@@ -94,7 +94,7 @@
         }
 
         .incident-table .col-description {
-            @apply text-right;
+            @apply text-left;
         }
 
         .incident-table .col-impact {
