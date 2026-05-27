@@ -22,6 +22,18 @@ export default tseslint.config(
         },
     },
     {
+        files: ['src/server/**/*.js'],
+        languageOptions: {
+            ecmaVersion: 2022,
+            sourceType: 'script',
+            globals: {
+                gs: 'readonly',
+                current: 'readonly',
+                previous: 'readonly',
+            },
+        },
+    },
+    {
         files: ['src/client/**/*.{ts,tsx}'],
         plugins: {
             react,
