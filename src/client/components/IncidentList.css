@@ -6,9 +6,32 @@
 .incident-list table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     overflow: hidden;
+}
+
+.incident-list .col-number {
+    width: 10%;
+    white-space: nowrap;
+}
+
+.incident-list .col-description {
+    width: 32%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.incident-list .col-opened {
+    width: 14%;
+    white-space: nowrap;
+}
+
+.incident-list .col-actions {
+    width: 22%;
+    white-space: nowrap;
 }
 
 .incident-list th {
@@ -33,6 +56,7 @@
 
 .action-buttons {
     display: flex;
+    flex-wrap: nowrap;
     gap: 8px;
 }
 
