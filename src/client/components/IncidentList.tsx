@@ -31,7 +31,15 @@ function formatOpenedAt(value) {
     return String(value).replace(/:\d{2}(\s*[AP]M)?$/i, '$1')
 }
 
-export default function IncidentList({ incidents, responseSummaries = {}, onEdit, onLogResponse, onRefresh, service }) {
+export default function IncidentList({
+    incidents,
+    responseSummaries = {},
+    onEdit,
+    onLogResponse,
+    onDeleteResponse,
+    onRefresh,
+    service,
+}) {
     const [expandedIncidentIds, setExpandedIncidentIds] = useState(() => new Set())
 
     const toggleExpanded = (incidentSysId) => {
@@ -250,7 +258,10 @@ export default function IncidentList({ incidents, responseSummaries = {}, onEdit
                                             <tr className="incident-response-row border-t border-rh-border bg-rh-elevated/30">
                                                 <td colSpan={COLUMN_COUNT} className="incident-response-cell p-0">
                                                     <div className="incident-response-panel-wrap px-4 py-3">
-                                                        <IncidentResponsePanel responses={summary.items} />
+                                                        <IncidentResponsePanel
+                                                            responses={summary.items}
+                                                            onDeleteResponse={onDeleteResponse}
+                                                        />
                                                     </div>
                                                 </td>
                                             </tr>

@@ -138,4 +138,23 @@ export class IncidentResponseService {
             throw error
         }
     }
+
+    async delete(sysId: string) {
+        try {
+            const response = await fetch(`/api/now/table/${this.tableName}/${sysId}`, {
+                method: 'DELETE',
+                headers: this.getHeaders(),
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                throw new Error(errorData.error?.message || `HTTP error ${response.status}`)
+            }
+
+            return response.ok
+        } catch (error) {
+            console.error(`Error deleting incident response ${sysId}:`, error)
+            throw error
+        }
+    }
 }
