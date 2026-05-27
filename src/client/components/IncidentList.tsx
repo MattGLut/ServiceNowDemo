@@ -1,8 +1,9 @@
 import React from 'react'
 
-const MAX_DESCRIPTION_LENGTH = 50
+const MAX_DESCRIPTION_LENGTH = 100
 
 const TH = 'text-center'
+const TH_DESCRIPTION = 'text-left'
 const TH_ACTIONS = 'text-right'
 
 const BTN_BASE = 'shrink-0 cursor-pointer rounded-full border px-2.5 py-1 text-xs font-semibold'
@@ -89,7 +90,7 @@ export default function IncidentList({ incidents, onEdit, onLogResponse, onRefre
                         <thead>
                             <tr>
                                 <th className={`col-number ${TH}`}>Number</th>
-                                <th className={`col-description ${TH}`}>Description</th>
+                                <th className={`col-description ${TH_DESCRIPTION}`}>Description</th>
                                 <th className={`col-state ${TH}`}>State</th>
                                 <th className={`col-impact ${TH}`}>Impact</th>
                                 <th className={`col-opened ${TH}`}>Opened</th>
@@ -137,7 +138,7 @@ export default function IncidentList({ incidents, onEdit, onLogResponse, onRefre
                                             {number}
                                         </td>
                                         <td
-                                            className="col-description px-4 py-3 text-center text-sm text-rh-text"
+                                            className="col-description px-4 py-3 text-left text-sm text-rh-text"
                                             data-label="Description"
                                             title={shortDesc || undefined}
                                         >
