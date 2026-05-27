@@ -37,11 +37,21 @@
 }
 
 .edit-button,
-.delete-button {
+.delete-button,
+.response-button {
     padding: 5px 10px;
     border: none;
     border-radius: 3px;
     cursor: pointer;
+}
+
+.response-button {
+    background-color: #673ab7;
+    color: white;
+}
+
+.response-button:hover {
+    background-color: #5e35b1;
 }
 
 .edit-button {
