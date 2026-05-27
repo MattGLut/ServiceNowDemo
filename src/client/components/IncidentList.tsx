@@ -1,7 +1,7 @@
 import React from 'react'
 import './IncidentList.css'
 
-export default function IncidentList({ incidents, onEdit, onRefresh, service }) {
+export default function IncidentList({ incidents, onEdit, onLogResponse, onRefresh, service }) {
     const handleDelete = async (incident) => {
         if (!confirm(`Are you sure you want to delete ${incident.number.display_value}?`)) {
             return
@@ -100,6 +100,13 @@ export default function IncidentList({ incidents, onEdit, onRefresh, service }) 
                                     <td>{openedAt}</td>
                                     <td>
                                         <div className="action-buttons">
+                                            <button
+                                                className="response-button"
+                                                onClick={() => onLogResponse(incident)}
+                                                aria-label={`Log response for incident ${number}`}
+                                            >
+                                                Log Response
+                                            </button>
                                             <button
                                                 className="edit-button"
                                                 onClick={() => onEdit(incident)}

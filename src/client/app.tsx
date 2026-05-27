@@ -1,17 +1,22 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { IncidentService } from './services/IncidentService'
+import { IncidentResponseService } from './services/IncidentResponseService'
 import IncidentList from './components/IncidentList'
 import IncidentForm from './components/IncidentForm'
+import IncidentResponseForm from './components/IncidentResponseForm'
 import './app.css'
 
 export default function App() {
     const [incidents, setIncidents] = useState([])
     const [loading, setLoading] = useState(true)
     const [showForm, setShowForm] = useState(false)
+    const [showResponseForm, setShowResponseForm] = useState(false)
     const [selectedIncident, setSelectedIncident] = useState(null)
+    const [responseIncident, setResponseIncident] = useState(null)
     const [error, setError] = useState(null)
 
     const incidentService = useMemo(() => new IncidentService(), [])
+    const incidentResponseService = useMemo(() => new IncidentResponseService(), [])
 
     const refreshIncidents = async () => {
         try {
@@ -44,6 +49,36 @@ export default function App() {
     const handleFormClose = () => {
         setShowForm(false)
         setSelectedIncident(null)
+    }
+
+    const handleLogResponseClick = (incident) => {
+        setResponseIncident(incident)
+        setShowResponseForm(true)
+    }
+
+    const handleResponseFormClose = () => {
+        setShowResponseForm(false)
+        setResponseIncident(null)
+    }
+
+    const handleResponseSubmit = async (responseText) => {
+        if (!responseIncident) {
+            return
+        }
+
+        setLoading(true)
+        try {
+            const sysId =
+                typeof responseIncident.sys_id === 'object' ? responseIncident.sys_id.value : responseIncident.sys_id
+            await incidentResponseService.create(sysId, responseText)
+            setShowResponseForm(false)
+            setResponseIncident(null)
+        } catch (err) {
+            setError('Failed to log incident response: ' + (err.message || 'Unknown error'))
+            console.error(err)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleFormSubmit = async (formData) => {
@@ -90,6 +125,7 @@ export default function App() {
                 <IncidentList
                     incidents={incidents}
                     onEdit={handleEditClick}
+                    onLogResponse={handleLogResponseClick}
                     onRefresh={refreshIncidents}
                     service={incidentService}
                 />
@@ -97,6 +133,14 @@ export default function App() {
 
             {showForm && (
                 <IncidentForm incident={selectedIncident} onSubmit={handleFormSubmit} onCancel={handleFormClose} />
+            )}
+
+            {showResponseForm && responseIncident && (
+                <IncidentResponseForm
+                    incident={responseIncident}
+                    onSubmit={handleResponseSubmit}
+                    onCancel={handleResponseFormClose}
+                />
             )}
         </div>
     )
