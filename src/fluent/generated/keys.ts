@@ -21,6 +21,10 @@ declare global {
                         table: 'sys_security_acl'
                         id: '431b98ae860d42b98486daa0e9525da8'
                     }
+                    'incident-response-set-responder-br': {
+                        table: 'sys_script'
+                        id: '550b49d98dfe425e9863964edbf3c702'
+                    }
                     'incident-response-write-acl': {
                         table: 'sys_security_acl'
                         id: 'c7ca26a801c84a90a018a91683e363d0'
@@ -28,6 +32,10 @@ declare global {
                     package_json: {
                         table: 'sys_module'
                         id: 'f14c2b06cd1244be881bfe999c172a64'
+                    }
+                    'src_server_business-rules_incident-response-set-responder_server_js': {
+                        table: 'sys_module'
+                        id: 'edb883bb86cb4ddf8c010c17b6e28540'
                     }
                     'tailwind.generated.css': {
                         table: 'sys_ux_theme_asset'
