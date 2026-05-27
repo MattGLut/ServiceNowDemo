@@ -2,9 +2,27 @@
 
 @source './**/*.{tsx,ts,html}';
 
+/* Robinhood-inspired dark palette */
+@theme {
+    --color-rh-bg: #000000;
+    --color-rh-panel: #1c1c1e;
+    --color-rh-elevated: #2c2c2e;
+    --color-rh-border: #3a3a3c;
+    --color-rh-text: #ffffff;
+    --color-rh-muted: #8e8e93;
+    --color-rh-green: #00c805;
+    --color-rh-green-hover: #00b805;
+}
+
+@layer base {
+    body {
+        @apply bg-rh-bg text-rh-text antialiased;
+    }
+}
+
 @layer components {
     .incident-table {
-        @apply w-full table-fixed border-collapse overflow-hidden rounded shadow-sm;
+        @apply w-full table-fixed border-collapse overflow-hidden;
     }
 
     .incident-table .col-number {
@@ -31,6 +49,10 @@
         @apply w-[29%] whitespace-nowrap;
     }
 
+    .incident-table th {
+        @apply bg-rh-elevated px-4 py-3 text-xs font-semibold uppercase tracking-wide text-rh-muted;
+    }
+
     @media (max-width: 1023px) {
         .incident-table .col-impact {
             @apply hidden;
@@ -53,11 +75,11 @@
         }
 
         .incident-table tr {
-            @apply mb-3 overflow-hidden rounded border border-gray-200;
+            @apply mb-3 overflow-hidden rounded-lg border border-rh-border bg-rh-panel;
         }
 
         .incident-table td {
-            @apply flex items-center justify-between gap-3 border-0 border-b border-gray-200 px-4 py-2.5 whitespace-normal;
+            @apply flex items-center justify-between gap-3 border-0 border-b border-rh-border px-4 py-2.5 whitespace-normal;
         }
 
         .incident-table td:last-child {
@@ -66,7 +88,7 @@
 
         .incident-table td::before {
             content: attr(data-label);
-            @apply shrink-0 font-semibold text-gray-600;
+            @apply shrink-0 font-semibold text-rh-muted;
         }
 
         .incident-table .col-description {
