@@ -32,23 +32,35 @@
     }
 
     .incident-table .col-description {
-        @apply w-[26%] overflow-hidden text-ellipsis whitespace-nowrap;
+        @apply w-[24%] overflow-hidden text-ellipsis whitespace-nowrap;
     }
 
     .incident-table .col-state {
-        @apply w-[12%] whitespace-nowrap;
-    }
-
-    .incident-table .col-impact {
         @apply w-[11%] whitespace-nowrap;
     }
 
+    .incident-table .col-impact {
+        @apply w-[10%] whitespace-nowrap;
+    }
+
     .incident-table .col-opened {
-        @apply w-[13%] whitespace-nowrap;
+        @apply w-[12%] whitespace-nowrap;
+    }
+
+    .incident-table .col-responses {
+        @apply w-[9%] whitespace-nowrap;
     }
 
     .incident-table .col-actions {
-        @apply w-[29%] whitespace-nowrap;
+        @apply w-[25%] whitespace-nowrap;
+    }
+
+    .incident-response-panel {
+        @apply rounded-lg border border-rh-border bg-rh-elevated px-4 py-3;
+    }
+
+    .incident-response-panel-wrap {
+        @apply w-full;
     }
 
     .incident-table th {
@@ -115,6 +127,26 @@
 
         .incident-table .action-buttons button {
             @apply w-full;
+        }
+
+        .incident-table .incident-response-row {
+            @apply mb-0 border-0 bg-transparent;
+        }
+
+        .incident-table .incident-response-row td {
+            @apply block border-0 px-0 py-0;
+        }
+
+        .incident-table .incident-response-row td::before {
+            content: none;
+        }
+
+        .incident-table .incident-response-panel-wrap {
+            @apply border-t border-rh-border px-4 py-3;
+        }
+
+        .incident-table .incident-response-panel {
+            @apply border-0 bg-rh-panel;
         }
     }
 }

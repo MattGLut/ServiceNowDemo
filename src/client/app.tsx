@@ -1,12 +1,15 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { IncidentService } from './services/IncidentService'
 import { IncidentResponseService } from './services/IncidentResponseService'
 import IncidentList from './components/IncidentList'
 import IncidentForm from './components/IncidentForm'
 import IncidentResponseForm from './components/IncidentResponseForm'
+import { getIncidentSysId } from './utils/fields'
+import { buildResponseSummaries, emptyResponseSummaries } from './utils/responseSummaries'
 
 export default function App() {
     const [incidents, setIncidents] = useState([])
+    const [responseSummaries, setResponseSummaries] = useState({})
     const [loading, setLoading] = useState(true)
     const [showForm, setShowForm] = useState(false)
     const [showResponseForm, setShowResponseForm] = useState(false)
@@ -17,23 +20,45 @@ export default function App() {
     const incidentService = useMemo(() => new IncidentService(), [])
     const incidentResponseService = useMemo(() => new IncidentResponseService(), [])
 
-    const refreshIncidents = async () => {
+    const loadResponseSummaries = useCallback(
+        async (incidentsList) => {
+            const incidentSysIds = incidentsList.map(getIncidentSysId).filter(Boolean)
+
+            if (!incidentSysIds.length) {
+                setResponseSummaries({})
+                return
+            }
+
+            try {
+                const responses = await incidentResponseService.listByIncidents(incidentSysIds)
+                setResponseSummaries(buildResponseSummaries(responses))
+            } catch (err) {
+                setResponseSummaries(emptyResponseSummaries(incidentSysIds))
+                setError('Failed to load incident responses: ' + (err.message || 'Unknown error'))
+                console.error(err)
+            }
+        },
+        [incidentResponseService]
+    )
+
+    const refreshIncidents = useCallback(async () => {
         try {
             setLoading(true)
             setError(null)
             const data = await incidentService.list()
             setIncidents(data)
+            await loadResponseSummaries(data)
         } catch (err) {
             setError('Failed to load incidents: ' + (err.message || 'Unknown error'))
             console.error(err)
         } finally {
             setLoading(false)
         }
-    }
+    }, [incidentService, loadResponseSummaries])
 
     useEffect(() => {
         void refreshIncidents()
-    }, [])
+    }, [refreshIncidents])
 
     const handleCreateClick = () => {
         setSelectedIncident(null)
@@ -65,18 +90,16 @@ export default function App() {
             return
         }
 
-        setLoading(true)
         try {
-            const sysId =
-                typeof responseIncident.sys_id === 'object' ? responseIncident.sys_id.value : responseIncident.sys_id
+            setError(null)
+            const sysId = getIncidentSysId(responseIncident)
             await incidentResponseService.create(sysId, responseText)
             setShowResponseForm(false)
             setResponseIncident(null)
+            await loadResponseSummaries(incidents)
         } catch (err) {
             setError('Failed to log incident response: ' + (err.message || 'Unknown error'))
             console.error(err)
-        } finally {
-            setLoading(false)
         }
     }
 
@@ -84,11 +107,7 @@ export default function App() {
         setLoading(true)
         try {
             if (selectedIncident) {
-                const sysId =
-                    typeof selectedIncident.sys_id === 'object'
-                        ? selectedIncident.sys_id.value
-                        : selectedIncident.sys_id
-                await incidentService.update(sysId, formData)
+                await incidentService.update(getIncidentSysId(selectedIncident), formData)
             } else {
                 await incidentService.create(formData)
             }
@@ -135,6 +154,7 @@ export default function App() {
             ) : (
                 <IncidentList
                     incidents={incidents}
+                    responseSummaries={responseSummaries}
                     onEdit={handleEditClick}
                     onLogResponse={handleLogResponseClick}
                     onRefresh={refreshIncidents}
