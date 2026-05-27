@@ -20,6 +20,19 @@ function getCurrentUserSysId(): string | undefined {
     return window.NOW?.user_id ?? window.g_user?.userID
 }
 
+const RESPONSE_FIELDS = 'sys_id,incident,response_text,responded_by,responded_at'
+const CHUNK_SIZE = 50
+
+function chunkArray(items, size) {
+    const chunks = []
+
+    for (let index = 0; index < items.length; index += size) {
+        chunks.push(items.slice(index, index + size))
+    }
+
+    return chunks
+}
+
 export class IncidentResponseService {
     private readonly tableName: string
 
@@ -40,11 +53,49 @@ export class IncidentResponseService {
         return headers
     }
 
+    async listByIncidents(incidentSysIds) {
+        if (!incidentSysIds.length) {
+            return []
+        }
+
+        const chunks = chunkArray(incidentSysIds, CHUNK_SIZE)
+        const allResults = []
+
+        try {
+            for (const chunk of chunks) {
+                const searchParams = new URLSearchParams()
+                searchParams.set('sysparm_display_value', 'all')
+                searchParams.set('sysparm_fields', RESPONSE_FIELDS)
+                searchParams.set('sysparm_query', `incidentIN${chunk.join(',')}^ORDERBYDESCresponded_at`)
+
+                const response = await fetch(`/api/now/table/${this.tableName}?${searchParams.toString()}`, {
+                    method: 'GET',
+                    headers: this.getHeaders(),
+                })
+
+                if (!response.ok) {
+                    const errorData = await response.json()
+                    throw new Error(errorData.error?.message || `HTTP error ${response.status}`)
+                }
+
+                const { result } = await response.json()
+                if (result?.length) {
+                    allResults.push(...result)
+                }
+            }
+
+            return allResults
+        } catch (error) {
+            console.error('Error fetching responses for incidents:', error)
+            throw error
+        }
+    }
+
     async listForIncident(incidentSysId: string) {
         try {
             const searchParams = new URLSearchParams()
             searchParams.set('sysparm_display_value', 'all')
-            searchParams.set('sysparm_fields', 'sys_id,incident,response_text,responded_by,responded_at')
+            searchParams.set('sysparm_fields', RESPONSE_FIELDS)
             searchParams.set('sysparm_query', `incident=${incidentSysId}^ORDERBYDESCresponded_at`)
 
             const response = await fetch(`/api/now/table/${this.tableName}?${searchParams.toString()}`, {
