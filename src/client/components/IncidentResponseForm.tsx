@@ -41,7 +41,7 @@ export default function IncidentResponseForm({ incident, onSubmit, onCancel }) {
                             Cancel
                         </button>
                         <button type="submit" className="submit-button">
-                            Log Response
+                            Respond
                         </button>
                     </div>
                 </form>

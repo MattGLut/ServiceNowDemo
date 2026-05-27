@@ -103,9 +103,9 @@ export default function IncidentList({ incidents, onEdit, onLogResponse, onRefre
                                             <button
                                                 className="response-button"
                                                 onClick={() => onLogResponse(incident)}
-                                                aria-label={`Log response for incident ${number}`}
+                                                aria-label={`Respond to incident ${number}`}
                                             >
-                                                Log Response
+                                                Respond
                                             </button>
                                             <button
                                                 className="edit-button"
