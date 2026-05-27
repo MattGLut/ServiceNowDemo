@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import './IncidentForm.css'
+import {
+    MODAL_OVERLAY,
+    MODAL_PANEL,
+    MODAL_HEADER,
+    MODAL_TITLE,
+    MODAL_CLOSE,
+    LABEL_CLASS,
+    INPUT_CLASS,
+    BTN_CANCEL,
+    BTN_PRIMARY,
+} from './formStyles'
 
 export default function IncidentForm({ incident, onSubmit, onCancel }) {
     const isEditing = !!incident
 
-    // Initialize form state
     const [formData, setFormData] = useState({
         short_description: '',
         description: '',
@@ -12,10 +21,8 @@ export default function IncidentForm({ incident, onSubmit, onCancel }) {
         impact: '2',
     })
 
-    // Load incident data if editing
     useEffect(() => {
         if (incident) {
-            // Extract primitive values from potential objects
             const shortDesc =
                 typeof incident.short_description === 'object'
                     ? incident.short_description.value
@@ -48,21 +55,26 @@ export default function IncidentForm({ incident, onSubmit, onCancel }) {
     }
 
     return (
-        <div className="form-overlay">
-            <div className="form-container">
-                <div className="form-header">
-                    <h2>{isEditing ? `Edit ${incident.number.display_value}` : 'Create New Incident'}</h2>
-                    <button type="button" className="close-button" onClick={onCancel}>
+        <div className={MODAL_OVERLAY}>
+            <div className={MODAL_PANEL}>
+                <div className={MODAL_HEADER}>
+                    <h2 className={MODAL_TITLE}>
+                        {isEditing ? `Edit ${incident.number.display_value}` : 'Create New Incident'}
+                    </h2>
+                    <button type="button" className={MODAL_CLOSE} onClick={onCancel}>
                         ×
                     </button>
                 </div>
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="short_description">Short Description *</label>
+                <form className="p-5" onSubmit={handleSubmit}>
+                    <div className="mb-5">
+                        <label htmlFor="short_description" className={LABEL_CLASS}>
+                            Short Description *
+                        </label>
                         <input
                             type="text"
                             id="short_description"
                             name="short_description"
+                            className={INPUT_CLASS}
                             value={formData.short_description}
                             onChange={handleChange}
                             required
@@ -70,11 +82,14 @@ export default function IncidentForm({ incident, onSubmit, onCancel }) {
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="description">Description</label>
+                    <div className="mb-5">
+                        <label htmlFor="description" className={LABEL_CLASS}>
+                            Description
+                        </label>
                         <textarea
                             id="description"
                             name="description"
+                            className={INPUT_CLASS}
                             value={formData.description}
                             onChange={handleChange}
                             rows={5}
@@ -82,10 +97,18 @@ export default function IncidentForm({ incident, onSubmit, onCancel }) {
                         />
                     </div>
 
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="state">State</label>
-                            <select id="state" name="state" value={formData.state} onChange={handleChange}>
+                    <div className="mb-5 flex gap-4">
+                        <div className="flex-1">
+                            <label htmlFor="state" className={LABEL_CLASS}>
+                                State
+                            </label>
+                            <select
+                                id="state"
+                                name="state"
+                                className={INPUT_CLASS}
+                                value={formData.state}
+                                onChange={handleChange}
+                            >
                                 <option value="1">New</option>
                                 <option value="2">In Progress</option>
                                 <option value="3">On Hold</option>
@@ -94,9 +117,17 @@ export default function IncidentForm({ incident, onSubmit, onCancel }) {
                             </select>
                         </div>
 
-                        <div className="form-group">
-                            <label htmlFor="impact">Impact</label>
-                            <select id="impact" name="impact" value={formData.impact} onChange={handleChange}>
+                        <div className="flex-1">
+                            <label htmlFor="impact" className={LABEL_CLASS}>
+                                Impact
+                            </label>
+                            <select
+                                id="impact"
+                                name="impact"
+                                className={INPUT_CLASS}
+                                value={formData.impact}
+                                onChange={handleChange}
+                            >
                                 <option value="1">1 - High</option>
                                 <option value="2">2 - Medium</option>
                                 <option value="3">3 - Low</option>
@@ -104,11 +135,11 @@ export default function IncidentForm({ incident, onSubmit, onCancel }) {
                         </div>
                     </div>
 
-                    <div className="form-actions">
-                        <button type="button" className="cancel-button" onClick={onCancel}>
+                    <div className="mt-8 flex justify-end gap-2.5">
+                        <button type="button" className={BTN_CANCEL} onClick={onCancel}>
                             Cancel
                         </button>
-                        <button type="submit" className="submit-button">
+                        <button type="submit" className={BTN_PRIMARY}>
                             {isEditing ? 'Update' : 'Create'}
                         </button>
                     </div>

@@ -1,6 +1,7 @@
 .DS_Store
 .now/
 dist/
+src/client/tailwind.generated.css
 node_modules/
 target/
 *.tsbuildinfo

@@ -1,4 +1,4 @@
-import { servicenowFrontEndPlugins, rollup, glob } from '@servicenow/isomorphic-rollup'
+import { servicenowFrontEndPlugins, sass, rollup, glob } from '@servicenow/isomorphic-rollup'
 
 /**
  * Prebuild script for building the client assets of the application before running the rest of the build.
@@ -22,38 +22,32 @@ export default async ({ rootDir, config, fs, path, logger, registerExplicitId })
     // Clean up any previous build output
     fs.rmSync(staticContentDir, { recursive: true, force: true })
 
+    const snPlugins = await servicenowFrontEndPlugins({
+        scope: config.scope,
+        rootDir: clientDir,
+        projectRootDir: rootDir,
+        registerExplicitId,
+        editableSourceCodeOnInstance: true,
+    })
+
+    // Tailwind output exceeds the default 14KB extract threshold and would be deployed
+    // as a separate sys_ux_theme_asset loaded via /uxta/..., which often fails to
+    // apply on UI pages. Inline CSS into the bundle instead.
+    const plugins = snPlugins.flat().map((plugin) => {
+        if (plugin?.name === 'rollup-plugin-sass') {
+            return sass({
+                insert: true,
+                shouldExtract: () => false,
+            })
+        }
+        return plugin
+    })
+
     // Call the rollup build
     const rollupBundle = await rollup({
-        // Use the file system module provided by the build environment
         fs,
-        // Search all HTML files in the client directory to find entry points
         input: htmlFilePattern,
-        // Use the default set of ServiceNow plugins for Rollup
-        // configured for the scope name and root directory
-        plugins: [
-            servicenowFrontEndPlugins({
-                scope: config.scope,
-                rootDir: clientDir,
-                projectRootDir: rootDir,
-                registerExplicitId,
-                // When true -- Pages built with NowSDK will be editable on instance and through Build Agent
-                //
-                //   Set editableSourceCodeOnInstance to the value below to override
-                //   which files are included when deployed to a ServiceNow instance
-                //   editableSourceCodeOnInstance: {
-                //       excludePatterns: [
-                //         '**/node_modules/**',
-                //         '**/dist/**',
-                //         '**/build/**',
-                //         '**/.now/**',
-                //         '**/.git/**',
-                //         '**/*.min.js',
-                //         '**/*.bundle.js',
-                //     ],
-                //   },
-                editableSourceCodeOnInstance: true,
-            }),
-        ],
+        plugins,
     })
     // Write the build output to the configured destination
     // including source maps for JavaScript files
