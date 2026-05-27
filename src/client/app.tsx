@@ -103,6 +103,18 @@ export default function App() {
         }
     }
 
+    const handleResponseDelete = async (responseSysId) => {
+        try {
+            setError(null)
+            await incidentResponseService.delete(responseSysId)
+            await loadResponseSummaries(incidents)
+        } catch (err) {
+            setError('Failed to delete incident response: ' + (err.message || 'Unknown error'))
+            console.error(err)
+            throw err
+        }
+    }
+
     const handleFormSubmit = async (formData) => {
         setLoading(true)
         try {
@@ -157,6 +169,7 @@ export default function App() {
                     responseSummaries={responseSummaries}
                     onEdit={handleEditClick}
                     onLogResponse={handleLogResponseClick}
+                    onDeleteResponse={handleResponseDelete}
                     onRefresh={refreshIncidents}
                     service={incidentService}
                 />
