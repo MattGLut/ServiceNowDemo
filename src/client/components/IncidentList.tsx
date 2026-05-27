@@ -130,7 +130,10 @@ export default function IncidentList({ incidents, onEdit, onLogResponse, onRefre
                                         }
                                         className="border-t border-rh-border transition-colors hover:bg-rh-elevated/40"
                                     >
-                                        <td className="col-number px-4 py-3 text-center text-sm" data-label="Number">
+                                        <td
+                                            className="col-number px-4 py-3 text-center text-sm text-rh-muted"
+                                            data-label="Number"
+                                        >
                                             {number}
                                         </td>
                                         <td
