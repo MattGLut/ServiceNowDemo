@@ -32,6 +32,7 @@ declare global {
                     'tailwind.generated.css': {
                         table: 'sys_ux_theme_asset'
                         id: 'e93a6c30b37f47e9983f6dc12f76f882'
+                        deleted: true
                     }
                 }
                 composite: [
