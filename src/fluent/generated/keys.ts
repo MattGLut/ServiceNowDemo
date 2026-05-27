@@ -29,6 +29,10 @@ declare global {
                         table: 'sys_module'
                         id: 'f14c2b06cd1244be881bfe999c172a64'
                     }
+                    'tailwind.generated.css': {
+                        table: 'sys_ux_theme_asset'
+                        id: 'e93a6c30b37f47e9983f6dc12f76f882'
+                    }
                 }
                 composite: [
                     {

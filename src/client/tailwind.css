@@ -1,0 +1,96 @@
+@import 'tailwindcss';
+
+@source './**/*.{tsx,ts,html}';
+
+@layer components {
+    .incident-table {
+        @apply w-full table-fixed border-collapse overflow-hidden rounded shadow-sm;
+    }
+
+    .incident-table .col-number {
+        @apply w-[9%] whitespace-nowrap;
+    }
+
+    .incident-table .col-description {
+        @apply w-[26%] overflow-hidden text-ellipsis whitespace-nowrap;
+    }
+
+    .incident-table .col-state {
+        @apply w-[12%] whitespace-nowrap;
+    }
+
+    .incident-table .col-impact {
+        @apply w-[11%] whitespace-nowrap;
+    }
+
+    .incident-table .col-opened {
+        @apply w-[13%] whitespace-nowrap;
+    }
+
+    .incident-table .col-actions {
+        @apply w-[29%] whitespace-nowrap;
+    }
+
+    @media (max-width: 1023px) {
+        .incident-table .col-impact {
+            @apply hidden;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .incident-table {
+            table-layout: auto;
+        }
+
+        .incident-table thead {
+            @apply hidden;
+        }
+
+        .incident-table tbody,
+        .incident-table tr,
+        .incident-table td {
+            @apply block;
+        }
+
+        .incident-table tr {
+            @apply mb-3 overflow-hidden rounded border border-gray-200;
+        }
+
+        .incident-table td {
+            @apply flex items-center justify-between gap-3 border-0 border-b border-gray-200 px-4 py-2.5 whitespace-normal;
+        }
+
+        .incident-table td:last-child {
+            @apply border-b-0;
+        }
+
+        .incident-table td::before {
+            content: attr(data-label);
+            @apply shrink-0 font-semibold text-gray-600;
+        }
+
+        .incident-table .col-description {
+            @apply text-right;
+        }
+
+        .incident-table .col-impact {
+            @apply flex;
+        }
+
+        .incident-table .col-actions {
+            @apply flex-col items-stretch;
+        }
+
+        .incident-table .col-actions::before {
+            @apply self-start;
+        }
+
+        .incident-table .action-buttons {
+            @apply w-full flex-col;
+        }
+
+        .incident-table .action-buttons button {
+            @apply w-full;
+        }
+    }
+}
