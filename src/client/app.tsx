@@ -1,24 +1,31 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { IncidentService } from './services/IncidentService'
 import { IncidentResponseService } from './services/IncidentResponseService'
+import { IncidentComplaintService } from './services/IncidentComplaintService'
 import IncidentList from './components/IncidentList'
 import IncidentForm from './components/IncidentForm'
 import IncidentResponseForm from './components/IncidentResponseForm'
+import IncidentComplaintForm from './components/IncidentComplaintForm'
 import { getIncidentSysId } from './utils/fields'
 import { buildResponseSummaries, emptyResponseSummaries } from './utils/responseSummaries'
+import { buildComplaintSummaries, emptyComplaintSummaries } from './utils/complaintSummaries'
 
 export default function App() {
     const [incidents, setIncidents] = useState([])
     const [responseSummaries, setResponseSummaries] = useState({})
+    const [complaintSummaries, setComplaintSummaries] = useState({})
     const [loading, setLoading] = useState(true)
     const [showForm, setShowForm] = useState(false)
     const [showResponseForm, setShowResponseForm] = useState(false)
+    const [showComplaintForm, setShowComplaintForm] = useState(false)
     const [selectedIncident, setSelectedIncident] = useState(null)
     const [responseIncident, setResponseIncident] = useState(null)
+    const [complaintIncident, setComplaintIncident] = useState(null)
     const [error, setError] = useState(null)
 
     const incidentService = useMemo(() => new IncidentService(), [])
     const incidentResponseService = useMemo(() => new IncidentResponseService(), [])
+    const incidentComplaintService = useMemo(() => new IncidentComplaintService(), [])
 
     const loadResponseSummaries = useCallback(
         async (incidentsList) => {
@@ -41,20 +48,41 @@ export default function App() {
         [incidentResponseService]
     )
 
+    const loadComplaintSummaries = useCallback(
+        async (incidentsList) => {
+            const incidentSysIds = incidentsList.map(getIncidentSysId).filter(Boolean)
+
+            if (!incidentSysIds.length) {
+                setComplaintSummaries({})
+                return
+            }
+
+            try {
+                const complaints = await incidentComplaintService.listByIncidents(incidentSysIds)
+                setComplaintSummaries(buildComplaintSummaries(complaints))
+            } catch (err) {
+                setComplaintSummaries(emptyComplaintSummaries(incidentSysIds))
+                setError('Failed to load incident complaints: ' + (err.message || 'Unknown error'))
+                console.error(err)
+            }
+        },
+        [incidentComplaintService]
+    )
+
     const refreshIncidents = useCallback(async () => {
         try {
             setLoading(true)
             setError(null)
             const data = await incidentService.list()
             setIncidents(data)
-            await loadResponseSummaries(data)
+            await Promise.all([loadResponseSummaries(data), loadComplaintSummaries(data)])
         } catch (err) {
             setError('Failed to load incidents: ' + (err.message || 'Unknown error'))
             console.error(err)
         } finally {
             setLoading(false)
         }
-    }, [incidentService, loadResponseSummaries])
+    }, [incidentService, loadResponseSummaries, loadComplaintSummaries])
 
     useEffect(() => {
         void refreshIncidents()
@@ -85,6 +113,16 @@ export default function App() {
         setResponseIncident(null)
     }
 
+    const handleFileComplaintClick = (incident) => {
+        setComplaintIncident(incident)
+        setShowComplaintForm(true)
+    }
+
+    const handleComplaintFormClose = () => {
+        setShowComplaintForm(false)
+        setComplaintIncident(null)
+    }
+
     const handleResponseSubmit = async (responseText) => {
         if (!responseIncident) {
             return
@@ -110,6 +148,36 @@ export default function App() {
             await loadResponseSummaries(incidents)
         } catch (err) {
             setError('Failed to delete incident response: ' + (err.message || 'Unknown error'))
+            console.error(err)
+            throw err
+        }
+    }
+
+    const handleComplaintSubmit = async (complaintText) => {
+        if (!complaintIncident) {
+            return
+        }
+
+        try {
+            setError(null)
+            const sysId = getIncidentSysId(complaintIncident)
+            await incidentComplaintService.create(sysId, complaintText)
+            setShowComplaintForm(false)
+            setComplaintIncident(null)
+            await loadComplaintSummaries(incidents)
+        } catch (err) {
+            setError('Failed to file incident complaint: ' + (err.message || 'Unknown error'))
+            console.error(err)
+        }
+    }
+
+    const handleComplaintDelete = async (complaintSysId) => {
+        try {
+            setError(null)
+            await incidentComplaintService.delete(complaintSysId)
+            await loadComplaintSummaries(incidents)
+        } catch (err) {
+            setError('Failed to delete incident complaint: ' + (err.message || 'Unknown error'))
             console.error(err)
             throw err
         }
@@ -167,9 +235,12 @@ export default function App() {
                 <IncidentList
                     incidents={incidents}
                     responseSummaries={responseSummaries}
+                    complaintSummaries={complaintSummaries}
                     onEdit={handleEditClick}
                     onLogResponse={handleLogResponseClick}
                     onDeleteResponse={handleResponseDelete}
+                    onFileComplaint={handleFileComplaintClick}
+                    onDeleteComplaint={handleComplaintDelete}
                     onRefresh={refreshIncidents}
                     service={incidentService}
                 />
@@ -184,6 +255,14 @@ export default function App() {
                     incident={responseIncident}
                     onSubmit={handleResponseSubmit}
                     onCancel={handleResponseFormClose}
+                />
+            )}
+
+            {showComplaintForm && complaintIncident && (
+                <IncidentComplaintForm
+                    incident={complaintIncident}
+                    onSubmit={handleComplaintSubmit}
+                    onCancel={handleComplaintFormClose}
                 />
             )}
         </div>
