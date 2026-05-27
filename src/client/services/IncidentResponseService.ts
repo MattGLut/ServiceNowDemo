@@ -1,12 +1,8 @@
+import { getCurrentUserSysId } from '../utils/currentUser'
+
 declare global {
     interface Window {
         g_ck: string
-        NOW?: {
-            user_id?: string
-        }
-        g_user?: {
-            userID?: string
-        }
     }
 }
 
@@ -14,10 +10,6 @@ function formatGlideDateTime(date: Date): string {
     const pad = (value: number) => String(value).padStart(2, '0')
 
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
-}
-
-function getCurrentUserSysId(): string | undefined {
-    return window.NOW?.user_id ?? window.g_user?.userID
 }
 
 const RESPONSE_FIELDS = 'sys_id,incident,response_text,responded_by,responded_at'
