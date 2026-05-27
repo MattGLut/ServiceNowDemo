@@ -1,6 +1,29 @@
 import React from 'react'
 import './IncidentList.css'
 
+const MAX_DESCRIPTION_LENGTH = 50
+
+function truncateText(text, maxLength = MAX_DESCRIPTION_LENGTH) {
+    if (!text) {
+        return ''
+    }
+
+    if (text.length <= maxLength) {
+        return text
+    }
+
+    return `${text.slice(0, maxLength - 3)}...`
+}
+
+function formatOpenedAt(value) {
+    if (!value) {
+        return ''
+    }
+
+    // e.g. "2026-05-27 10:30:45" or "05/27/2026 10:30:45 AM"
+    return String(value).replace(/:\d{2}(\s*[AP]M)?$/i, '$1')
+}
+
 export default function IncidentList({ incidents, onEdit, onLogResponse, onRefresh, service }) {
     const handleDelete = async (incident) => {
         if (!confirm(`Are you sure you want to delete ${incident.number.display_value}?`)) {
@@ -80,15 +103,19 @@ export default function IncidentList({ incidents, onEdit, onLogResponse, onRefre
                                 typeof incident.state === 'object' ? incident.state.display_value : incident.state
                             const impact =
                                 typeof incident.impact === 'object' ? incident.impact.display_value : incident.impact
-                            const openedAt =
+                            const openedAtRaw =
                                 typeof incident.opened_at === 'object'
                                     ? incident.opened_at.display_value
                                     : incident.opened_at
+                            const openedAt = formatOpenedAt(openedAtRaw)
+                            const displayDesc = truncateText(shortDesc)
 
                             return (
                                 <tr key={typeof incident.sys_id === 'object' ? incident.sys_id.value : incident.sys_id}>
-                                    <td>{number}</td>
-                                    <td>{shortDesc}</td>
+                                    <td className="col-number">{number}</td>
+                                    <td className="col-description" title={shortDesc || undefined}>
+                                        {displayDesc}
+                                    </td>
                                     <td>
                                         <span className={`state-badge ${getStateClass(incident.state)}`}>{state}</span>
                                     </td>
@@ -97,8 +124,8 @@ export default function IncidentList({ incidents, onEdit, onLogResponse, onRefre
                                             {impact}
                                         </span>
                                     </td>
-                                    <td>{openedAt}</td>
-                                    <td>
+                                    <td className="col-opened">{openedAt}</td>
+                                    <td className="col-actions">
                                         <div className="action-buttons">
                                             <button
                                                 className="response-button"
