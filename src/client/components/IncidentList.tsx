@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import IncidentResponsePanel from './IncidentResponsePanel'
-import IncidentComplaintPanel from './IncidentComplaintPanel'
 import { getIncidentSysId } from '../utils/fields'
 
 const MAX_DESCRIPTION_LENGTH = 100
-const COLUMN_COUNT = 8
+const COLUMN_COUNT = 7
 
 const TH = 'text-center'
 const TH_DESCRIPTION = 'text-left'
@@ -32,34 +31,30 @@ function formatOpenedAt(value) {
     return String(value).replace(/:\d{2}(\s*[AP]M)?$/i, '$1')
 }
 
-function toggleInSet(setter, id) {
-    setter((previous) => {
-        const next = new Set(previous)
-
-        if (next.has(id)) {
-            next.delete(id)
-        } else {
-            next.add(id)
-        }
-
-        return next
-    })
-}
-
 export default function IncidentList({
     incidents,
     responseSummaries = {},
-    complaintSummaries = {},
     onEdit,
     onLogResponse,
     onDeleteResponse,
-    onFileComplaint,
-    onDeleteComplaint,
     onRefresh,
     service,
 }) {
-    const [expandedResponseIds, setExpandedResponseIds] = useState(() => new Set())
-    const [expandedComplaintIds, setExpandedComplaintIds] = useState(() => new Set())
+    const [expandedIncidentIds, setExpandedIncidentIds] = useState(() => new Set())
+
+    const toggleExpanded = (incidentSysId) => {
+        setExpandedIncidentIds((previous) => {
+            const next = new Set(previous)
+
+            if (next.has(incidentSysId)) {
+                next.delete(incidentSysId)
+            } else {
+                next.add(incidentSysId)
+            }
+
+            return next
+        })
+    }
 
     const handleDelete = async (incident) => {
         if (!confirm(`Are you sure you want to delete ${incident.number.display_value}?`)) {
@@ -126,19 +121,15 @@ export default function IncidentList({
                                 <th className={`col-impact ${TH}`}>Impact</th>
                                 <th className={`col-opened ${TH}`}>Opened</th>
                                 <th className={`col-responses ${TH}`}>Responses</th>
-                                <th className={`col-complaints ${TH}`}>Complaints</th>
                                 <th className={`col-actions ${TH_ACTIONS}`}>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {incidents.map((incident) => {
                                 const incidentSysId = getIncidentSysId(incident)
-                                const responseSummary = responseSummaries[incidentSysId] || { count: 0, items: [] }
-                                const complaintSummary = complaintSummaries[incidentSysId] || { count: 0, items: [] }
-                                const responseCount = responseSummary.count
-                                const complaintCount = complaintSummary.count
-                                const isResponseExpanded = expandedResponseIds.has(incidentSysId)
-                                const isComplaintExpanded = expandedComplaintIds.has(incidentSysId)
+                                const summary = responseSummaries[incidentSysId] || { count: 0, items: [] }
+                                const responseCount = summary.count
+                                const isExpanded = expandedIncidentIds.has(incidentSysId)
 
                                 const number =
                                     typeof incident.number === 'object'
@@ -211,7 +202,7 @@ export default function IncidentList({
                                                                 ? 'bg-rh-green/20 text-rh-green hover:bg-rh-green/30'
                                                                 : 'bg-rh-elevated text-rh-muted'
                                                         }`}
-                                                        onClick={() => toggleInSet(setExpandedResponseIds, incidentSysId)}
+                                                        onClick={() => toggleExpanded(incidentSysId)}
                                                         aria-label={`${responseCount} responses for incident ${number}`}
                                                     >
                                                         {responseCount > 0 ? responseCount : '—'}
@@ -219,47 +210,15 @@ export default function IncidentList({
                                                     <button
                                                         type="button"
                                                         className="inline-flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded border-0 bg-transparent text-sm text-rh-muted hover:bg-rh-elevated hover:text-rh-text"
-                                                        onClick={() => toggleInSet(setExpandedResponseIds, incidentSysId)}
-                                                        aria-expanded={isResponseExpanded}
+                                                        onClick={() => toggleExpanded(incidentSysId)}
+                                                        aria-expanded={isExpanded}
                                                         aria-label={
-                                                            isResponseExpanded
+                                                            isExpanded
                                                                 ? `Collapse responses for ${number}`
                                                                 : `Expand responses for ${number}`
                                                         }
                                                     >
-                                                        {isResponseExpanded ? '▾' : '▸'}
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <td
-                                                className="col-complaints px-4 py-3 text-center"
-                                                data-label="Complaints"
-                                            >
-                                                <div className="flex items-center justify-center gap-1.5">
-                                                    <button
-                                                        type="button"
-                                                        className={`inline-flex min-w-[1.75rem] cursor-pointer items-center justify-center rounded-full border-0 px-2 py-0.5 text-xs font-semibold ${
-                                                            complaintCount > 0
-                                                                ? 'bg-amber-500/20 text-amber-400 hover:bg-amber-500/30'
-                                                                : 'bg-rh-elevated text-rh-muted'
-                                                        }`}
-                                                        onClick={() => toggleInSet(setExpandedComplaintIds, incidentSysId)}
-                                                        aria-label={`${complaintCount} complaints for incident ${number}`}
-                                                    >
-                                                        {complaintCount > 0 ? complaintCount : '—'}
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="inline-flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded border-0 bg-transparent text-sm text-rh-muted hover:bg-rh-elevated hover:text-rh-text"
-                                                        onClick={() => toggleInSet(setExpandedComplaintIds, incidentSysId)}
-                                                        aria-expanded={isComplaintExpanded}
-                                                        aria-label={
-                                                            isComplaintExpanded
-                                                                ? `Collapse complaints for ${number}`
-                                                                : `Expand complaints for ${number}`
-                                                        }
-                                                    >
-                                                        {isComplaintExpanded ? '▾' : '▸'}
+                                                        {isExpanded ? '▾' : '▸'}
                                                     </button>
                                                 </div>
                                             </td>
@@ -275,14 +234,6 @@ export default function IncidentList({
                                                         aria-label={`Respond to incident ${number}`}
                                                     >
                                                         Respond
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className={`${BTN_BASE} border-amber-500/50 bg-amber-500/15 text-amber-400 hover:bg-amber-500/25`}
-                                                        onClick={() => onFileComplaint(incident)}
-                                                        aria-label={`File complaint for incident ${number}`}
-                                                    >
-                                                        File Complaint
                                                     </button>
                                                     <button
                                                         type="button"
@@ -303,25 +254,13 @@ export default function IncidentList({
                                                 </div>
                                             </td>
                                         </tr>
-                                        {isResponseExpanded && (
+                                        {isExpanded && (
                                             <tr className="incident-response-row border-t border-rh-border bg-rh-elevated/30">
                                                 <td colSpan={COLUMN_COUNT} className="incident-response-cell p-0">
                                                     <div className="incident-response-panel-wrap px-4 py-3">
                                                         <IncidentResponsePanel
-                                                            responses={responseSummary.items}
+                                                            responses={summary.items}
                                                             onDeleteResponse={onDeleteResponse}
-                                                        />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        )}
-                                        {isComplaintExpanded && (
-                                            <tr className="incident-complaint-row border-t border-rh-border bg-rh-elevated/30">
-                                                <td colSpan={COLUMN_COUNT} className="incident-complaint-cell p-0">
-                                                    <div className="incident-complaint-panel-wrap px-4 py-3">
-                                                        <IncidentComplaintPanel
-                                                            complaints={complaintSummary.items}
-                                                            onDeleteComplaint={onDeleteComplaint}
                                                         />
                                                     </div>
                                                 </td>

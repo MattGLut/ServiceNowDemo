@@ -32,27 +32,23 @@
     }
 
     .incident-table .col-description {
-        @apply w-[20%] overflow-hidden text-ellipsis whitespace-nowrap;
+        @apply w-[24%] overflow-hidden text-ellipsis whitespace-nowrap;
     }
 
     .incident-table .col-state {
-        @apply w-[10%] whitespace-nowrap;
-    }
-
-    .incident-table .col-impact {
-        @apply w-[9%] whitespace-nowrap;
-    }
-
-    .incident-table .col-opened {
         @apply w-[11%] whitespace-nowrap;
     }
 
-    .incident-table .col-responses {
-        @apply w-[8%] whitespace-nowrap;
+    .incident-table .col-impact {
+        @apply w-[10%] whitespace-nowrap;
     }
 
-    .incident-table .col-complaints {
-        @apply w-[8%] whitespace-nowrap;
+    .incident-table .col-opened {
+        @apply w-[12%] whitespace-nowrap;
+    }
+
+    .incident-table .col-responses {
+        @apply w-[9%] whitespace-nowrap;
     }
 
     .incident-table .col-actions {
@@ -64,14 +60,6 @@
     }
 
     .incident-response-panel-wrap {
-        @apply w-full;
-    }
-
-    .incident-complaint-panel {
-        @apply rounded-lg border border-rh-border bg-rh-elevated px-4 py-3;
-    }
-
-    .incident-complaint-panel-wrap {
         @apply w-full;
     }
 
@@ -158,26 +146,6 @@
         }
 
         .incident-table .incident-response-panel {
-            @apply border-0 bg-rh-panel;
-        }
-
-        .incident-table .incident-complaint-row {
-            @apply mb-0 border-0 bg-transparent;
-        }
-
-        .incident-table .incident-complaint-row td {
-            @apply block border-0 px-0 py-0;
-        }
-
-        .incident-table .incident-complaint-row td::before {
-            content: none;
-        }
-
-        .incident-table .incident-complaint-panel-wrap {
-            @apply border-t border-rh-border px-4 py-3;
-        }
-
-        .incident-table .incident-complaint-panel {
             @apply border-0 bg-rh-panel;
         }
     }
