@@ -15,8 +15,10 @@
 }
 
 @layer base {
-    body {
-        @apply bg-rh-bg text-rh-text antialiased;
+    html,
+    body,
+    #root {
+        @apply min-h-full w-full bg-rh-bg text-rh-text antialiased;
     }
 }
 

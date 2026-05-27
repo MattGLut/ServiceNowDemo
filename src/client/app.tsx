@@ -103,7 +103,7 @@ export default function App() {
     }
 
     return (
-        <div className="mx-auto min-h-screen max-w-6xl bg-rh-bg p-5 font-sans max-md:p-3">
+        <div className="min-h-screen w-full bg-rh-bg p-5 font-sans max-md:p-3">
             <header className="mb-5 flex items-center justify-between border-b border-rh-border pb-4 max-md:flex-col max-md:items-stretch max-md:gap-3">
                 <h1 className="m-0 text-2xl font-bold tracking-tight text-rh-text max-md:text-xl">
                     Incident Response Manager Pro
