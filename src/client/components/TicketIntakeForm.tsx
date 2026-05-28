@@ -119,12 +119,11 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
                         onChange={(event) => setStpFlag(event.target.checked)}
                         disabled={submitting}
                     />
+                    <span className="portal-stp-toggle-track" aria-hidden="true">
+                        <span className="portal-stp-toggle-thumb" />
+                    </span>
                     <span className="portal-stp-toggle-label">Straight-through processing (STP)</span>
                 </label>
-                <p className="portal-stp-toggle-hint">
-                    Enable when this ticket can be processed automatically without document intelligence
-                    review.
-                </p>
             </div>
 
             <div

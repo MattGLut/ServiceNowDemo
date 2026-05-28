@@ -313,19 +313,39 @@
     }
 
     .portal-stp-toggle {
-        @apply flex cursor-pointer items-start gap-3;
+        @apply flex cursor-pointer items-center gap-3;
     }
 
     .portal-stp-toggle-input {
-        @apply mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-rh-green;
+        @apply sr-only;
+    }
+
+    .portal-stp-toggle-track {
+        @apply relative h-6 w-11 shrink-0 rounded-full border border-rh-border bg-rh-elevated transition-colors duration-200;
+    }
+
+    .portal-stp-toggle-thumb {
+        @apply absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-rh-text shadow-sm transition-transform duration-200;
+    }
+
+    .portal-stp-toggle-input:checked + .portal-stp-toggle-track {
+        @apply border-rh-green bg-rh-green;
+    }
+
+    .portal-stp-toggle-input:checked + .portal-stp-toggle-track .portal-stp-toggle-thumb {
+        @apply translate-x-5 bg-black;
+    }
+
+    .portal-stp-toggle-input:disabled + .portal-stp-toggle-track {
+        @apply opacity-50;
+    }
+
+    .portal-stp-toggle-input:disabled ~ .portal-stp-toggle-label {
+        @apply opacity-50;
     }
 
     .portal-stp-toggle-label {
         @apply text-sm font-medium text-rh-text;
-    }
-
-    .portal-stp-toggle-hint {
-        @apply m-0 mt-1.5 pl-7 text-xs text-rh-muted;
     }
 
     .portal-immersive-shell {
