@@ -26,3 +26,12 @@ export type TicketRecord = {
     submittedAt: string
     submittedByDisplay: string
 }
+
+export type TicketAttachment = {
+    sysId: string
+    fileName: string
+    contentType: string
+    sizeBytes: number
+    createdAt: string
+    downloadUrl: string
+}

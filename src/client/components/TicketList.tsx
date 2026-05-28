@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { TicketService } from '../services/TicketService'
+import { formatSubmittedAt } from '../utils/formatDateTime'
+import { ticketViewUrl } from '../utils/portalPage'
 import type { TicketRecord } from '../types/ticket'
 
 type TicketListProps = {
@@ -86,7 +88,12 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
                                             className={isHighlighted ? 'portal-ticket-row-highlight' : undefined}
                                         >
                                         <td>
-                                            <span className="portal-ticket-title">{ticket.title}</span>
+                                            <a
+                                                href={ticketViewUrl(ticket.sysId)}
+                                                className="portal-ticket-title portal-ticket-title-link"
+                                            >
+                                                {ticket.title}
+                                            </a>
                                             {ticket.description && (
                                                 <span className="portal-ticket-description">
                                                     {truncateDescription(ticket.description)}
@@ -122,23 +129,3 @@ function truncateDescription(text: string, maxLength = 120): string {
     return trimmed.slice(0, maxLength).trimEnd() + '…'
 }
 
-function formatSubmittedAt(value: string): string {
-    if (!value) {
-        return '—'
-    }
-
-    const normalized = value.includes('T') ? value : value.replace(' ', 'T')
-    const date = new Date(normalized)
-
-    if (Number.isNaN(date.getTime())) {
-        return value
-    }
-
-    return date.toLocaleString(undefined, {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-    })
-}

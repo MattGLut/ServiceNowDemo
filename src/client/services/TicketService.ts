@@ -1,5 +1,11 @@
 import { getCurrentUserSysId } from '../utils/currentUser'
-import type { TicketCreateInput, TicketCreateResult, TicketRecord, TicketStatus } from '../types/ticket'
+import type {
+    TicketAttachment,
+    TicketCreateInput,
+    TicketCreateResult,
+    TicketRecord,
+    TicketStatus,
+} from '../types/ticket'
 
 declare global {
     interface Window {
@@ -27,6 +33,26 @@ function unwrapGlideValue(field: GlideFieldValue): string {
         return field
     }
     return field.value || field.display_value || ''
+}
+
+function mapTicketRow(row: Record<string, GlideFieldValue>): TicketRecord {
+    const sysId = unwrapGlideValue(row.sys_id)
+    const statusValue = unwrapGlideValue(row.status) as TicketStatus
+    const statusLabel = unwrapGlideField(row.status) || statusValue
+
+    return {
+        sysId,
+        title: unwrapGlideField(row.title),
+        description: unwrapGlideField(row.description),
+        status: statusValue,
+        statusLabel,
+        submittedAt: unwrapGlideField(row.submitted_at),
+        submittedByDisplay: unwrapGlideField(row.submitted_by),
+    }
+}
+
+export function buildAttachmentDownloadUrl(attachmentSysId: string): string {
+    return `/sys_attachment.do?sys_id=${encodeURIComponent(attachmentSysId)}`
 }
 
 function formatGlideDateTime(date: Date): string {
@@ -140,19 +166,70 @@ export class TicketService {
             return []
         }
 
+        return result.map((row: Record<string, GlideFieldValue>) => mapTicketRow(row))
+    }
+
+    async getById(sysId: string): Promise<TicketRecord | null> {
+        const params = new URLSearchParams({
+            sysparm_display_value: 'all',
+            sysparm_exclude_reference_link: 'true',
+        })
+
+        const response = await fetch(
+            `/api/now/table/${this.tableName}/${encodeURIComponent(sysId)}?${params.toString()}`,
+            { headers: this.getHeaders() }
+        )
+
+        if (response.status === 404) {
+            return null
+        }
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}))
+            throw new Error(errorData.error?.message || `HTTP error ${response.status}`)
+        }
+
+        const { result } = await response.json()
+        if (!result) {
+            return null
+        }
+
+        return mapTicketRow(result as Record<string, GlideFieldValue>)
+    }
+
+    async listAttachments(ticketSysId: string): Promise<TicketAttachment[]> {
+        const params = new URLSearchParams({
+            sysparm_display_value: 'all',
+            sysparm_exclude_reference_link: 'true',
+            sysparm_fields: 'sys_id,file_name,content_type,size_bytes,sys_created_on',
+            sysparm_query: `table_name=${this.tableName}^table_sys_id=${ticketSysId}^ORDERBYDESCsys_created_on`,
+        })
+
+        const response = await fetch(`/api/now/table/sys_attachment?${params.toString()}`, {
+            headers: this.getHeaders(),
+        })
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}))
+            throw new Error(errorData.error?.message || `HTTP error ${response.status}`)
+        }
+
+        const { result } = await response.json()
+        if (!Array.isArray(result)) {
+            return []
+        }
+
         return result.map((row: Record<string, GlideFieldValue>) => {
-            const sysId = unwrapGlideValue(row.sys_id)
-            const statusValue = unwrapGlideValue(row.status) as TicketStatus
-            const statusLabel = unwrapGlideField(row.status) || statusValue
+            const attachmentSysId = unwrapGlideValue(row.sys_id)
+            const sizeRaw = unwrapGlideValue(row.size_bytes)
 
             return {
-                sysId,
-                title: unwrapGlideField(row.title),
-                description: unwrapGlideField(row.description),
-                status: statusValue,
-                statusLabel,
-                submittedAt: unwrapGlideField(row.submitted_at),
-                submittedByDisplay: unwrapGlideField(row.submitted_by),
+                sysId: attachmentSysId,
+                fileName: unwrapGlideField(row.file_name) || 'attachment',
+                contentType: unwrapGlideField(row.content_type),
+                sizeBytes: Number.parseInt(sizeRaw, 10) || 0,
+                createdAt: unwrapGlideField(row.sys_created_on),
+                downloadUrl: buildAttachmentDownloadUrl(attachmentSysId),
             }
         })
     }
