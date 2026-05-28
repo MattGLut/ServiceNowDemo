@@ -21,3 +21,13 @@
         @apply min-h-full w-full bg-rh-bg text-rh-text antialiased;
     }
 }
+
+@layer components {
+    .portal-home-hero {
+        @apply rounded-xl border border-rh-border bg-rh-panel px-8 py-12;
+    }
+
+    .portal-cta {
+        @apply cursor-pointer rounded-full border-0 bg-rh-green px-8 py-3 text-sm font-bold text-black hover:bg-rh-green-hover;
+    }
+}

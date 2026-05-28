@@ -228,6 +228,13 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_page'
+                        id: '3e2ca4f04b104a759892c88968ebd34a'
+                        key: {
+                            endpoint: 'x_2058901_demo_ticket_submit.do'
+                        }
+                    },
+                    {
                         table: 'sn_glider_source_artifact_m2m'
                         id: '3ea13875f30443a4b8f172e0390fde83'
                         key: {
@@ -298,6 +305,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sn_glider_source_artifact_m2m'
+                        id: '6b2cee5dc541487085028f905ce48897'
+                        key: {
+                            application_file: 'd80e72df8380435fb911d316f3d0932c'
+                            source_artifact: 'a1c9c0e91e3b4900a70cb087471b578a'
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: '6d3c2eecf1d24467a978ad50cba38e70'
                         key: {
@@ -347,6 +362,29 @@ declare global {
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'submitted_by'
+                        }
+                    },
+                    {
+                        table: 'sn_glider_source_artifact_m2m'
+                        id: 'a01dc012ba63455ca58361caa05b8046'
+                        key: {
+                            application_file: '32b08f7b0bd949839a4b5e581692e760'
+                            source_artifact: 'a1c9c0e91e3b4900a70cb087471b578a'
+                        }
+                    },
+                    {
+                        table: 'sn_glider_source_artifact'
+                        id: 'a1c9c0e91e3b4900a70cb087471b578a'
+                        key: {
+                            name: 'x_2058901_demo_ticket_submit.do - BYOUI Files'
+                        }
+                    },
+                    {
+                        table: 'sn_glider_source_artifact_m2m'
+                        id: 'a6b1b8b94d864205a1d2cf2435bdb029'
+                        key: {
+                            application_file: '3e2ca4f04b104a759892c88968ebd34a'
+                            source_artifact: 'a1c9c0e91e3b4900a70cb087471b578a'
                         }
                     },
                     {

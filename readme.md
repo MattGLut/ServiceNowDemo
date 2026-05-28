@@ -4,7 +4,7 @@ ServiceNow scoped application (`x_2058901_demo`) with a **React + TypeScript** U
 
 See [docs/architecture.md](docs/architecture.md) for the full system design.
 
-**Current capability:** Submit tickets (`x_2058901_demo_ticket`) with title, description, and optional file attachments via the intake form on the UI page.
+**Current capability:** Portal home plus ticket submission (`x_2058901_demo_ticket`) with title, description, and optional file attachments.
 
 ## Build and deploy
 
@@ -18,9 +18,12 @@ Styling uses [Tailwind CSS v4](https://tailwindcss.com). `npm run build` compile
 
 For local UI work with hot reload on styles, run `npm run dev:css` in a second terminal alongside `npm run dev`.
 
-## UI page endpoint
+## UI page endpoints
 
-`x_2058901_demo_incident_manager.do` (unchanged to preserve existing bookmarks and CI)
+| Endpoint | Purpose |
+|----------|---------|
+| `x_2058901_demo_incident_manager.do` | **Home** — portal landing with link to submit |
+| `x_2058901_demo_ticket_submit.do` | **Submit** — ticket intake form |
 
 ## Instance cleanup after reset
 
@@ -28,7 +31,7 @@ Removing Fluent source from this repo **does not automatically delete** metadata
 
 1. Verify old demo tables `x_2058901_demo_incident_response` and `x_2058901_demo_incident_complaint` are unused.
 2. Retire or delete them in Application Manager / Table administration if safe.
-3. Confirm the UI page loads and shows the placeholder shell.
+3. Confirm the home page loads and the submit page shows the intake form.
 
 ## Scripts
 
