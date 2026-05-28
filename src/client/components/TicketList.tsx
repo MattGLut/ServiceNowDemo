@@ -87,6 +87,7 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
                                 <th>Title</th>
                                 <th>Status</th>
                                 <th className="portal-ticket-col-date">Submitted</th>
+                                <th className="portal-ticket-col-files">Files</th>
                                 <th className="portal-ticket-col-actions">
                                     <span className="sr-only">Actions</span>
                                 </th>
@@ -114,15 +115,17 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
                                             <span className="portal-ticket-date-mobile">
                                                 {formatSubmittedAt(ticket.submittedAt)}
                                             </span>
-                                            {attachmentLabel && (
-                                                <span className="portal-ticket-attachments">{attachmentLabel}</span>
-                                            )}
                                         </td>
                                         <td>
                                             <span className="portal-ticket-status">{ticket.statusLabel}</span>
                                         </td>
                                         <td className="portal-ticket-date portal-ticket-col-date">
                                             {formatSubmittedAt(ticket.submittedAt)}
+                                        </td>
+                                        <td className="portal-ticket-col-files">
+                                            <span className="portal-ticket-attachments">
+                                                {attachmentLabel ?? '—'}
+                                            </span>
                                         </td>
                                         <td className="portal-ticket-col-actions">
                                             <a

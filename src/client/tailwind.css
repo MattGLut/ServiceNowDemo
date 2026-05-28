@@ -206,7 +206,7 @@
     }
 
     .portal-ticket-table {
-        @apply w-full min-w-[20rem] border-collapse text-left text-sm sm:min-w-0;
+        @apply w-full table-fixed border-collapse text-left text-sm;
     }
 
     .portal-ticket-table thead {
@@ -225,12 +225,16 @@
         @apply hidden sm:table-cell;
     }
 
+    .portal-ticket-col-files {
+        @apply w-[28%] max-w-[12rem] min-w-[5.5rem];
+    }
+
     .portal-ticket-description {
         @apply mt-1 hidden text-xs text-rh-muted md:block;
     }
 
     .portal-ticket-attachments {
-        @apply mt-1 block truncate text-xs text-rh-muted;
+        @apply block truncate text-xs text-rh-muted;
     }
 
     .portal-ticket-row-highlight td {
