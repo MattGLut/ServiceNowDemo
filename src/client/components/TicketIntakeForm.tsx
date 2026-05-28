@@ -7,9 +7,10 @@ const MAX_FILES = 10
 
 type TicketIntakeFormProps = {
     onSubmit: (input: { title: string; description: string; files: File[] }) => Promise<TicketCreateResult>
+    embedded?: boolean
 }
 
-export default function TicketIntakeForm({ onSubmit }: TicketIntakeFormProps) {
+export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketIntakeFormProps) {
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
@@ -72,15 +73,20 @@ export default function TicketIntakeForm({ onSubmit }: TicketIntakeFormProps) {
         }
     }
 
+    const formClassName = embedded
+        ? 'portal-submit-form'
+        : 'mx-auto max-w-2xl rounded-xl border border-rh-border bg-rh-panel p-6'
+
     return (
-        <form
-            className="mx-auto max-w-2xl rounded-xl border border-rh-border bg-rh-panel p-6"
-            onSubmit={(event) => void handleSubmit(event)}
-        >
-            <h2 className="m-0 mb-1 text-lg font-semibold text-rh-text">Submit a ticket</h2>
-            <p className="mb-6 mt-0 text-sm text-rh-muted">
-                Provide details and optional supporting documents. Tickets start in Submitted status.
-            </p>
+        <form className={formClassName} onSubmit={(event) => void handleSubmit(event)}>
+            {!embedded && (
+                <>
+                    <h2 className="m-0 mb-1 text-lg font-semibold text-rh-text">Submit a ticket</h2>
+                    <p className="mb-6 mt-0 text-sm text-rh-muted">
+                        Provide details and optional supporting documents. Tickets start in Submitted status.
+                    </p>
+                </>
+            )}
 
             <div className="mb-5">
                 <label htmlFor="ticket_title" className={LABEL_CLASS}>

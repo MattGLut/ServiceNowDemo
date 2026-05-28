@@ -63,8 +63,92 @@
         @apply flex min-h-0 min-w-0 flex-1 flex-col;
     }
 
-    .portal-main-form {
-        @apply min-h-0 flex-1 overflow-y-auto p-5 max-md:p-3;
+    .portal-submit-view {
+        @apply flex min-h-0 flex-1 flex-col;
+    }
+
+    .portal-submit-panel {
+        @apply flex min-h-0 flex-1 flex-col overflow-hidden bg-rh-panel;
+    }
+
+    .portal-submit-panel-list {
+        @apply border-t border-rh-border;
+    }
+
+    .portal-submit-panel-inner {
+        @apply flex min-h-0 flex-1 flex-col overflow-y-auto p-5 max-md:p-3;
+    }
+
+    .portal-submit-panel-header {
+        @apply mb-4 flex shrink-0 items-center justify-between gap-3;
+    }
+
+    .portal-submit-panel-title {
+        @apply m-0 text-lg font-semibold text-rh-text;
+    }
+
+    .portal-submit-refresh {
+        @apply cursor-pointer rounded-full border border-rh-border bg-rh-elevated px-4 py-1.5 text-xs font-medium text-rh-text hover:bg-rh-border disabled:cursor-not-allowed disabled:opacity-60;
+    }
+
+    .portal-submit-form {
+        @apply mx-auto w-full max-w-2xl;
+    }
+
+    .portal-submit-banner {
+        @apply rounded-lg px-4 py-3 text-sm;
+    }
+
+    .portal-submit-banner-error {
+        @apply border border-red-500/40 bg-red-500/10 text-red-400;
+    }
+
+    .portal-submit-banner-success {
+        @apply border border-rh-green/40 bg-rh-green/10 text-rh-green;
+    }
+
+    .portal-submit-empty {
+        @apply m-0 px-1 text-sm text-rh-muted;
+    }
+
+    .portal-ticket-table-wrap {
+        @apply min-h-0 flex-1 overflow-auto;
+    }
+
+    .portal-ticket-table {
+        @apply w-full border-collapse text-left text-sm;
+    }
+
+    .portal-ticket-table thead {
+        @apply sticky top-0 bg-rh-panel;
+    }
+
+    .portal-ticket-table th {
+        @apply border-b border-rh-border px-3 py-2.5 text-xs font-semibold uppercase tracking-wide text-rh-muted;
+    }
+
+    .portal-ticket-table td {
+        @apply border-b border-rh-border/60 px-3 py-3 align-top text-rh-text;
+    }
+
+    .portal-ticket-row-highlight td {
+        @apply bg-rh-green/10;
+    }
+
+    .portal-ticket-title {
+        @apply block font-medium text-rh-text;
+    }
+
+    .portal-ticket-description {
+        @apply mt-1 block text-xs text-rh-muted;
+    }
+
+    .portal-ticket-status {
+        @apply inline-block rounded-full bg-rh-elevated px-2.5 py-1 text-xs font-medium text-rh-text;
+    }
+
+    .portal-ticket-date {
+        @apply whitespace-nowrap text-rh-muted;
     }
 
     .portal-home-hero {
