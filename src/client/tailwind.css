@@ -145,6 +145,10 @@
         @apply border border-rh-green/40 bg-rh-green/10 text-rh-green;
     }
 
+    .portal-submit-banner-close {
+        @apply shrink-0 cursor-pointer border-0 bg-transparent p-0 text-xl leading-none text-rh-green hover:text-rh-text;
+    }
+
     .portal-submit-empty {
         @apply m-0 px-1 text-center text-sm text-rh-muted;
     }

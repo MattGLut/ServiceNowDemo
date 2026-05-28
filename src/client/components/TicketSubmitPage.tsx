@@ -1,4 +1,6 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+
+const SUCCESS_BANNER_MS = 5000
 import PortalLayout from './PortalLayout'
 import TicketIntakeForm from './TicketIntakeForm'
 import TicketList from './TicketList'
@@ -11,6 +13,20 @@ export default function TicketSubmitPage() {
     const [lastSubmission, setLastSubmission] = useState<TicketCreateResult | null>(null)
     const [attachmentCount, setAttachmentCount] = useState(0)
     const [listRefreshKey, setListRefreshKey] = useState(0)
+
+    const dismissSuccess = useCallback(() => {
+        setLastSubmission(null)
+        setAttachmentCount(0)
+    }, [])
+
+    useEffect(() => {
+        if (!lastSubmission) {
+            return
+        }
+
+        const timeoutId = window.setTimeout(dismissSuccess, SUCCESS_BANNER_MS)
+        return () => window.clearTimeout(timeoutId)
+    }, [lastSubmission, dismissSuccess])
 
     const handleSubmit = async (input: { title: string; description: string; files: File[] }) => {
         setError(null)
@@ -69,18 +85,28 @@ export default function TicketSubmitPage() {
                         )}
 
                         {lastSubmission && (
-                            <div className="portal-submit-banner portal-submit-banner-success shrink-0">
-                                <p className="m-0 font-semibold">Ticket submitted</p>
-                                <p className="mb-0 mt-1 text-sm">
-                                    <span className="text-rh-text">{lastSubmission.title}</span>
-                                    {attachmentCount > 0 && (
-                                        <span className="text-rh-muted">
-                                            {' '}
-                                            — {attachmentCount} file
-                                            {attachmentCount === 1 ? '' : 's'} attached
-                                        </span>
-                                    )}
-                                </p>
+                            <div className="portal-submit-banner portal-submit-banner-success shrink-0 flex items-start justify-between gap-3">
+                                <div className="min-w-0">
+                                    <p className="m-0 font-semibold">Ticket submitted</p>
+                                    <p className="mb-0 mt-1 text-sm">
+                                        <span className="text-rh-text">{lastSubmission.title}</span>
+                                        {attachmentCount > 0 && (
+                                            <span className="text-rh-muted">
+                                                {' '}
+                                                — {attachmentCount} file
+                                                {attachmentCount === 1 ? '' : 's'} attached
+                                            </span>
+                                        )}
+                                    </p>
+                                </div>
+                                <button
+                                    type="button"
+                                    className="portal-submit-banner-close"
+                                    aria-label="Dismiss success message"
+                                    onClick={dismissSuccess}
+                                >
+                                    ×
+                                </button>
                             </div>
                         )}
 
