@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react'
 import PortalLayout from './PortalLayout'
 import TicketIntakeForm from './TicketIntakeForm'
 import { TicketService } from '../services/TicketService'
-import { PORTAL_HOME_PATH } from '../utils/portalPage'
 import type { TicketCreateResult } from '../types/ticket'
 
 export default function TicketSubmitPage() {
@@ -43,11 +42,8 @@ export default function TicketSubmitPage() {
     }
 
     return (
-        <PortalLayout
-            subtitle="Submit a ticket with optional supporting documents."
-            backHref={PORTAL_HOME_PATH}
-            backLabel="Back to home"
-        >
+        <PortalLayout>
+            <div className="portal-main-form">
             {error && (
                 <div className="mb-5 flex items-center justify-between rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-red-400">
                     <span>{error}</span>
@@ -78,6 +74,7 @@ export default function TicketSubmitPage() {
             )}
 
             <TicketIntakeForm onSubmit={handleSubmit} />
+            </div>
         </PortalLayout>
     )
 }
