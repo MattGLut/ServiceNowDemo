@@ -1,0 +1,9 @@
+{
+  "plugins": {
+    "servicenow/fluent": {
+      "enabled": true,
+      "gitUrl": "https://github.com/ServiceNow/sdk",
+      "gitRef": "master"
+    }
+  }
+}

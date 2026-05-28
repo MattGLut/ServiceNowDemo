@@ -43,13 +43,50 @@ declare global {
                         id: 'edb883bb86cb4ddf8c010c17b6e28540'
                         deleted: true
                     }
+                    'src_server_business-rules_ticket-set-submitter_server_js': {
+                        table: 'sys_module'
+                        id: '0a6c08e453224e78b96183c2e6a8aa29'
+                    }
                     'tailwind.generated.css': {
                         table: 'sys_ux_theme_asset'
                         id: 'e93a6c30b37f47e9983f6dc12f76f882'
                         deleted: true
                     }
+                    'ticket-create-acl': {
+                        table: 'sys_security_acl'
+                        id: '6878cb4b1d524380ac56969e01dcafca'
+                    }
+                    'ticket-delete-acl': {
+                        table: 'sys_security_acl'
+                        id: '0a54b0ba77e54161aa058d6de5509548'
+                    }
+                    'ticket-read-acl': {
+                        table: 'sys_security_acl'
+                        id: '63df6c7a6ca44a9286f61c6c862c9e6c'
+                    }
+                    'ticket-set-submitter-br': {
+                        table: 'sys_script'
+                        id: '45806afd788043439ec5cb63c2dcf797'
+                    }
+                    'ticket-write-acl': {
+                        table: 'sys_security_acl'
+                        id: 'a7944e1f902b49f1b6436409688f7492'
+                    }
                 }
                 composite: [
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '0250698448e14624b3d9d10ea7de0088'
+                        key: {
+                            sys_security_acl: 'a7944e1f902b49f1b6436409688f7492'
+                            sys_user_role: {
+                                id: '4c09d527185b43b0be26e620ba60281d'
+                                key: {
+                                    name: 'itil'
+                                }
+                            }
+                        }
+                    },
                     {
                         table: 'sys_security_acl_role'
                         id: '02d3cb20618d4806a79b0fb15e593d8c'
@@ -58,6 +95,19 @@ declare global {
                             sys_security_acl: 'fc0ae24a621d41f2af509629e5a87834'
                             sys_user_role: {
                                 id: 'acd5f572647a4a7ebe52e0886d66308f'
+                                key: {
+                                    name: 'itil'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '0302ee4e5f0243419c2b0aee1db4b18a'
+                        key: {
+                            sys_security_acl: '63df6c7a6ca44a9286f61c6c862c9e6c'
+                            sys_user_role: {
+                                id: '4d6083d3abd74d2f98786cd686d18c27'
                                 key: {
                                     name: 'itil'
                                 }
@@ -105,10 +155,76 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_dictionary'
+                        id: '1736dc70c48f4834a6223050f8d9b697'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'title'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '20f18cd7851d4051902c70e5bbbb8912'
+                        key: {
+                            sys_security_acl: '0a54b0ba77e54161aa058d6de5509548'
+                            sys_user_role: {
+                                id: '86c2c4d3a8d64b4aa2bb25811eae2b2b'
+                                key: {
+                                    name: 'itil'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: '220d4f05cf2343fa9cd4832733eb6b4e'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'status'
+                            value: 'submitted'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '226516f718ca4737a6cf9d9f9b8b0da0'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'NULL'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: '29dc9a653ffe4cef99ea29e7ba0d6fc6'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'status'
+                            value: 'di_processing'
+                        }
+                    },
+                    {
                         table: 'sys_ux_lib_asset'
                         id: '32b08f7b0bd949839a4b5e581692e760'
                         key: {
                             name: 'x_2058901_demo/main'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: '373346bdf82f48b3b2b9d0aea01c30bd'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'status'
+                            value: 'approved'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '3a610496b9fe446898aa43cf49216e9e'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'submitted_by'
+                            language: 'en'
                         }
                     },
                     {
@@ -138,6 +254,27 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '505c09be37c6499582eebb2547959ff4'
+                        key: {
+                            sys_security_acl: '6878cb4b1d524380ac56969e01dcafca'
+                            sys_user_role: {
+                                id: '575f59b4c2684e0dbd45dcb922b2c7f7'
+                                key: {
+                                    name: 'itil'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '54ee7defc02f4a65ba27ce2d0b17334a'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'status'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: '6032e7d333674222aa32a42429936489'
                         deleted: true
@@ -162,12 +299,54 @@ declare global {
                     },
                     {
                         table: 'sys_documentation'
+                        id: '6d3c2eecf1d24467a978ad50cba38e70'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'description'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: '7e47340324a2446388d99538dbea258c'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'status'
+                            value: 'picked_up'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '7e7f01a7c6d543a69fb67b60f494a374'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'title'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'ua_table_licensing_config'
+                        id: '8e8b80511ef94d9985ce4f8754c2513d'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
                         id: '93e5e1be2459422d8ebeb66f058adfff'
                         deleted: true
                         key: {
                             name: 'x_2058901_demo_incident_response'
                             element: 'responded_at'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '9be1ce0a32604c7b8644a99acbf2ac96'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'submitted_by'
                         }
                     },
                     {
@@ -186,6 +365,32 @@ declare global {
                         key: {
                             name: 'x_2058901_demo_incident_response'
                             element: 'incident'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: 'b02485d9442d471380eefca196cec11d'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'status'
+                            value: 'stp_queued'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'b6c6a9b58d104c7abecbcb927da433f6'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'description'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: 'bea67a8e39de46068a8611ae5762352b'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'status'
+                            value: 'ready_for_pickup'
                         }
                     },
                     {
@@ -214,6 +419,13 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_db_object'
+                        id: 'd5fcd53405b24cefbf2f449dd565b1c5'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                        }
+                    },
+                    {
                         table: 'sn_glider_source_artifact_m2m'
                         id: 'd72190c446ad4d288e96e3728e184cb0'
                         key: {
@@ -226,6 +438,24 @@ declare global {
                         id: 'd80e72df8380435fb911d316f3d0932c'
                         key: {
                             name: 'x_2058901_demo/main.js.map'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: 'd8eae10b0d434434b1c6d8bc7d943bf0'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'status'
+                            value: 'pending_review'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: 'dd7d74a7050b45d5a361471b92febc20'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'status'
+                            language: 'en'
                         }
                     },
                     {
@@ -256,6 +486,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_dictionary'
+                        id: 'f1394501569147abb30b7b4a03181a14'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'submitted_at'
+                        }
+                    },
+                    {
                         table: 'sys_security_acl_role'
                         id: 'f327b1aa137a4a7b946b2508d37958c1'
                         deleted: true
@@ -267,6 +505,31 @@ declare global {
                                     name: 'itil'
                                 }
                             }
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'f6d8da1e4e284779b22f157651f73235'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'NULL'
+                        }
+                    },
+                    {
+                        table: 'sys_choice_set'
+                        id: 'f795114ba67b46f4bca90db522dbd8f8'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'status'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: 'fc7d1d43b6e14c158a38f2fe94f08273'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'submitted_at'
+                            language: 'en'
                         }
                     },
                 ]
