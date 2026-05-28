@@ -120,7 +120,7 @@
 
     @media (min-width: 1024px) and (max-height: 720px) {
         .portal-submit-view {
-            grid-template-rows: minmax(0, 0.44fr) minmax(0, 0.56fr);
+            grid-template-rows: minmax(0, 0.52fr) minmax(0, 0.48fr);
         }
     }
 
@@ -153,19 +153,28 @@
     }
 
     .portal-submit-form {
-        @apply flex h-full min-h-0 w-full max-w-none flex-col lg:mx-auto lg:max-w-2xl;
+        @apply flex min-h-0 w-full max-w-none flex-col lg:mx-auto lg:max-w-2xl;
+    }
+
+    .portal-submit-panel-body .portal-submit-form {
+        @apply min-h-0 flex-1;
     }
 
     .portal-submit-form-fields {
-        @apply flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto sm:gap-3;
+        @apply flex min-h-0 flex-1 flex-col gap-2 overflow-hidden sm:gap-3;
+    }
+
+    .portal-submit-form-row {
+        @apply grid shrink-0 grid-cols-1 gap-3 min-[520px]:grid-cols-2 min-[520px]:items-start;
     }
 
     .portal-submit-field-description {
         @apply flex min-h-0 flex-1 flex-col;
     }
 
+    .portal-submit-field-stp,
     .portal-submit-field-attachments {
-        @apply shrink-0;
+        @apply min-w-0;
     }
 
     .portal-submit-form-actions {

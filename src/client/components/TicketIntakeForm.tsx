@@ -89,7 +89,57 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
     const fieldWrapClass = embedded ? 'portal-submit-field' : 'mb-5'
     const descriptionRows = embedded ? 2 : 5
 
-    const fields = (
+    const attachmentsField = (
+        <>
+            <label htmlFor="ticket_files" className={LABEL_CLASS}>
+                Attachments
+            </label>
+            <input
+                ref={fileInputRef}
+                id="ticket_files"
+                name="files"
+                type="file"
+                className="block w-full text-sm text-rh-muted file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-rh-elevated file:px-4 file:py-2 file:text-sm file:font-semibold file:text-rh-text hover:file:bg-rh-border"
+                multiple
+                onChange={handleFileChange}
+                disabled={submitting}
+            />
+            {!embedded && (
+                <p className="mt-2 text-xs text-rh-muted">
+                    Up to {MAX_FILES} files, {MAX_FILE_SIZE_MB} MB each. PDF and images recommended for
+                    document intelligence routing.
+                </p>
+            )}
+            {embedded && (
+                <p className="mt-1 text-xs text-rh-muted">
+                    Up to {MAX_FILES} files, {MAX_FILE_SIZE_MB} MB each.
+                </p>
+            )}
+            {fileError && <p className="mt-2 text-sm text-red-400">{fileError}</p>}
+            {selectedFiles.length > 0 && (
+                <ul className="mt-2 max-h-16 space-y-1 overflow-y-auto rounded-lg border border-rh-border bg-rh-bg px-3 py-2 text-sm text-rh-text">
+                    {selectedFiles.map((file) => (
+                        <li key={`${file.name}-${file.size}`}>
+                            {file.name}{' '}
+                            <span className="text-rh-muted">({formatFileSize(file.size)})</span>
+                        </li>
+                    ))}
+                </ul>
+            )}
+            {selectedFiles.length > 0 && (
+                <button
+                    type="button"
+                    className="mt-1 cursor-pointer border-0 bg-transparent text-sm text-rh-muted underline hover:text-rh-text"
+                    onClick={handleClearFiles}
+                    disabled={submitting}
+                >
+                    Clear files
+                </button>
+            )}
+        </>
+    )
+
+    const fields = embedded ? (
         <>
             <div className={`${fieldWrapClass} shrink-0`}>
                 <label htmlFor="ticket_title" className={LABEL_CLASS}>
@@ -109,7 +159,58 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
                 />
             </div>
 
+            <div className="portal-submit-field portal-submit-field-description">
+                <label htmlFor="ticket_description" className={LABEL_CLASS}>
+                    Description
+                </label>
+                <textarea
+                    id="ticket_description"
+                    name="description"
+                    className={`${INPUT_CLASS} portal-submit-textarea`}
+                    value={description}
+                    onChange={(event) => setDescription(event.target.value)}
+                    rows={descriptionRows}
+                    maxLength={8000}
+                    placeholder="Additional context for processing..."
+                    disabled={submitting}
+                />
+            </div>
+
+            <div className="portal-submit-form-row">
+                <div className="portal-submit-field portal-submit-field-stp">
+                    <ToggleSwitch
+                        id="ticket_stp_flag"
+                        name="stp_flag"
+                        label="Straight-through processing (STP)"
+                        checked={stpFlag}
+                        onChange={setStpFlag}
+                        disabled={submitting}
+                    />
+                </div>
+                <div className="portal-submit-field portal-submit-field-attachments">{attachmentsField}</div>
+            </div>
+        </>
+    ) : (
+        <>
             <div className={`${fieldWrapClass} shrink-0`}>
+                <label htmlFor="ticket_title" className={LABEL_CLASS}>
+                    Title *
+                </label>
+                <input
+                    id="ticket_title"
+                    name="title"
+                    type="text"
+                    className={INPUT_CLASS}
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
+                    required
+                    maxLength={200}
+                    placeholder="Brief summary of the request"
+                    disabled={submitting}
+                />
+            </div>
+
+            <div className={fieldWrapClass}>
                 <ToggleSwitch
                     id="ticket_stp_flag"
                     name="stp_flag"
@@ -120,20 +221,14 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
                 />
             </div>
 
-            <div
-                className={
-                    embedded
-                        ? 'portal-submit-field portal-submit-field-description'
-                        : fieldWrapClass
-                }
-            >
+            <div className={fieldWrapClass}>
                 <label htmlFor="ticket_description" className={LABEL_CLASS}>
                     Description
                 </label>
                 <textarea
                     id="ticket_description"
                     name="description"
-                    className={embedded ? `${INPUT_CLASS} portal-submit-textarea` : INPUT_CLASS}
+                    className={INPUT_CLASS}
                     value={description}
                     onChange={(event) => setDescription(event.target.value)}
                     rows={descriptionRows}
@@ -143,53 +238,7 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
                 />
             </div>
 
-            <div className={embedded ? 'portal-submit-field portal-submit-field-attachments' : 'mb-6'}>
-                <label htmlFor="ticket_files" className={LABEL_CLASS}>
-                    Attachments
-                </label>
-                <input
-                    ref={fileInputRef}
-                    id="ticket_files"
-                    name="files"
-                    type="file"
-                    className="block w-full text-sm text-rh-muted file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-rh-elevated file:px-4 file:py-2 file:text-sm file:font-semibold file:text-rh-text hover:file:bg-rh-border"
-                    multiple
-                    onChange={handleFileChange}
-                    disabled={submitting}
-                />
-                {!embedded && (
-                    <p className="mt-2 text-xs text-rh-muted">
-                        Up to {MAX_FILES} files, {MAX_FILE_SIZE_MB} MB each. PDF and images recommended for
-                        document intelligence routing.
-                    </p>
-                )}
-                {embedded && (
-                    <p className="mt-1 text-xs text-rh-muted">
-                        Up to {MAX_FILES} files, {MAX_FILE_SIZE_MB} MB each.
-                    </p>
-                )}
-                {fileError && <p className="mt-2 text-sm text-red-400">{fileError}</p>}
-                {selectedFiles.length > 0 && (
-                    <ul className="mt-2 max-h-20 space-y-1 overflow-y-auto rounded-lg border border-rh-border bg-rh-bg px-3 py-2 text-sm text-rh-text">
-                        {selectedFiles.map((file) => (
-                            <li key={`${file.name}-${file.size}`}>
-                                {file.name}{' '}
-                                <span className="text-rh-muted">({formatFileSize(file.size)})</span>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-                {selectedFiles.length > 0 && (
-                    <button
-                        type="button"
-                        className="mt-1 cursor-pointer border-0 bg-transparent text-sm text-rh-muted underline hover:text-rh-text"
-                        onClick={handleClearFiles}
-                        disabled={submitting}
-                    >
-                        Clear files
-                    </button>
-                )}
-            </div>
+            <div className="mb-6">{attachmentsField}</div>
         </>
     )
 
