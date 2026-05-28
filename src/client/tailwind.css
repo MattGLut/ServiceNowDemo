@@ -229,6 +229,10 @@
         @apply mt-1 hidden text-xs text-rh-muted md:block;
     }
 
+    .portal-ticket-attachments {
+        @apply mt-1 block truncate text-xs text-rh-muted;
+    }
+
     .portal-ticket-row-highlight td {
         @apply bg-rh-green/10;
     }

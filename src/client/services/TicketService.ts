@@ -197,6 +197,53 @@ export class TicketService {
         return mapTicketRow(result as Record<string, GlideFieldValue>)
     }
 
+    async listAttachmentNamesByTicket(ticketSysIds: string[]): Promise<Record<string, string[]>> {
+        if (ticketSysIds.length === 0) {
+            return {}
+        }
+
+        const params = new URLSearchParams({
+            sysparm_display_value: 'all',
+            sysparm_exclude_reference_link: 'true',
+            sysparm_fields: 'table_sys_id,file_name',
+            sysparm_query: `table_name=${this.tableName}^table_sys_idIN${ticketSysIds.join(',')}^ORDERBYDESCsys_created_on`,
+            sysparm_limit: '500',
+        })
+
+        const response = await fetch(`/api/now/table/sys_attachment?${params.toString()}`, {
+            headers: this.getHeaders(),
+        })
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}))
+            throw new Error(errorData.error?.message || `HTTP error ${response.status}`)
+        }
+
+        const { result } = await response.json()
+        if (!Array.isArray(result)) {
+            return {}
+        }
+
+        const namesByTicket: Record<string, string[]> = {}
+
+        for (const row of result) {
+            const ticketSysId = unwrapGlideValue(row.table_sys_id)
+            const fileName = unwrapGlideField(row.file_name) || 'attachment'
+
+            if (!ticketSysId) {
+                continue
+            }
+
+            if (!namesByTicket[ticketSysId]) {
+                namesByTicket[ticketSysId] = []
+            }
+
+            namesByTicket[ticketSysId].push(fileName)
+        }
+
+        return namesByTicket
+    }
+
     async listAttachments(ticketSysId: string): Promise<TicketAttachment[]> {
         const params = new URLSearchParams({
             sysparm_display_value: 'all',

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { TicketService } from '../services/TicketService'
-import { formatSubmittedAt } from '../utils/formatDateTime'
+import { formatAttachmentSummary, formatSubmittedAt } from '../utils/formatDateTime'
 import { ticketViewUrl } from '../utils/portalPage'
 import type { TicketRecord } from '../types/ticket'
 
@@ -13,6 +13,7 @@ type TicketListProps = {
 
 export default function TicketList({ ticketService, refreshKey, highlightSysId, headerStart }: TicketListProps) {
     const [tickets, setTickets] = useState<TicketRecord[]>([])
+    const [attachmentNamesByTicket, setAttachmentNamesByTicket] = useState<Record<string, string[]>>({})
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
 
@@ -23,6 +24,16 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
         try {
             const records = await ticketService.list()
             setTickets(records)
+
+            try {
+                const namesByTicket = await ticketService.listAttachmentNamesByTicket(
+                    records.map((record) => record.sysId)
+                )
+                setAttachmentNamesByTicket(namesByTicket)
+            } catch (attachmentErr) {
+                console.error(attachmentErr)
+                setAttachmentNamesByTicket({})
+            }
         } catch (err) {
             const message = err instanceof Error ? err.message : 'Unknown error'
             setError('Failed to load tickets: ' + message)
@@ -84,6 +95,9 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
                             <tbody>
                                 {tickets.map((ticket) => {
                                     const isHighlighted = highlightSysId === ticket.sysId
+                                    const attachmentLabel = formatAttachmentSummary(
+                                        attachmentNamesByTicket[ticket.sysId] ?? []
+                                    )
 
                                     return (
                                         <tr
@@ -100,6 +114,9 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
                                             <span className="portal-ticket-date-mobile">
                                                 {formatSubmittedAt(ticket.submittedAt)}
                                             </span>
+                                            {attachmentLabel && (
+                                                <span className="portal-ticket-attachments">{attachmentLabel}</span>
+                                            )}
                                         </td>
                                         <td>
                                             <span className="portal-ticket-status">{ticket.statusLabel}</span>

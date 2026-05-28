@@ -19,6 +19,18 @@ export function formatSubmittedAt(value: string): string {
     })
 }
 
+export function formatAttachmentSummary(fileNames: string[]): string | null {
+    if (fileNames.length === 0) {
+        return null
+    }
+
+    if (fileNames.length === 1) {
+        return fileNames[0]
+    }
+
+    return `${fileNames.length} files`
+}
+
 export function formatFileSize(bytes: number): string {
     if (bytes < 1024) {
         return `${bytes} B`
