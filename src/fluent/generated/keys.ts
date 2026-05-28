@@ -12,22 +12,27 @@ declare global {
                     'incident-response-create-acl': {
                         table: 'sys_security_acl'
                         id: 'fc0ae24a621d41f2af509629e5a87834'
+                        deleted: true
                     }
                     'incident-response-delete-acl': {
                         table: 'sys_security_acl'
                         id: 'a2ecb86fd39c4694a0a4a87de6397ec2'
+                        deleted: true
                     }
                     'incident-response-read-acl': {
                         table: 'sys_security_acl'
                         id: '431b98ae860d42b98486daa0e9525da8'
+                        deleted: true
                     }
                     'incident-response-set-responder-br': {
                         table: 'sys_script'
                         id: '550b49d98dfe425e9863964edbf3c702'
+                        deleted: true
                     }
                     'incident-response-write-acl': {
                         table: 'sys_security_acl'
                         id: 'c7ca26a801c84a90a018a91683e363d0'
+                        deleted: true
                     }
                     package_json: {
                         table: 'sys_module'
@@ -36,6 +41,7 @@ declare global {
                     'src_server_business-rules_incident-response-set-responder_server_js': {
                         table: 'sys_module'
                         id: 'edb883bb86cb4ddf8c010c17b6e28540'
+                        deleted: true
                     }
                     'tailwind.generated.css': {
                         table: 'sys_ux_theme_asset'
@@ -47,6 +53,7 @@ declare global {
                     {
                         table: 'sys_security_acl_role'
                         id: '02d3cb20618d4806a79b0fb15e593d8c'
+                        deleted: true
                         key: {
                             sys_security_acl: 'fc0ae24a621d41f2af509629e5a87834'
                             sys_user_role: {
@@ -60,6 +67,7 @@ declare global {
                     {
                         table: 'sys_documentation'
                         id: '03cb7835826943d7a3141ab88f03637a'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_incident_response'
                             element: 'response_text'
@@ -69,6 +77,7 @@ declare global {
                     {
                         table: 'sys_security_acl_role'
                         id: '05411b01ce4149e0bc9a314c9ee0f976'
+                        deleted: true
                         key: {
                             sys_security_acl: '431b98ae860d42b98486daa0e9525da8'
                             sys_user_role: {
@@ -82,6 +91,7 @@ declare global {
                     {
                         table: 'sys_dictionary'
                         id: '0a0a3f51a367461f98a22d589dabbef7'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_incident_response'
                             element: 'response_text'
@@ -112,6 +122,7 @@ declare global {
                     {
                         table: 'sys_documentation'
                         id: '44dc1b5455e2487293adf81de434df29'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_incident_response'
                             element: 'NULL'
@@ -121,6 +132,7 @@ declare global {
                     {
                         table: 'sys_db_object'
                         id: '48ec9aab3c774597898d23bfd79a647e'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_incident_response'
                         }
@@ -128,6 +140,7 @@ declare global {
                     {
                         table: 'sys_dictionary'
                         id: '6032e7d333674222aa32a42429936489'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_incident_response'
                             element: 'NULL'
@@ -136,6 +149,7 @@ declare global {
                     {
                         table: 'sys_security_acl_role'
                         id: '6660e9234e1e438aa684440f8ee84d36'
+                        deleted: true
                         key: {
                             sys_security_acl: 'c7ca26a801c84a90a018a91683e363d0'
                             sys_user_role: {
@@ -149,6 +163,7 @@ declare global {
                     {
                         table: 'sys_documentation'
                         id: '93e5e1be2459422d8ebeb66f058adfff'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_incident_response'
                             element: 'responded_at'
@@ -158,6 +173,7 @@ declare global {
                     {
                         table: 'sys_dictionary'
                         id: 'a85c9aaedaa74eb1837891c44ff6c390'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_incident_response'
                             element: 'responded_by'
@@ -166,6 +182,7 @@ declare global {
                     {
                         table: 'sys_dictionary'
                         id: 'aaa95c52ce4c437fbb1962bd79915d76'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_incident_response'
                             element: 'incident'
@@ -181,6 +198,7 @@ declare global {
                     {
                         table: 'ua_table_licensing_config'
                         id: 'c13a24931eb443e286d92385cdac0c44'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_incident_response'
                         }
@@ -188,6 +206,7 @@ declare global {
                     {
                         table: 'sys_documentation'
                         id: 'c809fee7af5a4f11b8410d8468e9f3f7'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_incident_response'
                             element: 'responded_by'
@@ -212,6 +231,7 @@ declare global {
                     {
                         table: 'sys_documentation'
                         id: 'dde6b1a592154a7aab487cbefa91469a'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_incident_response'
                             element: 'incident'
@@ -229,6 +249,7 @@ declare global {
                     {
                         table: 'sys_dictionary'
                         id: 'f11a0f01e6014a5784835037cff71b52'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_incident_response'
                             element: 'responded_at'
@@ -237,6 +258,7 @@ declare global {
                     {
                         table: 'sys_security_acl_role'
                         id: 'f327b1aa137a4a7b946b2508d37958c1'
+                        deleted: true
                         key: {
                             sys_security_acl: 'a2ecb86fd39c4694a0a4a87de6397ec2'
                             sys_user_role: {
