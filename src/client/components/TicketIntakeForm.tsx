@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { LABEL_CLASS, INPUT_CLASS, BTN_PRIMARY, BTN_CANCEL } from './formStyles'
+import ToggleSwitch from './ToggleSwitch'
 import type { TicketCreateResult } from '../types/ticket'
 
 const MAX_FILE_SIZE_MB = 25
@@ -109,21 +110,14 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
             </div>
 
             <div className={fieldWrapClass}>
-                <label htmlFor="ticket_stp_flag" className="portal-stp-toggle">
-                    <input
-                        id="ticket_stp_flag"
-                        name="stp_flag"
-                        type="checkbox"
-                        className="portal-stp-toggle-input"
-                        checked={stpFlag}
-                        onChange={(event) => setStpFlag(event.target.checked)}
-                        disabled={submitting}
-                    />
-                    <span className="portal-stp-toggle-track" aria-hidden="true">
-                        <span className="portal-stp-toggle-thumb" />
-                    </span>
-                    <span className="portal-stp-toggle-label">Straight-through processing (STP)</span>
-                </label>
+                <ToggleSwitch
+                    id="ticket_stp_flag"
+                    name="stp_flag"
+                    label="Straight-through processing (STP)"
+                    checked={stpFlag}
+                    onChange={setStpFlag}
+                    disabled={submitting}
+                />
             </div>
 
             <div
