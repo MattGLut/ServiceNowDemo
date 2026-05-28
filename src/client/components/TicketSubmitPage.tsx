@@ -39,7 +39,12 @@ export default function TicketSubmitPage() {
         return () => mediaQuery.removeEventListener('change', handleChange)
     }, [])
 
-    const handleSubmit = async (input: { title: string; description: string; files: File[] }) => {
+    const handleSubmit = async (input: {
+        title: string
+        description: string
+        stpFlag: boolean
+        files: File[]
+    }) => {
         setError(null)
         setLastSubmission(null)
 
@@ -49,6 +54,7 @@ export default function TicketSubmitPage() {
             result = await ticketService.create({
                 title: input.title,
                 description: input.description,
+                stpFlag: input.stpFlag,
             })
 
             if (input.files.length > 0) {

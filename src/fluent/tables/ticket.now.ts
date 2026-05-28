@@ -6,6 +6,7 @@ import {
     ReferenceColumn,
     DateTimeColumn,
     ChoiceColumn,
+    BooleanColumn,
 } from '@servicenow/sdk/core'
 
 export const x_2058901_demo_ticket = Table({
@@ -22,6 +23,10 @@ export const x_2058901_demo_ticket = Table({
         }),
         description: MultiLineTextColumn({
             label: 'Description',
+        }),
+        stp_flag: BooleanColumn({
+            label: 'STP',
+            default: false,
         }),
         status: ChoiceColumn({
             label: 'Status',

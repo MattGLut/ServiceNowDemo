@@ -6,7 +6,12 @@ const MAX_FILE_SIZE_MB = 25
 const MAX_FILES = 10
 
 type TicketIntakeFormProps = {
-    onSubmit: (input: { title: string; description: string; files: File[] }) => Promise<TicketCreateResult>
+    onSubmit: (input: {
+        title: string
+        description: string
+        stpFlag: boolean
+        files: File[]
+    }) => Promise<TicketCreateResult>
     embedded?: boolean
 }
 
@@ -15,6 +20,7 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+    const [stpFlag, setStpFlag] = useState(false)
     const [submitting, setSubmitting] = useState(false)
     const [fileError, setFileError] = useState<string | null>(null)
 
@@ -52,10 +58,12 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
             await onSubmit({
                 title,
                 description,
+                stpFlag,
                 files: selectedFiles,
             })
             setTitle('')
             setDescription('')
+            setStpFlag(false)
             setSelectedFiles([])
             if (fileInputRef.current) {
                 fileInputRef.current.value = ''
@@ -98,6 +106,25 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
                     placeholder="Brief summary of the request"
                     disabled={submitting}
                 />
+            </div>
+
+            <div className={fieldWrapClass}>
+                <label htmlFor="ticket_stp_flag" className="portal-stp-toggle">
+                    <input
+                        id="ticket_stp_flag"
+                        name="stp_flag"
+                        type="checkbox"
+                        className="portal-stp-toggle-input"
+                        checked={stpFlag}
+                        onChange={(event) => setStpFlag(event.target.checked)}
+                        disabled={submitting}
+                    />
+                    <span className="portal-stp-toggle-label">Straight-through processing (STP)</span>
+                </label>
+                <p className="portal-stp-toggle-hint">
+                    Enable when this ticket can be processed automatically without document intelligence
+                    review.
+                </p>
             </div>
 
             <div
@@ -181,6 +208,7 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
                 onClick={() => {
                     setTitle('')
                     setDescription('')
+                    setStpFlag(false)
                     handleClearFiles()
                 }}
                 disabled={submitting}

@@ -211,6 +211,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_dictionary'
+                        id: '2b18d7e0e00a458a86dd798c5509b1b4'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'stp_flag'
+                        }
+                    },
+                    {
                         table: 'sys_ux_lib_asset'
                         id: '32b08f7b0bd949839a4b5e581692e760'
                         key: {
@@ -294,6 +302,15 @@ declare global {
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'status'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '5de2525ea82b45e2a9dab8efea0e911c'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'stp_flag'
+                            language: 'en'
                         }
                     },
                     {

@@ -35,6 +35,11 @@ function unwrapGlideValue(field: GlideFieldValue): string {
     return field.value || field.display_value || ''
 }
 
+function unwrapGlideBoolean(field: GlideFieldValue): boolean {
+    const value = unwrapGlideValue(field).toLowerCase()
+    return value === 'true' || value === '1' || value === 'yes'
+}
+
 function mapTicketRow(row: Record<string, GlideFieldValue>): TicketRecord {
     const sysId = unwrapGlideValue(row.sys_id)
     const statusValue = unwrapGlideValue(row.status) as TicketStatus
@@ -44,6 +49,7 @@ function mapTicketRow(row: Record<string, GlideFieldValue>): TicketRecord {
         sysId,
         title: unwrapGlideField(row.title),
         description: unwrapGlideField(row.description),
+        stpFlag: unwrapGlideBoolean(row.stp_flag),
         status: statusValue,
         statusLabel,
         submittedAt: unwrapGlideField(row.submitted_at),
@@ -78,9 +84,10 @@ export class TicketService {
     }
 
     async create(input: TicketCreateInput): Promise<TicketCreateResult> {
-        const payload: Record<string, string> = {
+        const payload: Record<string, string | boolean> = {
             title: input.title.trim(),
             description: input.description.trim(),
+            stp_flag: input.stpFlag,
             status: 'submitted',
             submitted_at: formatGlideDateTime(new Date()),
         }
@@ -142,7 +149,7 @@ export class TicketService {
         const params = new URLSearchParams({
             sysparm_display_value: 'all',
             sysparm_exclude_reference_link: 'true',
-            sysparm_fields: 'sys_id,title,description,status,submitted_at,submitted_by',
+            sysparm_fields: 'sys_id,title,description,stp_flag,status,submitted_at,submitted_by',
             sysparm_limit: String(limit),
             sysparm_query: 'ORDERBYDESCsubmitted_at',
         })

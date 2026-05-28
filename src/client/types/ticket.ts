@@ -10,6 +10,7 @@ export type TicketStatus =
 export type TicketCreateInput = {
     title: string
     description: string
+    stpFlag: boolean
 }
 
 export type TicketCreateResult = {
@@ -21,6 +22,7 @@ export type TicketRecord = {
     sysId: string
     title: string
     description: string
+    stpFlag: boolean
     status: TicketStatus
     statusLabel: string
     submittedAt: string
