@@ -202,11 +202,54 @@
     }
 
     .portal-ticket-table-wrap {
-        @apply min-h-0 flex-1 overflow-auto -mx-1 px-1;
+        @apply min-h-0 flex-1 overflow-x-hidden overflow-y-auto;
     }
 
     .portal-ticket-table {
         @apply w-full table-fixed border-collapse text-left text-sm;
+    }
+
+  /* Column widths (table-layout: fixed + colgroup) — must sum to 100% per breakpoint */
+    .portal-ticket-table .portal-ticket-col-title {
+        width: 38%;
+    }
+
+    .portal-ticket-table .portal-ticket-col-status {
+        width: 16%;
+    }
+
+    .portal-ticket-table .portal-ticket-col-date {
+        width: 0;
+    }
+
+    .portal-ticket-table .portal-ticket-col-files {
+        width: 26%;
+    }
+
+    .portal-ticket-table .portal-ticket-col-actions {
+        width: 20%;
+    }
+
+    @media (min-width: 640px) {
+        .portal-ticket-table .portal-ticket-col-title {
+            width: 30%;
+        }
+
+        .portal-ticket-table .portal-ticket-col-status {
+            width: 12%;
+        }
+
+        .portal-ticket-table .portal-ticket-col-date {
+            width: 22%;
+        }
+
+        .portal-ticket-table .portal-ticket-col-files {
+            width: 20%;
+        }
+
+        .portal-ticket-table .portal-ticket-col-actions {
+            width: 16%;
+        }
     }
 
     .portal-ticket-table thead {
@@ -218,15 +261,11 @@
     }
 
     .portal-ticket-table td {
-        @apply border-b border-rh-border/60 px-2 py-2 align-top text-rh-text sm:px-3 sm:py-3;
+        @apply overflow-hidden border-b border-rh-border/60 px-2 py-2 align-top text-rh-text sm:px-3 sm:py-3;
     }
 
     .portal-ticket-col-date {
         @apply hidden sm:table-cell;
-    }
-
-    .portal-ticket-col-files {
-        @apply w-[28%] max-w-[12rem] min-w-[5.5rem];
     }
 
     .portal-ticket-description {
@@ -246,11 +285,11 @@
     }
 
     .portal-ticket-col-actions {
-        @apply w-0 whitespace-nowrap text-right;
+        @apply whitespace-nowrap text-right;
     }
 
     .portal-ticket-view-btn {
-        @apply inline-flex cursor-pointer items-center justify-center rounded-full border border-rh-border bg-rh-elevated px-3 py-1 text-xs font-medium text-rh-text no-underline hover:border-rh-green hover:text-rh-green;
+        @apply inline-flex max-w-full cursor-pointer items-center justify-center rounded-full border border-rh-border bg-rh-elevated px-2.5 py-1 text-xs font-medium text-rh-text no-underline hover:border-rh-green hover:text-rh-green sm:px-3;
     }
 
     .portal-immersive-shell {
@@ -350,11 +389,15 @@
     }
 
     .portal-ticket-status {
-        @apply inline-block rounded-full bg-rh-elevated px-2 py-0.5 text-xs font-medium text-rh-text sm:px-2.5 sm:py-1;
+        @apply inline-block max-w-full truncate rounded-full bg-rh-elevated px-2 py-0.5 text-xs font-medium text-rh-text sm:px-2.5 sm:py-1;
     }
 
     .portal-ticket-date {
-        @apply text-xs whitespace-nowrap text-rh-muted sm:text-sm;
+        @apply text-xs text-rh-muted sm:text-sm;
+    }
+
+    .portal-ticket-date-text {
+        @apply block truncate;
     }
 
     .portal-ticket-date-mobile {
