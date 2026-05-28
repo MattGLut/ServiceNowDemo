@@ -116,26 +116,6 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
                 </p>
             )}
             {fileError && <p className="mt-2 text-sm text-red-400">{fileError}</p>}
-            {selectedFiles.length > 0 && (
-                <ul className="mt-2 max-h-16 space-y-1 overflow-y-auto rounded-lg border border-rh-border bg-rh-bg px-3 py-2 text-sm text-rh-text">
-                    {selectedFiles.map((file) => (
-                        <li key={`${file.name}-${file.size}`}>
-                            {file.name}{' '}
-                            <span className="text-rh-muted">({formatFileSize(file.size)})</span>
-                        </li>
-                    ))}
-                </ul>
-            )}
-            {selectedFiles.length > 0 && (
-                <button
-                    type="button"
-                    className="mt-1 cursor-pointer border-0 bg-transparent text-sm text-rh-muted underline hover:text-rh-text"
-                    onClick={handleClearFiles}
-                    disabled={submitting}
-                >
-                    Clear files
-                </button>
-            )}
         </>
     )
 
@@ -287,14 +267,4 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
             )}
         </form>
     )
-}
-
-function formatFileSize(bytes: number): string {
-    if (bytes < 1024) {
-        return `${bytes} B`
-    }
-    if (bytes < 1024 * 1024) {
-        return `${(bytes / 1024).toFixed(1)} KB`
-    }
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
