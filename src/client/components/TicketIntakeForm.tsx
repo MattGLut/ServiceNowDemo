@@ -91,7 +91,7 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
 
     const fields = (
         <>
-            <div className={fieldWrapClass}>
+            <div className={`${fieldWrapClass} shrink-0`}>
                 <label htmlFor="ticket_title" className={LABEL_CLASS}>
                     Title *
                 </label>
@@ -109,7 +109,7 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
                 />
             </div>
 
-            <div className={fieldWrapClass}>
+            <div className={`${fieldWrapClass} shrink-0`}>
                 <ToggleSwitch
                     id="ticket_stp_flag"
                     name="stp_flag"
@@ -143,7 +143,7 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
                 />
             </div>
 
-            <div className={embedded ? 'portal-submit-field' : 'mb-6'}>
+            <div className={embedded ? 'portal-submit-field portal-submit-field-attachments' : 'mb-6'}>
                 <label htmlFor="ticket_files" className={LABEL_CLASS}>
                     Attachments
                 </label>
