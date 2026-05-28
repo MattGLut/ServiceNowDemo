@@ -1,30 +1,23 @@
 import React from 'react'
+import PortalSidebar from './PortalSidebar'
+import { PORTAL_HOME_PATH } from '../utils/portalPage'
 
 type PortalLayoutProps = {
-    subtitle: string
-    backHref?: string
-    backLabel?: string
     children: React.ReactNode
 }
 
-export default function PortalLayout({ subtitle, backHref, backLabel, children }: PortalLayoutProps) {
+export default function PortalLayout({ children }: PortalLayoutProps) {
     return (
-        <div className="min-h-screen w-full bg-rh-bg p-5 font-sans max-md:p-3">
-            <header className="mb-8 border-b border-rh-border pb-6">
-                {backHref && (
-                    <a
-                        href={backHref}
-                        className="mb-3 inline-block text-sm text-rh-muted no-underline hover:text-rh-text"
-                    >
-                        {backLabel ?? 'Back'}
-                    </a>
-                )}
-                <h1 className="m-0 text-2xl font-bold tracking-tight text-rh-text max-md:text-xl">
+        <div className="portal-shell font-sans">
+            <header className="portal-header">
+                <a href={PORTAL_HOME_PATH} className="portal-header-title">
                     Ticket Intake Portal
-                </h1>
-                <p className="mt-2 mb-0 text-sm text-rh-muted">{subtitle}</p>
+                </a>
             </header>
-            {children}
+            <div className="portal-body">
+                <PortalSidebar />
+                <main className="portal-main">{children}</main>
+            </div>
         </div>
     )
 }
