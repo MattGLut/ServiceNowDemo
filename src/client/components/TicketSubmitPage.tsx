@@ -3,6 +3,7 @@ import PortalLayout from './PortalLayout'
 import SubmitSuccessToast from './SubmitSuccessToast'
 import TicketIntakeForm from './TicketIntakeForm'
 import TicketList from './TicketList'
+import { isSubmitTicketsView } from '../utils/portalPage'
 import { TicketService } from '../services/TicketService'
 import type { TicketCreateResult } from '../types/ticket'
 
@@ -16,7 +17,9 @@ export default function TicketSubmitPage() {
     const [lastSubmission, setLastSubmission] = useState<TicketCreateResult | null>(null)
     const [attachmentCount, setAttachmentCount] = useState(0)
     const [listRefreshKey, setListRefreshKey] = useState(0)
-    const [mobileView, setMobileView] = useState<MobileSubmitView>('form')
+    const [mobileView, setMobileView] = useState<MobileSubmitView>(() =>
+        isSubmitTicketsView() ? 'tickets' : 'form'
+    )
 
     const dismissSuccess = useCallback(() => {
         setLastSubmission(null)

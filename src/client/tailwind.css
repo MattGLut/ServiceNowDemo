@@ -237,6 +237,106 @@
         @apply block font-medium text-rh-text;
     }
 
+    .portal-ticket-title-link {
+        @apply no-underline hover:text-rh-green;
+    }
+
+    .portal-immersive-shell {
+        @apply flex h-full w-full flex-col overflow-hidden bg-rh-bg;
+    }
+
+    .portal-immersive-header {
+        @apply flex shrink-0 flex-col gap-1 border-b border-rh-border px-4 py-3 sm:px-5 sm:py-4;
+    }
+
+    .portal-immersive-back {
+        @apply text-sm text-rh-muted no-underline hover:text-rh-green;
+    }
+
+    .portal-immersive-title {
+        @apply m-0 truncate text-lg font-bold tracking-tight text-rh-text sm:text-xl;
+    }
+
+    .portal-immersive-main {
+        @apply min-h-0 flex-1 overflow-y-auto;
+    }
+
+    .portal-detail-panel {
+        @apply mx-auto flex min-h-full w-full max-w-3xl flex-col gap-6 bg-rh-panel p-4 sm:p-6;
+    }
+
+    .portal-detail-header {
+        @apply flex flex-wrap items-center justify-between gap-2 border-b border-rh-border pb-4;
+    }
+
+    .portal-detail-sys-id {
+        @apply m-0;
+    }
+
+    .portal-detail-section {
+        @apply flex flex-col gap-3;
+    }
+
+    .portal-detail-section-title {
+        @apply m-0 text-sm font-semibold uppercase tracking-wide text-rh-muted;
+    }
+
+    .portal-detail-meta {
+        @apply m-0 grid gap-3 sm:grid-cols-2;
+    }
+
+    .portal-detail-meta-row dt {
+        @apply text-xs font-medium text-rh-muted;
+    }
+
+    .portal-detail-meta-row dd {
+        @apply m-0 mt-1 text-sm text-rh-text;
+    }
+
+    .portal-detail-label {
+        @apply m-0 mb-2 text-xs font-medium text-rh-muted;
+    }
+
+    .portal-detail-description {
+        @apply m-0 whitespace-pre-wrap text-sm text-rh-text;
+    }
+
+    .portal-detail-description-empty {
+        @apply text-rh-muted italic;
+    }
+
+    .portal-detail-attachments {
+        @apply m-0 list-none space-y-2 p-0;
+    }
+
+    .portal-detail-attachment-item {
+        @apply rounded-lg border border-rh-border bg-rh-bg;
+    }
+
+    .portal-detail-attachment-link {
+        @apply flex flex-col gap-1 px-4 py-3 no-underline hover:bg-rh-elevated;
+    }
+
+    .portal-detail-attachment-name {
+        @apply text-sm font-medium text-rh-green;
+    }
+
+    .portal-detail-attachment-meta {
+        @apply text-xs text-rh-muted;
+    }
+
+    .portal-detail-future {
+        @apply rounded-lg border border-dashed border-rh-border bg-rh-bg/50 p-4;
+    }
+
+    .portal-detail-message {
+        @apply m-0 text-sm text-rh-text;
+    }
+
+    .portal-detail-submessage {
+        @apply m-0 text-sm text-rh-muted;
+    }
+
     .portal-ticket-status {
         @apply inline-block rounded-full bg-rh-elevated px-2 py-0.5 text-xs font-medium text-rh-text sm:px-2.5 sm:py-1;
     }

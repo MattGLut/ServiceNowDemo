@@ -4,7 +4,7 @@ ServiceNow scoped application (`x_2058901_demo`) with a **React + TypeScript** U
 
 See [docs/architecture.md](docs/architecture.md) for the full system design.
 
-**Current capability:** Portal home plus ticket submission (`x_2058901_demo_ticket`) with title, description, and optional file attachments.
+**Current capability:** Portal home, ticket submission (`x_2058901_demo_ticket`), and immersive ticket detail view with attachment downloads.
 
 ## Build and deploy
 
@@ -23,7 +23,8 @@ For local UI work with hot reload on styles, run `npm run dev:css` in a second t
 | Endpoint | Purpose |
 |----------|---------|
 | `x_2058901_demo_incident_manager.do` | **Home** — portal landing with link to submit |
-| `x_2058901_demo_ticket_submit.do` | **Submit** — ticket intake form |
+| `x_2058901_demo_ticket_submit.do` | **Submit** — ticket intake form; `?view=tickets` opens the list on mobile |
+| `x_2058901_demo_ticket_view.do?sys_id={sys_id}` | **Detail** — full-page ticket view with attachment download links |
 
 ## Instance cleanup after reset
 
