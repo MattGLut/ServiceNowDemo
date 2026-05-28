@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { TicketService } from '../services/TicketService'
 import { formatAttachmentSummary, formatSubmittedAt } from '../utils/formatDateTime'
+import ProcessingPathBadge from './ProcessingPathBadge'
 import { ticketViewUrl } from '../utils/portalPage'
 import type { TicketRecord } from '../types/ticket'
 
@@ -85,6 +86,7 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
                             <colgroup>
                                 <col className="portal-ticket-col-title" />
                                 <col className="portal-ticket-col-status" />
+                                <col className="portal-ticket-col-path" />
                                 <col className="portal-ticket-col-date" />
                                 <col className="portal-ticket-col-files" />
                                 <col className="portal-ticket-col-actions" />
@@ -93,6 +95,7 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
                             <tr>
                                 <th scope="col">Title</th>
                                 <th scope="col">Status</th>
+                                <th scope="col">Path</th>
                                 <th scope="col" className="portal-ticket-col-date">
                                     Submitted
                                 </th>
@@ -127,6 +130,9 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
                                         </td>
                                         <td className="portal-ticket-cell-status">
                                             <span className="portal-ticket-status">{ticket.statusLabel}</span>
+                                        </td>
+                                        <td>
+                                            <ProcessingPathBadge stpFlag={ticket.stpFlag} />
                                         </td>
                                         <td className="portal-ticket-date portal-ticket-col-date">
                                             <span className="portal-ticket-date-text">

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ImmersiveLayout from './ImmersiveLayout'
+import ProcessingPathBadge from './ProcessingPathBadge'
 import { TicketService } from '../services/TicketService'
 import { formatFileSize, formatSubmittedAt } from '../utils/formatDateTime'
 import type { TicketAttachment, TicketRecord } from '../types/ticket'
@@ -87,7 +88,10 @@ export default function TicketDetailPage({ sysId }: TicketDetailPageProps) {
         <ImmersiveLayout title={ticket.title}>
             <div className="portal-detail-panel">
                 <div className="portal-detail-header">
-                    <span className="portal-ticket-status">{ticket.statusLabel}</span>
+                    <div className="flex flex-wrap items-center gap-2">
+                        <span className="portal-ticket-status">{ticket.statusLabel}</span>
+                        <ProcessingPathBadge stpFlag={ticket.stpFlag} />
+                    </div>
                     <p className="portal-detail-sys-id font-mono text-xs text-rh-muted">{ticket.sysId}</p>
                 </div>
 
@@ -101,6 +105,14 @@ export default function TicketDetailPage({ sysId }: TicketDetailPageProps) {
                         <div className="portal-detail-meta-row">
                             <dt>Submitted by</dt>
                             <dd>{ticket.submittedByDisplay || '—'}</dd>
+                        </div>
+                        <div className="portal-detail-meta-row">
+                            <dt>Processing path</dt>
+                            <dd>
+                                {ticket.stpFlag
+                                    ? 'Straight-through (STP)'
+                                    : 'Document intelligence (DI)'}
+                            </dd>
                         </div>
                     </dl>
                     <div className="portal-detail-description-block">
