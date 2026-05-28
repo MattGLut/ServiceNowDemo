@@ -82,13 +82,22 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
                 {tickets.length > 0 && (
                     <div className="portal-ticket-table-wrap">
                         <table className="portal-ticket-table">
+                            <colgroup>
+                                <col className="portal-ticket-col-title" />
+                                <col className="portal-ticket-col-status" />
+                                <col className="portal-ticket-col-date" />
+                                <col className="portal-ticket-col-files" />
+                                <col className="portal-ticket-col-actions" />
+                            </colgroup>
                             <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Status</th>
-                                <th className="portal-ticket-col-date">Submitted</th>
-                                <th className="portal-ticket-col-files">Files</th>
-                                <th className="portal-ticket-col-actions">
+                                <th scope="col">Title</th>
+                                <th scope="col">Status</th>
+                                <th scope="col" className="portal-ticket-col-date">
+                                    Submitted
+                                </th>
+                                <th scope="col">Files</th>
+                                <th scope="col" className="portal-ticket-col-actions">
                                     <span className="sr-only">Actions</span>
                                 </th>
                             </tr>
@@ -105,7 +114,7 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
                                             key={ticket.sysId}
                                             className={isHighlighted ? 'portal-ticket-row-highlight' : undefined}
                                         >
-                                        <td>
+                                        <td className="portal-ticket-cell-title">
                                             <span className="portal-ticket-title">{ticket.title}</span>
                                             {ticket.description && (
                                                 <span className="portal-ticket-description">
@@ -116,11 +125,13 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
                                                 {formatSubmittedAt(ticket.submittedAt)}
                                             </span>
                                         </td>
-                                        <td>
+                                        <td className="portal-ticket-cell-status">
                                             <span className="portal-ticket-status">{ticket.statusLabel}</span>
                                         </td>
                                         <td className="portal-ticket-date portal-ticket-col-date">
-                                            {formatSubmittedAt(ticket.submittedAt)}
+                                            <span className="portal-ticket-date-text">
+                                                {formatSubmittedAt(ticket.submittedAt)}
+                                            </span>
                                         </td>
                                         <td className="portal-ticket-col-files">
                                             <span className="portal-ticket-attachments">
