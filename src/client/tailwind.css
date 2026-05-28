@@ -28,15 +28,51 @@
     }
 
     .portal-header {
-        @apply relative shrink-0 border-b border-rh-border px-4 py-3 sm:px-5 sm:py-4;
+        @apply shrink-0 border-b border-rh-border px-4 py-3 sm:px-5 sm:py-4;
     }
 
     .portal-toast-region {
-        @apply pointer-events-none absolute inset-x-3 top-full z-50 mt-2 flex justify-center sm:inset-x-5;
+        @apply pointer-events-none absolute inset-x-0 top-3 z-50 flex justify-center px-4 sm:top-4;
     }
 
     .portal-toast {
-        @apply pointer-events-auto w-full max-w-md shadow-lg;
+        @apply pointer-events-auto w-full max-w-md;
+    }
+
+    .portal-toast-banner {
+        @apply flex items-start justify-between gap-3 rounded-lg border border-rh-green bg-rh-elevated px-4 py-3 text-sm shadow-xl;
+    }
+
+    .portal-toast-enter {
+        animation: portal-toast-in 0.3s ease-out forwards;
+    }
+
+    .portal-toast-exit {
+        animation: portal-toast-out 0.4s ease-in forwards;
+    }
+
+    @keyframes portal-toast-in {
+        from {
+            opacity: 0;
+            transform: translateY(-0.5rem);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes portal-toast-out {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        to {
+            opacity: 0;
+            transform: translateY(-0.5rem);
+        }
     }
 
     .portal-header-title {
@@ -72,7 +108,7 @@
     }
 
     .portal-submit-view {
-        @apply grid min-h-0 flex-1 overflow-hidden;
+        @apply relative grid min-h-0 flex-1 overflow-hidden;
         grid-template-rows: minmax(0, 1fr);
     }
 
