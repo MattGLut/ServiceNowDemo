@@ -28,7 +28,15 @@
     }
 
     .portal-header {
-        @apply shrink-0 border-b border-rh-border px-4 py-3 sm:px-5 sm:py-4;
+        @apply relative shrink-0 border-b border-rh-border px-4 py-3 sm:px-5 sm:py-4;
+    }
+
+    .portal-toast-region {
+        @apply pointer-events-none absolute inset-x-3 top-full z-50 mt-2 flex justify-center sm:inset-x-5;
+    }
+
+    .portal-toast {
+        @apply pointer-events-auto w-full max-w-md shadow-lg;
     }
 
     .portal-header-title {

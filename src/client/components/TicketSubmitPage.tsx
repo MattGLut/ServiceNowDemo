@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PortalLayout from './PortalLayout'
+import SubmitSuccessToast from './SubmitSuccessToast'
 import TicketIntakeForm from './TicketIntakeForm'
 import TicketList from './TicketList'
 import { TicketService } from '../services/TicketService'
@@ -89,7 +90,17 @@ export default function TicketSubmitPage() {
         (mobileView === 'form' ? 'hidden lg:flex' : 'flex')
 
     return (
-        <PortalLayout>
+        <PortalLayout
+            toast={
+                lastSubmission ? (
+                    <SubmitSuccessToast
+                        submission={lastSubmission}
+                        attachmentCount={attachmentCount}
+                        onDismiss={dismissSuccess}
+                    />
+                ) : null
+            }
+        >
             <div className="portal-submit-view">
                 <section className={formPanelClassName}>
                     <div className="portal-submit-panel-header">
@@ -112,32 +123,6 @@ export default function TicketSubmitPage() {
                                     onClick={() => setError(null)}
                                 >
                                     Dismiss
-                                </button>
-                            </div>
-                        )}
-
-                        {lastSubmission && (
-                            <div className="portal-submit-banner portal-submit-banner-success shrink-0 flex items-start justify-between gap-3">
-                                <div className="min-w-0">
-                                    <p className="m-0 font-semibold">Ticket submitted</p>
-                                    <p className="mb-0 mt-1 text-sm">
-                                        <span className="text-rh-text">{lastSubmission.title}</span>
-                                        {attachmentCount > 0 && (
-                                            <span className="text-rh-muted">
-                                                {' '}
-                                                — {attachmentCount} file
-                                                {attachmentCount === 1 ? '' : 's'} attached
-                                            </span>
-                                        )}
-                                    </p>
-                                </div>
-                                <button
-                                    type="button"
-                                    className="portal-submit-banner-close"
-                                    aria-label="Dismiss success message"
-                                    onClick={dismissSuccess}
-                                >
-                                    ×
                                 </button>
                             </div>
                         )}
