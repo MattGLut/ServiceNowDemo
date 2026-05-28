@@ -76,6 +76,9 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
                                 <th>Title</th>
                                 <th>Status</th>
                                 <th className="portal-ticket-col-date">Submitted</th>
+                                <th className="portal-ticket-col-actions">
+                                    <span className="sr-only">Actions</span>
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -88,12 +91,7 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
                                             className={isHighlighted ? 'portal-ticket-row-highlight' : undefined}
                                         >
                                         <td>
-                                            <a
-                                                href={ticketViewUrl(ticket.sysId)}
-                                                className="portal-ticket-title portal-ticket-title-link"
-                                            >
-                                                {ticket.title}
-                                            </a>
+                                            <span className="portal-ticket-title">{ticket.title}</span>
                                             {ticket.description && (
                                                 <span className="portal-ticket-description">
                                                     {truncateDescription(ticket.description)}
@@ -108,6 +106,14 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
                                         </td>
                                         <td className="portal-ticket-date portal-ticket-col-date">
                                             {formatSubmittedAt(ticket.submittedAt)}
+                                        </td>
+                                        <td className="portal-ticket-col-actions">
+                                            <a
+                                                href={ticketViewUrl(ticket.sysId)}
+                                                className="portal-ticket-view-btn"
+                                            >
+                                                View
+                                            </a>
                                         </td>
                                         </tr>
                                     )

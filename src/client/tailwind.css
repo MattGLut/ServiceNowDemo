@@ -237,8 +237,12 @@
         @apply block font-medium text-rh-text;
     }
 
-    .portal-ticket-title-link {
-        @apply no-underline hover:text-rh-green;
+    .portal-ticket-col-actions {
+        @apply w-0 whitespace-nowrap text-right;
+    }
+
+    .portal-ticket-view-btn {
+        @apply inline-flex cursor-pointer items-center justify-center rounded-full border border-rh-border bg-rh-elevated px-3 py-1 text-xs font-medium text-rh-text no-underline hover:border-rh-green hover:text-rh-green;
     }
 
     .portal-immersive-shell {
