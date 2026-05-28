@@ -28,35 +28,35 @@
     }
 
     .portal-header {
-        @apply shrink-0 border-b border-rh-border px-5 py-4 max-md:px-3;
+        @apply shrink-0 border-b border-rh-border px-4 py-3 sm:px-5 sm:py-4;
     }
 
     .portal-header-title {
-        @apply m-0 text-2xl font-bold tracking-tight text-rh-text no-underline hover:text-rh-green max-md:text-xl;
+        @apply m-0 text-lg font-bold tracking-tight text-rh-text no-underline hover:text-rh-green sm:text-xl lg:text-2xl;
     }
 
     .portal-body {
-        @apply flex min-h-0 flex-1;
+        @apply flex min-h-0 flex-1 flex-col lg:flex-row;
     }
 
     .portal-sidebar {
-        @apply flex w-56 shrink-0 flex-col border-r border-rh-border bg-rh-bg px-3 py-5 max-md:w-44;
+        @apply flex shrink-0 flex-row items-center gap-2 overflow-x-auto border-b border-rh-border bg-rh-bg px-3 py-2.5 lg:w-56 lg:flex-col lg:items-stretch lg:gap-0 lg:overflow-x-visible lg:border-r lg:border-b-0 lg:px-3 lg:py-5;
     }
 
     .portal-sidebar-label {
-        @apply m-0 mb-3 px-3 text-xs font-semibold uppercase tracking-wide text-rh-muted;
+        @apply m-0 shrink-0 px-2 text-xs font-semibold uppercase tracking-wide text-rh-muted lg:mb-3 lg:px-3;
     }
 
     .portal-sidebar-list {
-        @apply m-0 list-none p-0;
+        @apply m-0 flex list-none gap-1 p-0 lg:block lg:gap-0;
     }
 
     .portal-sidebar-link {
-        @apply block rounded-lg px-3 py-2.5 text-sm text-rh-text no-underline hover:bg-rh-panel;
+        @apply block shrink-0 rounded-lg px-3 py-2 text-sm whitespace-nowrap text-rh-text no-underline hover:bg-rh-panel lg:py-2.5;
     }
 
     .portal-sidebar-link-active {
-        @apply block rounded-lg bg-rh-panel px-3 py-2.5 text-sm font-semibold text-rh-green no-underline;
+        @apply block shrink-0 rounded-lg bg-rh-panel px-3 py-2 text-sm font-semibold whitespace-nowrap text-rh-green no-underline lg:py-2.5;
     }
 
     .portal-main {
@@ -64,7 +64,20 @@
     }
 
     .portal-submit-view {
-        @apply grid min-h-0 flex-1 grid-rows-2 overflow-hidden;
+        @apply grid min-h-0 flex-1 overflow-hidden;
+        grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    @media (max-height: 720px) {
+        .portal-submit-view {
+            grid-template-rows: minmax(0, 0.44fr) minmax(0, 0.56fr);
+        }
+    }
+
+    @media (max-width: 640px) {
+        .portal-submit-view {
+            grid-template-rows: minmax(0, 0.48fr) minmax(0, 0.52fr);
+        }
     }
 
     .portal-submit-panel {
@@ -76,47 +89,52 @@
     }
 
     .portal-submit-panel-header {
-        @apply flex shrink-0 items-center justify-between gap-3 border-b border-rh-border/60 px-5 py-3 max-md:px-3;
+        @apply flex shrink-0 items-center justify-between gap-2 border-b border-rh-border/60 px-3 py-2 sm:gap-3 sm:px-5 sm:py-3;
     }
 
     .portal-submit-panel-body {
-        @apply flex min-h-0 flex-1 flex-col overflow-hidden px-5 py-3 max-md:px-3;
-    }
-
-    .portal-submit-panel-scroll {
-        @apply min-h-0 flex-1 overflow-y-auto;
+        @apply flex min-h-0 flex-1 flex-col gap-2 overflow-hidden px-3 py-2 sm:gap-3 sm:px-5 sm:py-3;
     }
 
     .portal-submit-panel-title {
-        @apply m-0 text-lg font-semibold text-rh-text;
+        @apply m-0 text-base font-semibold text-rh-text sm:text-lg;
     }
 
     .portal-submit-refresh {
-        @apply cursor-pointer rounded-full border border-rh-border bg-rh-elevated px-4 py-1.5 text-xs font-medium text-rh-text hover:bg-rh-border disabled:cursor-not-allowed disabled:opacity-60;
+        @apply shrink-0 cursor-pointer rounded-full border border-rh-border bg-rh-elevated px-3 py-1 text-xs font-medium text-rh-text hover:bg-rh-border disabled:cursor-not-allowed disabled:opacity-60 sm:px-4 sm:py-1.5;
     }
 
     .portal-submit-form {
-        @apply mx-auto flex h-full min-h-0 w-full max-w-2xl flex-col;
+        @apply flex h-full min-h-0 w-full max-w-none flex-col lg:mx-auto lg:max-w-2xl;
     }
 
     .portal-submit-form-fields {
-        @apply min-h-0 flex-1 space-y-3 overflow-y-auto pr-1;
+        @apply grid min-h-0 flex-1 gap-2 overflow-hidden sm:gap-3;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+
+    .portal-submit-field-description {
+        @apply flex min-h-0 flex-col;
     }
 
     .portal-submit-form-actions {
-        @apply flex shrink-0 justify-end gap-2.5 pt-3;
+        @apply flex shrink-0 flex-wrap justify-end gap-2 pt-2 sm:gap-2.5 sm:pt-3;
+    }
+
+    .portal-submit-form-actions > button {
+        @apply max-sm:w-full max-sm:justify-center;
     }
 
     .portal-submit-field {
-        @apply mb-0;
+        @apply mb-0 min-w-0;
     }
 
     .portal-submit-textarea {
-        @apply min-h-[4.5rem] resize-y;
+        @apply min-h-0 flex-1 resize-none;
     }
 
     .portal-submit-banner {
-        @apply rounded-lg px-4 py-3 text-sm;
+        @apply rounded-lg px-3 py-2 text-sm sm:px-4 sm:py-3;
     }
 
     .portal-submit-banner-error {
@@ -128,27 +146,35 @@
     }
 
     .portal-submit-empty {
-        @apply m-0 px-1 text-sm text-rh-muted;
+        @apply m-0 px-1 text-center text-sm text-rh-muted;
     }
 
     .portal-ticket-table-wrap {
-        @apply min-h-0 flex-1 overflow-auto;
+        @apply min-h-0 flex-1 overflow-auto -mx-1 px-1;
     }
 
     .portal-ticket-table {
-        @apply w-full border-collapse text-left text-sm;
+        @apply w-full min-w-[20rem] border-collapse text-left text-sm sm:min-w-0;
     }
 
     .portal-ticket-table thead {
-        @apply sticky top-0 bg-rh-panel;
+        @apply sticky top-0 z-10 bg-rh-panel;
     }
 
     .portal-ticket-table th {
-        @apply border-b border-rh-border px-3 py-2.5 text-xs font-semibold uppercase tracking-wide text-rh-muted;
+        @apply border-b border-rh-border px-2 py-2 text-xs font-semibold uppercase tracking-wide text-rh-muted sm:px-3 sm:py-2.5;
     }
 
     .portal-ticket-table td {
-        @apply border-b border-rh-border/60 px-3 py-3 align-top text-rh-text;
+        @apply border-b border-rh-border/60 px-2 py-2 align-top text-rh-text sm:px-3 sm:py-3;
+    }
+
+    .portal-ticket-col-date {
+        @apply hidden sm:table-cell;
+    }
+
+    .portal-ticket-description {
+        @apply mt-1 hidden text-xs text-rh-muted md:block;
     }
 
     .portal-ticket-row-highlight td {
@@ -159,16 +185,16 @@
         @apply block font-medium text-rh-text;
     }
 
-    .portal-ticket-description {
-        @apply mt-1 block text-xs text-rh-muted;
-    }
-
     .portal-ticket-status {
-        @apply inline-block rounded-full bg-rh-elevated px-2.5 py-1 text-xs font-medium text-rh-text;
+        @apply inline-block rounded-full bg-rh-elevated px-2 py-0.5 text-xs font-medium text-rh-text sm:px-2.5 sm:py-1;
     }
 
     .portal-ticket-date {
-        @apply whitespace-nowrap text-rh-muted;
+        @apply text-xs whitespace-nowrap text-rh-muted sm:text-sm;
+    }
+
+    .portal-ticket-date-mobile {
+        @apply mt-1 block text-xs text-rh-muted sm:hidden;
     }
 
     .portal-home-hero {
@@ -176,6 +202,6 @@
     }
 
     .portal-home-hero-content {
-        @apply m-auto max-w-xl px-8 py-12 text-center;
+        @apply m-auto max-w-xl px-4 py-8 text-center sm:px-8 sm:py-12;
     }
 }

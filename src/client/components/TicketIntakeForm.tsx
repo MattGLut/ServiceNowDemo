@@ -100,7 +100,13 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
                 />
             </div>
 
-            <div className={fieldWrapClass}>
+            <div
+                className={
+                    embedded
+                        ? 'portal-submit-field portal-submit-field-description'
+                        : fieldWrapClass
+                }
+            >
                 <label htmlFor="ticket_description" className={LABEL_CLASS}>
                     Description
                 </label>

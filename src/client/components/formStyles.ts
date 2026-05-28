@@ -17,7 +17,7 @@ export const INPUT_CLASS =
     'w-full rounded-lg border border-rh-border bg-rh-bg px-3 py-2.5 text-sm text-rh-text placeholder:text-rh-muted focus:border-rh-green focus:outline-none focus:ring-2 focus:ring-rh-green/30'
 
 export const BTN_CANCEL =
-    'cursor-pointer rounded-full border border-rh-border bg-rh-elevated px-5 py-2.5 text-sm font-medium text-rh-text hover:bg-rh-border'
+    'inline-flex cursor-pointer items-center justify-center rounded-full border border-rh-border bg-rh-elevated px-5 py-2.5 text-sm font-medium text-rh-text hover:bg-rh-border'
 
 export const BTN_PRIMARY =
-    'cursor-pointer rounded-full border-0 bg-rh-green px-5 py-2.5 text-sm font-semibold text-black hover:bg-rh-green-hover'
+    'inline-flex cursor-pointer items-center justify-center rounded-full border-0 bg-rh-green px-5 py-2.5 text-sm font-semibold text-black hover:bg-rh-green-hover'
