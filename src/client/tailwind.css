@@ -65,24 +65,12 @@
 
     .portal-submit-view {
         @apply grid min-h-0 flex-1 overflow-hidden;
-        grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr);
     }
 
-    @media (max-width: 1023px) {
+    @media (min-width: 1024px) {
         .portal-submit-view {
-            grid-template-rows: minmax(0, 1fr);
-        }
-
-        .portal-submit-panel-list {
-            display: none;
-        }
-
-        .portal-submit-view--show-tickets .portal-submit-panel-form {
-            display: none;
-        }
-
-        .portal-submit-view--show-tickets .portal-submit-panel-list {
-            display: flex;
+            grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
         }
     }
 
@@ -93,7 +81,7 @@
     }
 
     .portal-submit-panel {
-        @apply flex min-h-0 flex-col overflow-hidden bg-rh-panel;
+        @apply min-h-0 flex-col overflow-hidden bg-rh-panel;
     }
 
     .portal-submit-panel-list {
