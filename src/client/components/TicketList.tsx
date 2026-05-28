@@ -34,7 +34,7 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId }
     }, [loadTickets, refreshKey])
 
     return (
-        <div className="portal-submit-panel-inner">
+        <>
             <div className="portal-submit-panel-header">
                 <h2 className="portal-submit-panel-title">Submitted tickets</h2>
                 <button
@@ -47,59 +47,63 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId }
                 </button>
             </div>
 
-            {error && (
-                <div className="portal-submit-banner portal-submit-banner-error">{error}</div>
-            )}
+            <div className="portal-submit-panel-body">
+                {error && (
+                    <div className="portal-submit-banner portal-submit-banner-error mb-3 shrink-0">
+                        {error}
+                    </div>
+                )}
 
-            {!error && loading && tickets.length === 0 && (
-                <p className="portal-submit-empty">Loading tickets…</p>
-            )}
+                {!error && loading && tickets.length === 0 && (
+                    <p className="portal-submit-empty m-auto">Loading tickets…</p>
+                )}
 
-            {!error && !loading && tickets.length === 0 && (
-                <p className="portal-submit-empty">No tickets submitted yet.</p>
-            )}
+                {!error && !loading && tickets.length === 0 && (
+                    <p className="portal-submit-empty m-auto">No tickets submitted yet.</p>
+                )}
 
-            {tickets.length > 0 && (
-                <div className="portal-ticket-table-wrap">
-                    <table className="portal-ticket-table">
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Status</th>
-                                <th>Submitted</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {tickets.map((ticket) => {
-                                const isHighlighted = highlightSysId === ticket.sysId
+                {tickets.length > 0 && (
+                    <div className="portal-ticket-table-wrap">
+                        <table className="portal-ticket-table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                    <th>Submitted</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {tickets.map((ticket) => {
+                                    const isHighlighted = highlightSysId === ticket.sysId
 
-                                return (
-                                    <tr
-                                        key={ticket.sysId}
-                                        className={isHighlighted ? 'portal-ticket-row-highlight' : undefined}
-                                    >
-                                        <td>
-                                            <span className="portal-ticket-title">{ticket.title}</span>
-                                            {ticket.description && (
-                                                <span className="portal-ticket-description">
-                                                    {truncateDescription(ticket.description)}
-                                                </span>
-                                            )}
-                                        </td>
-                                        <td>
-                                            <span className="portal-ticket-status">{ticket.statusLabel}</span>
-                                        </td>
-                                        <td className="portal-ticket-date">
-                                            {formatSubmittedAt(ticket.submittedAt)}
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            )}
-        </div>
+                                    return (
+                                        <tr
+                                            key={ticket.sysId}
+                                            className={isHighlighted ? 'portal-ticket-row-highlight' : undefined}
+                                        >
+                                            <td>
+                                                <span className="portal-ticket-title">{ticket.title}</span>
+                                                {ticket.description && (
+                                                    <span className="portal-ticket-description">
+                                                        {truncateDescription(ticket.description)}
+                                                    </span>
+                                                )}
+                                            </td>
+                                            <td>
+                                                <span className="portal-ticket-status">{ticket.statusLabel}</span>
+                                            </td>
+                                            <td className="portal-ticket-date">
+                                                {formatSubmittedAt(ticket.submittedAt)}
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+        </>
     )
 }
 
