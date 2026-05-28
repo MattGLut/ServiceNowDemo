@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-
-const SUCCESS_BANNER_MS = 5000
 import PortalLayout from './PortalLayout'
 import TicketIntakeForm from './TicketIntakeForm'
 import TicketList from './TicketList'
 import { TicketService } from '../services/TicketService'
 import type { TicketCreateResult } from '../types/ticket'
+
+const SUCCESS_BANNER_MS = 5000
+const DESKTOP_BREAKPOINT_PX = 1024
+
+type MobileSubmitView = 'form' | 'tickets'
 
 export default function TicketSubmitPage() {
     const ticketService = useMemo(() => new TicketService(), [])
@@ -13,6 +16,7 @@ export default function TicketSubmitPage() {
     const [lastSubmission, setLastSubmission] = useState<TicketCreateResult | null>(null)
     const [attachmentCount, setAttachmentCount] = useState(0)
     const [listRefreshKey, setListRefreshKey] = useState(0)
+    const [mobileView, setMobileView] = useState<MobileSubmitView>('form')
 
     const dismissSuccess = useCallback(() => {
         setLastSubmission(null)
@@ -27,6 +31,19 @@ export default function TicketSubmitPage() {
         const timeoutId = window.setTimeout(dismissSuccess, SUCCESS_BANNER_MS)
         return () => window.clearTimeout(timeoutId)
     }, [lastSubmission, dismissSuccess])
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia(`(min-width: ${DESKTOP_BREAKPOINT_PX}px)`)
+        const handleChange = () => {
+            if (mediaQuery.matches) {
+                setMobileView('form')
+            }
+        }
+
+        handleChange()
+        mediaQuery.addEventListener('change', handleChange)
+        return () => mediaQuery.removeEventListener('change', handleChange)
+    }, [])
 
     const handleSubmit = async (input: { title: string; description: string; files: File[] }) => {
         setError(null)
@@ -63,12 +80,22 @@ export default function TicketSubmitPage() {
         }
     }
 
+    const submitViewClassName =
+        mobileView === 'tickets' ? 'portal-submit-view portal-submit-view--show-tickets' : 'portal-submit-view'
+
     return (
         <PortalLayout>
-            <div className="portal-submit-view">
+            <div className={submitViewClassName}>
                 <section className="portal-submit-panel portal-submit-panel-form flex min-h-0 flex-col">
                     <div className="portal-submit-panel-header">
                         <h2 className="portal-submit-panel-title">Submit a ticket</h2>
+                        <button
+                            type="button"
+                            className="portal-mobile-toggle lg:hidden"
+                            onClick={() => setMobileView('tickets')}
+                        >
+                            View tickets
+                        </button>
                     </div>
                     <div className="portal-submit-panel-body gap-3">
                         {error && (
@@ -119,6 +146,15 @@ export default function TicketSubmitPage() {
                         ticketService={ticketService}
                         refreshKey={listRefreshKey}
                         highlightSysId={lastSubmission?.sysId}
+                        headerStart={
+                            <button
+                                type="button"
+                                className="portal-mobile-toggle lg:hidden"
+                                onClick={() => setMobileView('form')}
+                            >
+                                Back to form
+                            </button>
+                        }
                     />
                 </section>
             </div>
