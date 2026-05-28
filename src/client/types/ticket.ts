@@ -16,3 +16,13 @@ export type TicketCreateResult = {
     sysId: string
     title: string
 }
+
+export type TicketRecord = {
+    sysId: string
+    title: string
+    description: string
+    status: TicketStatus
+    statusLabel: string
+    submittedAt: string
+    submittedByDisplay: string
+}

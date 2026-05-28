@@ -1,10 +1,32 @@
 import { getCurrentUserSysId } from '../utils/currentUser'
-import type { TicketCreateInput, TicketCreateResult } from '../types/ticket'
+import type { TicketCreateInput, TicketCreateResult, TicketRecord, TicketStatus } from '../types/ticket'
 
 declare global {
     interface Window {
         g_ck: string
     }
+}
+
+type GlideFieldValue = string | { value?: string; display_value?: string } | undefined
+
+function unwrapGlideField(field: GlideFieldValue): string {
+    if (!field) {
+        return ''
+    }
+    if (typeof field === 'string') {
+        return field
+    }
+    return field.display_value || field.value || ''
+}
+
+function unwrapGlideValue(field: GlideFieldValue): string {
+    if (!field) {
+        return ''
+    }
+    if (typeof field === 'string') {
+        return field
+    }
+    return field.value || field.display_value || ''
 }
 
 function formatGlideDateTime(date: Date): string {
@@ -88,5 +110,50 @@ export class TicketService {
         for (const file of files) {
             await this.uploadAttachment(ticketSysId, file)
         }
+    }
+
+    async list(limit = 50): Promise<TicketRecord[]> {
+        const params = new URLSearchParams({
+            sysparm_display_value: 'all',
+            sysparm_exclude_reference_link: 'true',
+            sysparm_fields: 'sys_id,title,description,status,submitted_at,submitted_by',
+            sysparm_limit: String(limit),
+            sysparm_query: 'ORDERBYDESCsubmitted_at',
+        })
+
+        const currentUserSysId = getCurrentUserSysId()
+        if (currentUserSysId) {
+            params.set('sysparm_query', `submitted_by=${currentUserSysId}^ORDERBYDESCsubmitted_at`)
+        }
+
+        const response = await fetch(`/api/now/table/${this.tableName}?${params.toString()}`, {
+            headers: this.getHeaders(),
+        })
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}))
+            throw new Error(errorData.error?.message || `HTTP error ${response.status}`)
+        }
+
+        const { result } = await response.json()
+        if (!Array.isArray(result)) {
+            return []
+        }
+
+        return result.map((row: Record<string, GlideFieldValue>) => {
+            const sysId = unwrapGlideValue(row.sys_id)
+            const statusValue = unwrapGlideValue(row.status) as TicketStatus
+            const statusLabel = unwrapGlideField(row.status) || statusValue
+
+            return {
+                sysId,
+                title: unwrapGlideField(row.title),
+                description: unwrapGlideField(row.description),
+                status: statusValue,
+                statusLabel,
+                submittedAt: unwrapGlideField(row.submitted_at),
+                submittedByDisplay: unwrapGlideField(row.submitted_by),
+            }
+        })
     }
 }
