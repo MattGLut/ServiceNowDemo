@@ -177,6 +177,7 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
             </div>
 
             <div className="portal-submit-form-row">
+                <div className="portal-submit-field portal-submit-field-attachments">{attachmentsField}</div>
                 <div className="portal-submit-field portal-submit-field-stp">
                     <ToggleSwitch
                         id="ticket_stp_flag"
@@ -187,7 +188,6 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
                         disabled={submitting}
                     />
                 </div>
-                <div className="portal-submit-field portal-submit-field-attachments">{attachmentsField}</div>
             </div>
         </>
     ) : (
