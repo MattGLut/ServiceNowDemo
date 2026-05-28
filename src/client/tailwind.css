@@ -157,12 +157,15 @@
     }
 
     .portal-submit-form-fields {
-        @apply grid min-h-0 flex-1 gap-2 overflow-hidden sm:gap-3;
-        grid-template-rows: auto minmax(0, 1fr) auto;
+        @apply flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto sm:gap-3;
     }
 
     .portal-submit-field-description {
-        @apply flex min-h-0 flex-col;
+        @apply flex min-h-0 flex-1 flex-col;
+    }
+
+    .portal-submit-field-attachments {
+        @apply shrink-0;
     }
 
     .portal-submit-form-actions {
