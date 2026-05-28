@@ -14,6 +14,6 @@ export function getFieldValue(field) {
     return typeof field === 'object' ? field.value ?? '' : String(field)
 }
 
-export function getIncidentSysId(incident) {
-    return getFieldValue(incident.sys_id)
+export function getRecordSysId(record) {
+    return getFieldValue(record.sys_id)
 }

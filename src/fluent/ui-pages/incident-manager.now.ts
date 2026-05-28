@@ -5,7 +5,7 @@ import incidentPage from '../../client/index.html'
 UiPage({
     $id: Now.ID['incident-manager-page'],
     endpoint: 'x_2058901_demo_incident_manager.do',
-    description: 'Incident Response Manager Pro Plus UI Page',
+    description: 'Ticket Intake Portal UI Page',
     category: 'general',
     html: incidentPage,
     direct: true,
