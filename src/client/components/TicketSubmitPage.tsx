@@ -6,7 +6,6 @@ import TicketList from './TicketList'
 import { TicketService } from '../services/TicketService'
 import type { TicketCreateResult } from '../types/ticket'
 
-const SUCCESS_BANNER_MS = 5000
 const DESKTOP_BREAKPOINT_PX = 1024
 
 type MobileSubmitView = 'form' | 'tickets'
@@ -23,15 +22,6 @@ export default function TicketSubmitPage() {
         setLastSubmission(null)
         setAttachmentCount(0)
     }, [])
-
-    useEffect(() => {
-        if (!lastSubmission) {
-            return
-        }
-
-        const timeoutId = window.setTimeout(dismissSuccess, SUCCESS_BANNER_MS)
-        return () => window.clearTimeout(timeoutId)
-    }, [lastSubmission, dismissSuccess])
 
     useEffect(() => {
         const mediaQuery = window.matchMedia(`(min-width: ${DESKTOP_BREAKPOINT_PX}px)`)
@@ -90,18 +80,18 @@ export default function TicketSubmitPage() {
         (mobileView === 'form' ? 'hidden lg:flex' : 'flex')
 
     return (
-        <PortalLayout
-            toast={
-                lastSubmission ? (
-                    <SubmitSuccessToast
-                        submission={lastSubmission}
-                        attachmentCount={attachmentCount}
-                        onDismiss={dismissSuccess}
-                    />
-                ) : null
-            }
-        >
+        <PortalLayout>
             <div className="portal-submit-view">
+                {lastSubmission && (
+                    <div className="portal-toast-region">
+                        <SubmitSuccessToast
+                            key={lastSubmission.sysId}
+                            submission={lastSubmission}
+                            attachmentCount={attachmentCount}
+                            onDismiss={dismissSuccess}
+                        />
+                    </div>
+                )}
                 <section className={formPanelClassName}>
                     <div className="portal-submit-panel-header">
                         <h2 className="portal-submit-panel-title">Submit a ticket</h2>

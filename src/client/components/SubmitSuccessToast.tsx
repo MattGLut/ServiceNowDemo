@@ -1,5 +1,8 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import type { TicketCreateResult } from '../types/ticket'
+
+const TOAST_VISIBLE_MS = 4500
+const TOAST_FADE_MS = 400
 
 type SubmitSuccessToastProps = {
     submission: TicketCreateResult
@@ -12,16 +15,40 @@ export default function SubmitSuccessToast({
     attachmentCount,
     onDismiss,
 }: SubmitSuccessToastProps) {
+    const [isExiting, setIsExiting] = useState(false)
+
+    const beginExit = useCallback(() => {
+        setIsExiting((exiting) => (exiting ? exiting : true))
+    }, [])
+
+    useEffect(() => {
+        const exitTimer = window.setTimeout(beginExit, TOAST_VISIBLE_MS)
+        return () => window.clearTimeout(exitTimer)
+    }, [beginExit])
+
+    useEffect(() => {
+        if (!isExiting) {
+            return
+        }
+
+        const removeTimer = window.setTimeout(onDismiss, TOAST_FADE_MS)
+        return () => window.clearTimeout(removeTimer)
+    }, [isExiting, onDismiss])
+
+    const handleDismiss = () => {
+        beginExit()
+    }
+
     return (
         <div
-            className="portal-toast portal-submit-banner portal-submit-banner-success flex items-start justify-between gap-3"
+            className={`portal-toast portal-toast-banner ${isExiting ? 'portal-toast-exit' : 'portal-toast-enter'}`}
             role="status"
             aria-live="polite"
         >
             <div className="min-w-0">
-                <p className="m-0 font-semibold">Ticket submitted</p>
-                <p className="mb-0 mt-1 text-sm">
-                    <span className="text-rh-text">{submission.title}</span>
+                <p className="m-0 font-semibold text-rh-green">Ticket submitted</p>
+                <p className="mb-0 mt-1 text-sm text-rh-text">
+                    {submission.title}
                     {attachmentCount > 0 && (
                         <span className="text-rh-muted">
                             {' '}
@@ -34,7 +61,7 @@ export default function SubmitSuccessToast({
                 type="button"
                 className="portal-submit-banner-close"
                 aria-label="Dismiss success message"
-                onClick={onDismiss}
+                onClick={handleDismiss}
             >
                 ×
             </button>
