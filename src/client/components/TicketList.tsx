@@ -66,11 +66,11 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId }
                     <div className="portal-ticket-table-wrap">
                         <table className="portal-ticket-table">
                             <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Status</th>
-                                    <th>Submitted</th>
-                                </tr>
+                            <tr>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th className="portal-ticket-col-date">Submitted</th>
+                            </tr>
                             </thead>
                             <tbody>
                                 {tickets.map((ticket) => {
@@ -81,20 +81,23 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId }
                                             key={ticket.sysId}
                                             className={isHighlighted ? 'portal-ticket-row-highlight' : undefined}
                                         >
-                                            <td>
-                                                <span className="portal-ticket-title">{ticket.title}</span>
-                                                {ticket.description && (
-                                                    <span className="portal-ticket-description">
-                                                        {truncateDescription(ticket.description)}
-                                                    </span>
-                                                )}
-                                            </td>
-                                            <td>
-                                                <span className="portal-ticket-status">{ticket.statusLabel}</span>
-                                            </td>
-                                            <td className="portal-ticket-date">
+                                        <td>
+                                            <span className="portal-ticket-title">{ticket.title}</span>
+                                            {ticket.description && (
+                                                <span className="portal-ticket-description">
+                                                    {truncateDescription(ticket.description)}
+                                                </span>
+                                            )}
+                                            <span className="portal-ticket-date-mobile">
                                                 {formatSubmittedAt(ticket.submittedAt)}
-                                            </td>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span className="portal-ticket-status">{ticket.statusLabel}</span>
+                                        </td>
+                                        <td className="portal-ticket-date portal-ticket-col-date">
+                                            {formatSubmittedAt(ticket.submittedAt)}
+                                        </td>
                                         </tr>
                                     )
                                 })}
