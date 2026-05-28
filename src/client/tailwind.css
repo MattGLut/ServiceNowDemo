@@ -68,15 +68,27 @@
         grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
     }
 
-    @media (max-height: 720px) {
+    @media (max-width: 1023px) {
         .portal-submit-view {
-            grid-template-rows: minmax(0, 0.44fr) minmax(0, 0.56fr);
+            grid-template-rows: minmax(0, 1fr);
+        }
+
+        .portal-submit-panel-list {
+            display: none;
+        }
+
+        .portal-submit-view--show-tickets .portal-submit-panel-form {
+            display: none;
+        }
+
+        .portal-submit-view--show-tickets .portal-submit-panel-list {
+            display: flex;
         }
     }
 
-    @media (max-width: 640px) {
+    @media (min-width: 1024px) and (max-height: 720px) {
         .portal-submit-view {
-            grid-template-rows: minmax(0, 0.48fr) minmax(0, 0.52fr);
+            grid-template-rows: minmax(0, 0.44fr) minmax(0, 0.56fr);
         }
     }
 
@@ -102,6 +114,10 @@
 
     .portal-submit-refresh {
         @apply shrink-0 cursor-pointer rounded-full border border-rh-border bg-rh-elevated px-3 py-1 text-xs font-medium text-rh-text hover:bg-rh-border disabled:cursor-not-allowed disabled:opacity-60 sm:px-4 sm:py-1.5;
+    }
+
+    .portal-mobile-toggle {
+        @apply shrink-0 cursor-pointer rounded-full border border-rh-border bg-rh-elevated px-3 py-1 text-xs font-medium text-rh-text hover:bg-rh-border sm:px-4 sm:py-1.5;
     }
 
     .portal-submit-form {
@@ -143,6 +159,10 @@
 
     .portal-submit-banner-success {
         @apply border border-rh-green/40 bg-rh-green/10 text-rh-green;
+    }
+
+    .portal-submit-banner-close {
+        @apply shrink-0 cursor-pointer border-0 bg-transparent p-0 text-xl leading-none text-rh-green hover:text-rh-text;
     }
 
     .portal-submit-empty {

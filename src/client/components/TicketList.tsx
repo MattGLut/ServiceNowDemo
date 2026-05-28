@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { TicketService } from '../services/TicketService'
 import type { TicketRecord } from '../types/ticket'
 
@@ -6,9 +6,10 @@ type TicketListProps = {
     ticketService: TicketService
     refreshKey: number
     highlightSysId?: string | null
+    headerStart?: ReactNode
 }
 
-export default function TicketList({ ticketService, refreshKey, highlightSysId }: TicketListProps) {
+export default function TicketList({ ticketService, refreshKey, highlightSysId, headerStart }: TicketListProps) {
     const [tickets, setTickets] = useState<TicketRecord[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -36,7 +37,10 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId }
     return (
         <>
             <div className="portal-submit-panel-header">
-                <h2 className="portal-submit-panel-title">Submitted tickets</h2>
+                <div className="flex min-w-0 items-center gap-2">
+                    {headerStart}
+                    <h2 className="portal-submit-panel-title">Submitted tickets</h2>
+                </div>
                 <button
                     type="button"
                     className="portal-submit-refresh"
