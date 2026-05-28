@@ -80,13 +80,18 @@ export default function TicketSubmitPage() {
         }
     }
 
-    const submitViewClassName =
-        mobileView === 'tickets' ? 'portal-submit-view portal-submit-view--show-tickets' : 'portal-submit-view'
+    const formPanelClassName =
+        'portal-submit-panel portal-submit-panel-form min-h-0 flex-col ' +
+        (mobileView === 'tickets' ? 'hidden lg:flex' : 'flex')
+
+    const listPanelClassName =
+        'portal-submit-panel portal-submit-panel-list min-h-0 flex-col ' +
+        (mobileView === 'form' ? 'hidden lg:flex' : 'flex')
 
     return (
         <PortalLayout>
-            <div className={submitViewClassName}>
-                <section className="portal-submit-panel portal-submit-panel-form flex min-h-0 flex-col">
+            <div className="portal-submit-view">
+                <section className={formPanelClassName}>
                     <div className="portal-submit-panel-header">
                         <h2 className="portal-submit-panel-title">Submit a ticket</h2>
                         <button
@@ -141,7 +146,7 @@ export default function TicketSubmitPage() {
                     </div>
                 </section>
 
-                <section className="portal-submit-panel portal-submit-panel-list flex min-h-0 flex-col">
+                <section className={listPanelClassName}>
                     <TicketList
                         ticketService={ticketService}
                         refreshKey={listRefreshKey}
