@@ -321,11 +321,11 @@
     }
 
     .portal-toggle-track {
-        @apply box-border flex h-6 w-11 shrink-0 items-center rounded-full border border-rh-border bg-rh-elevated p-0.5 transition-colors duration-200;
+        @apply box-border flex h-5 w-9 shrink-0 items-center rounded-full border border-rh-border bg-rh-elevated p-0.5 transition-colors duration-200;
     }
 
     .portal-toggle-thumb {
-        @apply block h-5 w-5 shrink-0 rounded-full bg-rh-text shadow-sm transition-[margin] duration-200;
+        @apply block h-4 w-4 shrink-0 rounded-full bg-rh-text shadow-sm transition-[margin] duration-200;
     }
 
     .portal-toggle-input:checked + .portal-toggle-track {
