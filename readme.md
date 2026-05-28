@@ -2,7 +2,9 @@
 
 ServiceNow scoped application (`x_2058901_demo`) with a **React + TypeScript** UI page for hybrid ticket processing: straight-through (STP) automation and Azure Document Intelligence extraction with human review.
 
-See [docs/architecture.md](docs/architecture.md) for the target system design.
+See [docs/architecture.md](docs/architecture.md) for the full system design.
+
+**Current capability:** Submit tickets (`x_2058901_demo_ticket`) with title, description, and optional file attachments via the intake form on the UI page.
 
 ## Build and deploy
 
