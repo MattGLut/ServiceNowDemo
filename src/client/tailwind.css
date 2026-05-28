@@ -18,13 +18,13 @@
     html,
     body,
     #root {
-        @apply min-h-screen w-full bg-rh-bg text-rh-text antialiased;
+        @apply h-dvh w-full overflow-hidden bg-rh-bg text-rh-text antialiased;
     }
 }
 
 @layer components {
     .portal-shell {
-        @apply flex min-h-screen w-full flex-col bg-rh-bg;
+        @apply flex h-full w-full flex-col overflow-hidden bg-rh-bg;
     }
 
     .portal-header {
@@ -64,23 +64,27 @@
     }
 
     .portal-submit-view {
-        @apply flex min-h-0 flex-1 flex-col;
+        @apply grid min-h-0 flex-1 grid-rows-2 overflow-hidden;
     }
 
     .portal-submit-panel {
-        @apply flex min-h-0 flex-1 flex-col overflow-hidden bg-rh-panel;
+        @apply flex min-h-0 flex-col overflow-hidden bg-rh-panel;
     }
 
     .portal-submit-panel-list {
         @apply border-t border-rh-border;
     }
 
-    .portal-submit-panel-inner {
-        @apply flex min-h-0 flex-1 flex-col overflow-y-auto p-5 max-md:p-3;
+    .portal-submit-panel-header {
+        @apply flex shrink-0 items-center justify-between gap-3 border-b border-rh-border/60 px-5 py-3 max-md:px-3;
     }
 
-    .portal-submit-panel-header {
-        @apply mb-4 flex shrink-0 items-center justify-between gap-3;
+    .portal-submit-panel-body {
+        @apply flex min-h-0 flex-1 flex-col overflow-hidden px-5 py-3 max-md:px-3;
+    }
+
+    .portal-submit-panel-scroll {
+        @apply min-h-0 flex-1 overflow-y-auto;
     }
 
     .portal-submit-panel-title {
@@ -92,7 +96,23 @@
     }
 
     .portal-submit-form {
-        @apply mx-auto w-full max-w-2xl;
+        @apply mx-auto flex h-full min-h-0 w-full max-w-2xl flex-col;
+    }
+
+    .portal-submit-form-fields {
+        @apply min-h-0 flex-1 space-y-3 overflow-y-auto pr-1;
+    }
+
+    .portal-submit-form-actions {
+        @apply flex shrink-0 justify-end gap-2.5 pt-3;
+    }
+
+    .portal-submit-field {
+        @apply mb-0;
+    }
+
+    .portal-submit-textarea {
+        @apply min-h-[4.5rem] resize-y;
     }
 
     .portal-submit-banner {

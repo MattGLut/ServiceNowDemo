@@ -50,14 +50,13 @@ export default function TicketSubmitPage() {
     return (
         <PortalLayout>
             <div className="portal-submit-view">
-                <section className="portal-submit-panel portal-submit-panel-form">
-                    <div className="portal-submit-panel-inner">
-                        <div className="portal-submit-panel-header">
-                            <h2 className="portal-submit-panel-title">Submit a ticket</h2>
-                        </div>
-
+                <section className="portal-submit-panel portal-submit-panel-form flex min-h-0 flex-col">
+                    <div className="portal-submit-panel-header">
+                        <h2 className="portal-submit-panel-title">Submit a ticket</h2>
+                    </div>
+                    <div className="portal-submit-panel-body gap-3">
                         {error && (
-                            <div className="portal-submit-banner portal-submit-banner-error mb-4 flex items-center justify-between">
+                            <div className="portal-submit-banner portal-submit-banner-error shrink-0 flex items-center justify-between">
                                 <span>{error}</span>
                                 <button
                                     type="button"
@@ -70,14 +69,15 @@ export default function TicketSubmitPage() {
                         )}
 
                         {lastSubmission && (
-                            <div className="portal-submit-banner portal-submit-banner-success mb-4">
+                            <div className="portal-submit-banner portal-submit-banner-success shrink-0">
                                 <p className="m-0 font-semibold">Ticket submitted</p>
                                 <p className="mb-0 mt-1 text-sm">
                                     <span className="text-rh-text">{lastSubmission.title}</span>
                                     {attachmentCount > 0 && (
                                         <span className="text-rh-muted">
                                             {' '}
-                                            — {attachmentCount} file{attachmentCount === 1 ? '' : 's'} attached
+                                            — {attachmentCount} file
+                                            {attachmentCount === 1 ? '' : 's'} attached
                                         </span>
                                     )}
                                 </p>
@@ -88,7 +88,7 @@ export default function TicketSubmitPage() {
                     </div>
                 </section>
 
-                <section className="portal-submit-panel portal-submit-panel-list">
+                <section className="portal-submit-panel portal-submit-panel-list flex min-h-0 flex-col">
                     <TicketList
                         ticketService={ticketService}
                         refreshKey={listRefreshKey}

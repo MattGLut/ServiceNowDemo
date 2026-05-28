@@ -77,18 +77,12 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
         ? 'portal-submit-form'
         : 'mx-auto max-w-2xl rounded-xl border border-rh-border bg-rh-panel p-6'
 
-    return (
-        <form className={formClassName} onSubmit={(event) => void handleSubmit(event)}>
-            {!embedded && (
-                <>
-                    <h2 className="m-0 mb-1 text-lg font-semibold text-rh-text">Submit a ticket</h2>
-                    <p className="mb-6 mt-0 text-sm text-rh-muted">
-                        Provide details and optional supporting documents. Tickets start in Submitted status.
-                    </p>
-                </>
-            )}
+    const fieldWrapClass = embedded ? 'portal-submit-field' : 'mb-5'
+    const descriptionRows = embedded ? 2 : 5
 
-            <div className="mb-5">
+    const fields = (
+        <>
+            <div className={fieldWrapClass}>
                 <label htmlFor="ticket_title" className={LABEL_CLASS}>
                     Title *
                 </label>
@@ -106,24 +100,24 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
                 />
             </div>
 
-            <div className="mb-5">
+            <div className={fieldWrapClass}>
                 <label htmlFor="ticket_description" className={LABEL_CLASS}>
                     Description
                 </label>
                 <textarea
                     id="ticket_description"
                     name="description"
-                    className={INPUT_CLASS}
+                    className={embedded ? `${INPUT_CLASS} portal-submit-textarea` : INPUT_CLASS}
                     value={description}
                     onChange={(event) => setDescription(event.target.value)}
-                    rows={5}
+                    rows={descriptionRows}
                     maxLength={8000}
                     placeholder="Additional context for processing..."
                     disabled={submitting}
                 />
             </div>
 
-            <div className="mb-6">
+            <div className={embedded ? 'portal-submit-field' : 'mb-6'}>
                 <label htmlFor="ticket_files" className={LABEL_CLASS}>
                     Attachments
                 </label>
@@ -137,13 +131,20 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
                     onChange={handleFileChange}
                     disabled={submitting}
                 />
-                <p className="mt-2 text-xs text-rh-muted">
-                    Up to {MAX_FILES} files, {MAX_FILE_SIZE_MB} MB each. PDF and images recommended for
-                    document intelligence routing.
-                </p>
+                {!embedded && (
+                    <p className="mt-2 text-xs text-rh-muted">
+                        Up to {MAX_FILES} files, {MAX_FILE_SIZE_MB} MB each. PDF and images recommended for
+                        document intelligence routing.
+                    </p>
+                )}
+                {embedded && (
+                    <p className="mt-1 text-xs text-rh-muted">
+                        Up to {MAX_FILES} files, {MAX_FILE_SIZE_MB} MB each.
+                    </p>
+                )}
                 {fileError && <p className="mt-2 text-sm text-red-400">{fileError}</p>}
                 {selectedFiles.length > 0 && (
-                    <ul className="mt-3 space-y-1 rounded-lg border border-rh-border bg-rh-bg px-3 py-2 text-sm text-rh-text">
+                    <ul className="mt-2 max-h-20 space-y-1 overflow-y-auto rounded-lg border border-rh-border bg-rh-bg px-3 py-2 text-sm text-rh-text">
                         {selectedFiles.map((file) => (
                             <li key={`${file.name}-${file.size}`}>
                                 {file.name}{' '}
@@ -155,7 +156,7 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
                 {selectedFiles.length > 0 && (
                     <button
                         type="button"
-                        className="mt-2 cursor-pointer border-0 bg-transparent text-sm text-rh-muted underline hover:text-rh-text"
+                        className="mt-1 cursor-pointer border-0 bg-transparent text-sm text-rh-muted underline hover:text-rh-text"
                         onClick={handleClearFiles}
                         disabled={submitting}
                     >
@@ -163,24 +164,51 @@ export default function TicketIntakeForm({ onSubmit, embedded = false }: TicketI
                     </button>
                 )}
             </div>
+        </>
+    )
 
-            <div className="flex justify-end gap-2.5">
-                <button
-                    type="button"
-                    className={BTN_CANCEL}
-                    onClick={() => {
-                        setTitle('')
-                        setDescription('')
-                        handleClearFiles()
-                    }}
-                    disabled={submitting}
-                >
-                    Reset
-                </button>
-                <button type="submit" className={BTN_PRIMARY} disabled={submitting}>
-                    {submitting ? 'Submitting…' : 'Submit ticket'}
-                </button>
-            </div>
+    const actions = (
+        <>
+            <button
+                type="button"
+                className={BTN_CANCEL}
+                onClick={() => {
+                    setTitle('')
+                    setDescription('')
+                    handleClearFiles()
+                }}
+                disabled={submitting}
+            >
+                Reset
+            </button>
+            <button type="submit" className={BTN_PRIMARY} disabled={submitting}>
+                {submitting ? 'Submitting…' : 'Submit ticket'}
+            </button>
+        </>
+    )
+
+    return (
+        <form className={formClassName} onSubmit={(event) => void handleSubmit(event)}>
+            {!embedded && (
+                <>
+                    <h2 className="m-0 mb-1 text-lg font-semibold text-rh-text">Submit a ticket</h2>
+                    <p className="mb-6 mt-0 text-sm text-rh-muted">
+                        Provide details and optional supporting documents. Tickets start in Submitted status.
+                    </p>
+                </>
+            )}
+
+            {embedded ? (
+                <>
+                    <div className="portal-submit-form-fields">{fields}</div>
+                    <div className="portal-submit-form-actions">{actions}</div>
+                </>
+            ) : (
+                <>
+                    {fields}
+                    <div className="flex justify-end gap-2.5">{actions}</div>
+                </>
+            )}
         </form>
     )
 }
