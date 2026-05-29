@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, type ReactNode } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { TicketService } from '../services/TicketService'
 import { formatAttachmentSummary, formatSubmittedAt } from '../utils/formatDateTime'
 import ProcessingPathBadge from './ProcessingPathBadge'
@@ -9,10 +9,9 @@ type TicketListProps = {
     ticketService: TicketService
     refreshKey: number
     highlightSysId?: string | null
-    headerStart?: ReactNode
 }
 
-export default function TicketList({ ticketService, refreshKey, highlightSysId, headerStart }: TicketListProps) {
+export default function TicketList({ ticketService, refreshKey, highlightSysId }: TicketListProps) {
     const [tickets, setTickets] = useState<TicketRecord[]>([])
     const [attachmentNamesByTicket, setAttachmentNamesByTicket] = useState<Record<string, string[]>>({})
     const [loading, setLoading] = useState(true)
@@ -51,10 +50,7 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId, 
     return (
         <>
             <div className="portal-submit-panel-header">
-                <div className="flex min-w-0 items-center gap-2">
-                    {headerStart}
-                    <h2 className="portal-submit-panel-title">Submitted tickets</h2>
-                </div>
+                <h2 className="portal-submit-panel-title">My tickets</h2>
                 <button
                     type="button"
                     className="portal-submit-refresh"

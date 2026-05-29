@@ -1,5 +1,5 @@
 import React, { type ReactNode } from 'react'
-import { PORTAL_SUBMIT_TICKETS_PATH } from '../utils/portalPage'
+import { PORTAL_TICKETS_PATH } from '../utils/portalPage'
 
 type ImmersiveLayoutProps = {
     backLabel?: string
@@ -15,7 +15,7 @@ export default function ImmersiveLayout({
     return (
         <div className="portal-immersive-shell font-sans">
             <header className="portal-immersive-header">
-                <a href={PORTAL_SUBMIT_TICKETS_PATH} className="portal-immersive-back">
+                <a href={PORTAL_TICKETS_PATH} className="portal-immersive-back">
                     {backLabel}
                 </a>
                 {title && <h1 className="portal-immersive-title">{title}</h1>}
