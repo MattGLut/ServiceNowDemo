@@ -1,9 +1,9 @@
-export type PortalPage = 'home' | 'submit' | 'ticket-detail'
+export type PortalPage = 'home' | 'submit' | 'tickets' | 'ticket-detail'
 
 export const PORTAL_HOME_PATH = '/x_2058901_demo_incident_manager.do'
 export const PORTAL_SUBMIT_PATH = '/x_2058901_demo_ticket_submit.do'
+export const PORTAL_TICKETS_PATH = '/x_2058901_demo_ticket_list.do'
 export const PORTAL_TICKET_VIEW_PATH = '/x_2058901_demo_ticket_view.do'
-export const PORTAL_SUBMIT_TICKETS_PATH = `${PORTAL_SUBMIT_PATH}?view=tickets`
 
 const SYS_ID_PATTERN = /^[0-9a-f]{32}$/i
 
@@ -12,6 +12,10 @@ export function getPortalPage(): PortalPage {
 
     if (path.includes('ticket_view')) {
         return 'ticket-detail'
+    }
+
+    if (path.includes('ticket_list')) {
+        return 'tickets'
     }
 
     if (path.includes('ticket_submit')) {
@@ -33,8 +37,4 @@ export function getTicketSysIdFromUrl(): string | null {
 
 export function ticketViewUrl(sysId: string): string {
     return `${PORTAL_TICKET_VIEW_PATH}?sys_id=${encodeURIComponent(sysId)}`
-}
-
-export function isSubmitTicketsView(): boolean {
-    return new URLSearchParams(window.location.search).get('view') === 'tickets'
 }

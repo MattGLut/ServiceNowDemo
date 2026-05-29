@@ -24,6 +24,19 @@ export const x_2058901_demo_ticket = Table({
         description: MultiLineTextColumn({
             label: 'Description',
         }),
+        request_type: ChoiceColumn({
+            label: 'Request Type',
+            default: 'general',
+            choices: {
+                general: { label: 'General request' },
+                document: { label: 'Document submission' },
+                pickup: { label: 'Pickup request' },
+            },
+        }),
+        external_id: StringColumn({
+            label: 'External Reference',
+            maxLength: 50,
+        }),
         stp_flag: BooleanColumn({
             label: 'STP',
             default: false,

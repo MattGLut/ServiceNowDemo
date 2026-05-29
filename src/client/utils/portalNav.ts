@@ -1,4 +1,4 @@
-import { PORTAL_SUBMIT_PATH, type PortalPage } from './portalPage'
+import { PORTAL_SUBMIT_PATH, PORTAL_TICKETS_PATH, type PortalPage } from './portalPage'
 
 export type PortalNavItem = {
     id: string
@@ -13,5 +13,11 @@ export const PORTAL_NAV_ACTIONS: PortalNavItem[] = [
         label: 'Submit a ticket',
         href: PORTAL_SUBMIT_PATH,
         page: 'submit',
+    },
+    {
+        id: 'tickets',
+        label: 'My tickets',
+        href: PORTAL_TICKETS_PATH,
+        page: 'tickets',
     },
 ]

@@ -4,6 +4,7 @@ import type {
     TicketCreateInput,
     TicketCreateResult,
     TicketRecord,
+    TicketRequestType,
     TicketStatus,
 } from '../types/ticket'
 
@@ -44,11 +45,16 @@ function mapTicketRow(row: Record<string, GlideFieldValue>): TicketRecord {
     const sysId = unwrapGlideValue(row.sys_id)
     const statusValue = unwrapGlideValue(row.status) as TicketStatus
     const statusLabel = unwrapGlideField(row.status) || statusValue
+    const requestTypeValue = unwrapGlideValue(row.request_type) as TicketRequestType
+    const requestTypeLabel = unwrapGlideField(row.request_type) || requestTypeValue
 
     return {
         sysId,
         title: unwrapGlideField(row.title),
         description: unwrapGlideField(row.description),
+        requestType: requestTypeValue || 'general',
+        requestTypeLabel,
+        externalId: unwrapGlideField(row.external_id),
         stpFlag: unwrapGlideBoolean(row.stp_flag),
         status: statusValue,
         statusLabel,
@@ -87,6 +93,8 @@ export class TicketService {
         const payload: Record<string, string | boolean> = {
             title: input.title.trim(),
             description: input.description.trim(),
+            request_type: input.requestType,
+            external_id: input.externalId.trim(),
             stp_flag: input.stpFlag,
             status: 'submitted',
             submitted_at: formatGlideDateTime(new Date()),
@@ -149,7 +157,7 @@ export class TicketService {
         const params = new URLSearchParams({
             sysparm_display_value: 'all',
             sysparm_exclude_reference_link: 'true',
-            sysparm_fields: 'sys_id,title,description,stp_flag,status,submitted_at,submitted_by',
+            sysparm_fields: 'sys_id,title,description,request_type,external_id,stp_flag,status,submitted_at,submitted_by',
             sysparm_limit: String(limit),
             sysparm_query: 'ORDERBYDESCsubmitted_at',
         })

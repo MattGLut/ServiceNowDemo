@@ -103,6 +103,16 @@ export default function TicketDetailPage({ sysId }: TicketDetailPageProps) {
                             <dd>{formatSubmittedAt(ticket.submittedAt)}</dd>
                         </div>
                         <div className="portal-detail-meta-row">
+                            <dt>Request type</dt>
+                            <dd>{ticket.requestTypeLabel || '—'}</dd>
+                        </div>
+                        {ticket.externalId && (
+                            <div className="portal-detail-meta-row">
+                                <dt>External reference</dt>
+                                <dd>{ticket.externalId}</dd>
+                            </div>
+                        )}
+                        <div className="portal-detail-meta-row">
                             <dt>Submitted by</dt>
                             <dd>{ticket.submittedByDisplay || '—'}</dd>
                         </div>

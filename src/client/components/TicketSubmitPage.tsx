@@ -1,47 +1,26 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import PortalLayout from './PortalLayout'
 import SubmitSuccessToast from './SubmitSuccessToast'
 import TicketIntakeForm from './TicketIntakeForm'
-import TicketList from './TicketList'
-import { isSubmitTicketsView } from '../utils/portalPage'
 import { TicketService } from '../services/TicketService'
-import type { TicketCreateResult } from '../types/ticket'
-
-const DESKTOP_BREAKPOINT_PX = 1024
-
-type MobileSubmitView = 'form' | 'tickets'
+import type { TicketCreateResult, TicketRequestType } from '../types/ticket'
 
 export default function TicketSubmitPage() {
     const ticketService = useMemo(() => new TicketService(), [])
     const [error, setError] = useState<string | null>(null)
     const [lastSubmission, setLastSubmission] = useState<TicketCreateResult | null>(null)
     const [attachmentCount, setAttachmentCount] = useState(0)
-    const [listRefreshKey, setListRefreshKey] = useState(0)
-    const [mobileView, setMobileView] = useState<MobileSubmitView>(() =>
-        isSubmitTicketsView() ? 'tickets' : 'form'
-    )
 
     const dismissSuccess = useCallback(() => {
         setLastSubmission(null)
         setAttachmentCount(0)
     }, [])
 
-    useEffect(() => {
-        const mediaQuery = window.matchMedia(`(min-width: ${DESKTOP_BREAKPOINT_PX}px)`)
-        const handleChange = () => {
-            if (mediaQuery.matches) {
-                setMobileView('form')
-            }
-        }
-
-        handleChange()
-        mediaQuery.addEventListener('change', handleChange)
-        return () => mediaQuery.removeEventListener('change', handleChange)
-    }, [])
-
     const handleSubmit = async (input: {
         title: string
         description: string
+        requestType: TicketRequestType
+        externalId: string
         stpFlag: boolean
         files: File[]
     }) => {
@@ -54,6 +33,8 @@ export default function TicketSubmitPage() {
             result = await ticketService.create({
                 title: input.title,
                 description: input.description,
+                requestType: input.requestType,
+                externalId: input.externalId,
                 stpFlag: input.stpFlag,
             })
 
@@ -63,7 +44,6 @@ export default function TicketSubmitPage() {
 
             setLastSubmission(result)
             setAttachmentCount(input.files.length)
-            setListRefreshKey((key) => key + 1)
             return result
         } catch (err) {
             const message = err instanceof Error ? err.message : 'Unknown error'
@@ -73,24 +53,13 @@ export default function TicketSubmitPage() {
                     : 'Failed to submit ticket: ' + message
             )
             console.error(err)
-            if (result) {
-                setListRefreshKey((key) => key + 1)
-            }
             throw err
         }
     }
 
-    const formPanelClassName =
-        'portal-submit-panel portal-submit-panel-form min-h-0 flex-col ' +
-        (mobileView === 'tickets' ? 'hidden lg:flex' : 'flex')
-
-    const listPanelClassName =
-        'portal-submit-panel portal-submit-panel-list min-h-0 flex-col ' +
-        (mobileView === 'form' ? 'hidden lg:flex' : 'flex')
-
     return (
         <PortalLayout>
-            <div className="portal-submit-view">
+            <div className="portal-form-page">
                 {lastSubmission && (
                     <div className="portal-toast-region">
                         <SubmitSuccessToast
@@ -101,51 +70,21 @@ export default function TicketSubmitPage() {
                         />
                     </div>
                 )}
-                <section className={formPanelClassName}>
-                    <div className="portal-submit-panel-header">
-                        <h2 className="portal-submit-panel-title">Submit a ticket</h2>
+
+                {error && (
+                    <div className="portal-submit-banner portal-submit-banner-error mb-4 flex shrink-0 items-center justify-between">
+                        <span>{error}</span>
                         <button
                             type="button"
-                            className="portal-mobile-toggle lg:hidden"
-                            onClick={() => setMobileView('tickets')}
+                            className="cursor-pointer border-0 bg-transparent font-semibold text-red-400 underline hover:text-red-300"
+                            onClick={() => setError(null)}
                         >
-                            View tickets
+                            Dismiss
                         </button>
                     </div>
-                    <div className="portal-submit-panel-body gap-3">
-                        {error && (
-                            <div className="portal-submit-banner portal-submit-banner-error shrink-0 flex items-center justify-between">
-                                <span>{error}</span>
-                                <button
-                                    type="button"
-                                    className="cursor-pointer border-0 bg-transparent font-semibold text-red-400 underline hover:text-red-300"
-                                    onClick={() => setError(null)}
-                                >
-                                    Dismiss
-                                </button>
-                            </div>
-                        )}
+                )}
 
-                        <TicketIntakeForm embedded onSubmit={handleSubmit} />
-                    </div>
-                </section>
-
-                <section className={listPanelClassName}>
-                    <TicketList
-                        ticketService={ticketService}
-                        refreshKey={listRefreshKey}
-                        highlightSysId={lastSubmission?.sysId}
-                        headerStart={
-                            <button
-                                type="button"
-                                className="portal-mobile-toggle lg:hidden"
-                                onClick={() => setMobileView('form')}
-                            >
-                                Back to form
-                            </button>
-                        }
-                    />
-                </section>
+                <TicketIntakeForm onSubmit={handleSubmit} />
             </div>
         </PortalLayout>
     )
