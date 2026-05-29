@@ -4,7 +4,7 @@ ServiceNow scoped application (`x_2058901_demo`) with a **React + TypeScript** U
 
 See [docs/architecture.md](docs/architecture.md) for the full system design.
 
-**Current capability:** Portal home, ticket submission (`x_2058901_demo_ticket`), and immersive ticket detail view with attachment downloads.
+**Current capability:** Portal home, ticket submission (`x_2058901_demo_ticket`), admin-managed workflow types (`x_2058901_demo_workflow_type`), and immersive ticket detail view with attachment downloads.
 
 ## Build and deploy
 

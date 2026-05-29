@@ -4,7 +4,6 @@ import type {
     TicketCreateInput,
     TicketCreateResult,
     TicketRecord,
-    TicketRequestType,
     TicketStatus,
 } from '../types/ticket'
 
@@ -45,15 +44,14 @@ function mapTicketRow(row: Record<string, GlideFieldValue>): TicketRecord {
     const sysId = unwrapGlideValue(row.sys_id)
     const statusValue = unwrapGlideValue(row.status) as TicketStatus
     const statusLabel = unwrapGlideField(row.status) || statusValue
-    const requestTypeValue = unwrapGlideValue(row.request_type) as TicketRequestType
-    const requestTypeLabel = unwrapGlideField(row.request_type) || requestTypeValue
 
     return {
         sysId,
         title: unwrapGlideField(row.title),
         description: unwrapGlideField(row.description),
-        requestType: requestTypeValue || 'general',
-        requestTypeLabel,
+        workflowTypeSysId: unwrapGlideValue(row.workflow_type),
+        workflowTypeCode: unwrapGlideField(row['workflow_type.code']) || unwrapGlideValue(row['workflow_type.code']),
+        workflowTypeName: unwrapGlideField(row.workflow_type),
         externalId: unwrapGlideField(row.external_id),
         stpFlag: unwrapGlideBoolean(row.stp_flag),
         status: statusValue,
@@ -90,11 +88,19 @@ export class TicketService {
     }
 
     async create(input: TicketCreateInput): Promise<TicketCreateResult> {
+        const contractNumber = input.externalId.trim()
+        if (!contractNumber) {
+            throw new Error('Contract number is required.')
+        }
+        if (!input.workflowTypeSysId) {
+            throw new Error('Workflow type is required.')
+        }
+
         const payload: Record<string, string | boolean> = {
             title: input.title.trim(),
             description: input.description.trim(),
-            request_type: input.requestType,
-            external_id: input.externalId.trim(),
+            workflow_type: input.workflowTypeSysId,
+            external_id: contractNumber,
             stp_flag: input.stpFlag,
             status: 'submitted',
             submitted_at: formatGlideDateTime(new Date()),
@@ -157,7 +163,8 @@ export class TicketService {
         const params = new URLSearchParams({
             sysparm_display_value: 'all',
             sysparm_exclude_reference_link: 'true',
-            sysparm_fields: 'sys_id,title,description,request_type,external_id,stp_flag,status,submitted_at,submitted_by',
+            sysparm_fields:
+                'sys_id,title,description,workflow_type,workflow_type.code,external_id,stp_flag,status,submitted_at,submitted_by',
             sysparm_limit: String(limit),
             sysparm_query: 'ORDERBYDESCsubmitted_at',
         })
@@ -188,6 +195,8 @@ export class TicketService {
         const params = new URLSearchParams({
             sysparm_display_value: 'all',
             sysparm_exclude_reference_link: 'true',
+            sysparm_fields:
+                'sys_id,title,description,workflow_type,workflow_type.code,external_id,stp_flag,status,submitted_at,submitted_by',
         })
 
         const response = await fetch(

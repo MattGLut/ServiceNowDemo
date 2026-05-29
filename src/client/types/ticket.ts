@@ -7,12 +7,10 @@ export type TicketStatus =
     | 'ready_for_pickup'
     | 'picked_up'
 
-export type TicketRequestType = 'general' | 'document' | 'pickup'
-
 export type TicketCreateInput = {
     title: string
     description: string
-    requestType: TicketRequestType
+    workflowTypeSysId: string
     externalId: string
     stpFlag: boolean
 }
@@ -26,8 +24,9 @@ export type TicketRecord = {
     sysId: string
     title: string
     description: string
-    requestType: TicketRequestType
-    requestTypeLabel: string
+    workflowTypeSysId: string
+    workflowTypeCode: string
+    workflowTypeName: string
     externalId: string
     stpFlag: boolean
     status: TicketStatus

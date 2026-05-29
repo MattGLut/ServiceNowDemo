@@ -72,6 +72,26 @@ declare global {
                         table: 'sys_security_acl'
                         id: 'a7944e1f902b49f1b6436409688f7492'
                     }
+                    'workflow-type-ch11': {
+                        table: 'x_2058901_demo_workflow_type'
+                        id: 'b510ae7a5f8b4a298c7e9630f2065afa'
+                    }
+                    'workflow-type-create-acl': {
+                        table: 'sys_security_acl'
+                        id: 'fb1b9997645c4ccc83accc85b07c1db7'
+                    }
+                    'workflow-type-delete-acl': {
+                        table: 'sys_security_acl'
+                        id: 'd2af8756a56245dbbe435b1fcf41a0d3'
+                    }
+                    'workflow-type-read-acl': {
+                        table: 'sys_security_acl'
+                        id: 'f5800be61c4d4bffb7beeac418046fda'
+                    }
+                    'workflow-type-write-acl': {
+                        table: 'sys_security_acl'
+                        id: '11557571477b4adb85ae62368e03f383'
+                    }
                 }
                 composite: [
                     {
@@ -171,6 +191,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_dictionary'
+                        id: '1adc667b4fb647bebeec3056f6b1b80b'
+                        key: {
+                            name: 'x_2058901_demo_workflow_type'
+                            element: 'name'
+                        }
+                    },
+                    {
                         table: 'sn_glider_source_artifact_m2m'
                         id: '201e60d27a3c4ad0b5c041af4e8edff4'
                         key: {
@@ -212,6 +240,7 @@ declare global {
                     {
                         table: 'sys_choice'
                         id: '2622c28013364fcd8d3f79e597c767af'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'request_type'
@@ -228,11 +257,41 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '2a621f3feb5a4f2e98a7cff902092962'
+                        key: {
+                            sys_security_acl: '11557571477b4adb85ae62368e03f383'
+                            sys_user_role: {
+                                id: '30e8e38de04a4370beb298164656282f'
+                                key: {
+                                    name: 'admin'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: '2b18d7e0e00a458a86dd798c5509b1b4'
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'stp_flag'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '2ba892e0aa4f48078e19c7867985cca4'
+                        key: {
+                            name: 'x_2058901_demo_workflow_type'
+                            element: 'code'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '307426b098cd472aa5eabcf0a264966a'
+                        key: {
+                            name: 'x_2058901_demo_workflow_type'
+                            element: 'code'
+                            language: 'en'
                         }
                     },
                     {
@@ -243,8 +302,22 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '338d9734b48e4bf5b76749ef6b757bab'
+                        key: {
+                            sys_security_acl: 'f5800be61c4d4bffb7beeac418046fda'
+                            sys_user_role: {
+                                id: '08ae9a355ba840608834918feda903e1'
+                                key: {
+                                    name: 'itil'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_choice_set'
                         id: '35ec82e5055e4102b6eb14137f8680b0'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'request_type'
@@ -301,8 +374,17 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_dictionary'
+                        id: '45f4dacbd985426a88a5e7f479bc337d'
+                        key: {
+                            name: 'x_2058901_demo_workflow_type'
+                            element: 'NULL'
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: '47d9d27bd8a94524a94ef3335b2df068'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'request_type'
@@ -340,6 +422,15 @@ declare global {
                     },
                     {
                         table: 'sys_documentation'
+                        id: '552c8c85ceeb454b86393e1419437a95'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'workflow_type'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
                         id: '5de2525ea82b45e2a9dab8efea0e911c'
                         key: {
                             name: 'x_2058901_demo_ticket'
@@ -350,6 +441,7 @@ declare global {
                     {
                         table: 'sys_dictionary'
                         id: '5f7469326a074acf9fd993f581f83bd4'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'request_type'
@@ -393,6 +485,19 @@ declare global {
                             name: 'x_2058901_demo_ticket'
                             element: 'description'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '6ed98245cc254549add311d2628a899c'
+                        key: {
+                            sys_security_acl: 'fb1b9997645c4ccc83accc85b07c1db7'
+                            sys_user_role: {
+                                id: '3b457666883249b2a9f4245f77e39168'
+                                key: {
+                                    name: 'admin'
+                                }
+                            }
                         }
                     },
                     {
@@ -447,6 +552,14 @@ declare global {
                     },
                     {
                         table: 'sys_dictionary'
+                        id: '99a2de24807f41ef8c2a5bb624b06c7f'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'workflow_type'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
                         id: '9be1ce0a32604c7b8644a99acbf2ac96'
                         key: {
                             name: 'x_2058901_demo_ticket'
@@ -459,6 +572,15 @@ declare global {
                         key: {
                             application_file: '32b08f7b0bd949839a4b5e581692e760'
                             source_artifact: 'a1c9c0e91e3b4900a70cb087471b578a'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: 'a1978ea086384e35bc61c3edb4d56b0e'
+                        key: {
+                            name: 'x_2058901_demo_workflow_type'
+                            element: 'name'
+                            language: 'en'
                         }
                     },
                     {
@@ -477,8 +599,16 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_db_object'
+                        id: 'a24f28e5994d4bd1ac85ae83c7294db5'
+                        key: {
+                            name: 'x_2058901_demo_workflow_type'
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: 'a298ba6b860d46ed84e039c041c3c197'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'request_type'
@@ -499,6 +629,13 @@ declare global {
                         key: {
                             application_file: '3e2ca4f04b104a759892c88968ebd34a'
                             source_artifact: 'a1c9c0e91e3b4900a70cb087471b578a'
+                        }
+                    },
+                    {
+                        table: 'ua_table_licensing_config'
+                        id: 'a6d5dab092a54105a06378359c6a4414'
+                        key: {
+                            name: 'x_2058901_demo_workflow_type'
                         }
                     },
                     {
@@ -537,6 +674,19 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: 'b41c3f8364d24e0baac33ef55ecf4b3e'
+                        key: {
+                            sys_security_acl: 'd2af8756a56245dbbe435b1fcf41a0d3'
+                            sys_user_role: {
+                                id: 'b6fcfd136df74006b839ddda201db43d'
+                                key: {
+                                    name: 'admin'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: 'b6c6a9b58d104c7abecbcb927da433f6'
                         key: {
@@ -556,6 +706,7 @@ declare global {
                     {
                         table: 'sys_choice'
                         id: 'bc7a43cea46342e58f6ee092e4a8b661'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'request_type'
@@ -667,6 +818,15 @@ declare global {
                         key: {
                             application_file: 'bff39ae26b7b4e5793ddc92c987a0121'
                             source_artifact: '0d3c23bf918c45878e4ea9f11dceb6ea'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: 'f0b1165f65aa49dead7ae64dd29642f8'
+                        key: {
+                            name: 'x_2058901_demo_workflow_type'
+                            element: 'NULL'
+                            language: 'en'
                         }
                     },
                     {
