@@ -106,7 +106,7 @@ type DiTicketExport = {
 | Phase | Scope |
 |-------|--------|
 | 1 | Clean slate — shell UI, no ticket features |
-| 2 (current) | Ticket table, ACLs, portal home + submit/list UI pages, intake form (`request_type`, `external_id`, `stp_flag`), file upload, ticket detail view + attachment download |
+| 2 (current) | Ticket table, workflow type reference table, ACLs, portal home + submit/list UI pages, intake form (`workflow_type`, `external_id`, `stp_flag`), file upload, ticket detail view + attachment download |
 | 3 | Automatic STP classification, status routing, typed export models |
 | 4 | Integration stubs (Scripted REST / Flow) for STP and Azure DI |
 | 5 | Review/approval UI on ticket detail (DI placeholder section), `ready_for_pickup`, export APIs |

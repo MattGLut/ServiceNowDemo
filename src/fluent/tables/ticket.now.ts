@@ -24,17 +24,14 @@ export const x_2058901_demo_ticket = Table({
         description: MultiLineTextColumn({
             label: 'Description',
         }),
-        request_type: ChoiceColumn({
-            label: 'Request Type',
-            default: 'general',
-            choices: {
-                general: { label: 'General request' },
-                document: { label: 'Document submission' },
-                pickup: { label: 'Pickup request' },
-            },
+        workflow_type: ReferenceColumn({
+            label: 'Workflow Type',
+            referenceTable: 'x_2058901_demo_workflow_type',
+            mandatory: true,
         }),
         external_id: StringColumn({
-            label: 'External Reference',
+            label: 'Contract Number',
+            mandatory: true,
             maxLength: 50,
         }),
         stp_flag: BooleanColumn({

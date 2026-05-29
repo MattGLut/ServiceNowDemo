@@ -3,7 +3,7 @@ import PortalLayout from './PortalLayout'
 import SubmitSuccessToast from './SubmitSuccessToast'
 import TicketIntakeForm from './TicketIntakeForm'
 import { TicketService } from '../services/TicketService'
-import type { TicketCreateResult, TicketRequestType } from '../types/ticket'
+import type { TicketCreateResult } from '../types/ticket'
 
 export default function TicketSubmitPage() {
     const ticketService = useMemo(() => new TicketService(), [])
@@ -19,7 +19,7 @@ export default function TicketSubmitPage() {
     const handleSubmit = async (input: {
         title: string
         description: string
-        requestType: TicketRequestType
+        workflowTypeSysId: string
         externalId: string
         stpFlag: boolean
         files: File[]
@@ -30,17 +30,19 @@ export default function TicketSubmitPage() {
         let result: TicketCreateResult | null = null
 
         try {
+            if (input.files.length === 0) {
+                throw new Error('At least one PDF attachment is required.')
+            }
+
             result = await ticketService.create({
                 title: input.title,
                 description: input.description,
-                requestType: input.requestType,
+                workflowTypeSysId: input.workflowTypeSysId,
                 externalId: input.externalId,
                 stpFlag: input.stpFlag,
             })
 
-            if (input.files.length > 0) {
-                await ticketService.uploadAttachments(result.sysId, input.files)
-            }
+            await ticketService.uploadAttachments(result.sysId, input.files)
 
             setLastSubmission(result)
             setAttachmentCount(input.files.length)
@@ -72,7 +74,7 @@ export default function TicketSubmitPage() {
                 )}
 
                 {error && (
-                    <div className="portal-submit-banner portal-submit-banner-error mb-4 flex shrink-0 items-center justify-between">
+                    <div className="portal-submit-banner portal-submit-banner-error mx-4 mt-4 flex shrink-0 items-center justify-between sm:mx-6">
                         <span>{error}</span>
                         <button
                             type="button"

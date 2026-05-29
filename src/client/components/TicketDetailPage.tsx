@@ -3,6 +3,7 @@ import ImmersiveLayout from './ImmersiveLayout'
 import ProcessingPathBadge from './ProcessingPathBadge'
 import { TicketService } from '../services/TicketService'
 import { formatFileSize, formatSubmittedAt } from '../utils/formatDateTime'
+import { formatWorkflowTypeLabel } from '../types/workflowType'
 import type { TicketAttachment, TicketRecord } from '../types/ticket'
 
 type TicketDetailPageProps = {
@@ -103,12 +104,19 @@ export default function TicketDetailPage({ sysId }: TicketDetailPageProps) {
                             <dd>{formatSubmittedAt(ticket.submittedAt)}</dd>
                         </div>
                         <div className="portal-detail-meta-row">
-                            <dt>Request type</dt>
-                            <dd>{ticket.requestTypeLabel || '—'}</dd>
+                            <dt>Workflow Type</dt>
+                            <dd>
+                                {ticket.workflowTypeCode && ticket.workflowTypeName
+                                    ? formatWorkflowTypeLabel({
+                                          code: ticket.workflowTypeCode,
+                                          name: ticket.workflowTypeName,
+                                      })
+                                    : ticket.workflowTypeName || '—'}
+                            </dd>
                         </div>
                         {ticket.externalId && (
                             <div className="portal-detail-meta-row">
-                                <dt>External reference</dt>
+                                <dt>Contract Number</dt>
                                 <dd>{ticket.externalId}</dd>
                             </div>
                         )}

@@ -108,7 +108,35 @@
     }
 
     .portal-form-page {
-        @apply relative flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-4 sm:px-6 sm:py-6;
+        @apply relative flex min-h-0 flex-1 flex-col overflow-hidden;
+    }
+
+    .portal-intake-form {
+        @apply flex min-h-0 flex-1 flex-col overflow-hidden bg-rh-panel px-4 py-4 sm:px-6 sm:py-5;
+    }
+
+    .portal-intake-form-body {
+        @apply flex min-h-0 flex-1 flex-col gap-4 sm:gap-5;
+    }
+
+    .portal-intake-form-description {
+        @apply flex min-h-0 flex-1 flex-col;
+    }
+
+    .portal-intake-form-textarea {
+        @apply min-h-0 flex-1 resize-none;
+    }
+
+    .portal-intake-form-actions {
+        @apply flex shrink-0 justify-end gap-2.5 pt-4 sm:pt-5;
+    }
+
+    .portal-intake-form-row {
+        @apply grid shrink-0 grid-cols-1 gap-4 sm:grid-cols-2 sm:items-start;
+    }
+
+    .portal-intake-form-row-stp {
+        @apply sm:items-center;
     }
 
     .portal-panel {
@@ -117,10 +145,6 @@
 
     .portal-panel-full {
         @apply min-h-0 flex-1;
-    }
-
-    .portal-intake-form-row {
-        @apply grid grid-cols-1 gap-4 sm:grid-cols-2 sm:items-start;
     }
 
     .portal-submit-view {
