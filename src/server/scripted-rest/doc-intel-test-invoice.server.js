@@ -43,6 +43,7 @@
         }
 
         var restMessage = new sn_ws.RESTMessageV2('x_2058901_demo TSC APIM', 'post_doc_intel_invoice')
+        restMessage.setHttpMethod('post')
         restMessage.setHttpTimeout(120000)
         restMessage.setRequestBodyFromAttachment(attachmentSysId)
 
@@ -73,6 +74,10 @@
             error: 'Doc Intel request failed.',
             status: statusCode,
             body: responseBody.substring(0, 2000),
+            hint:
+                statusCode === 405 || responseBody.indexOf('GET method not supported') !== -1
+                    ? 'Outbound REST message may be using GET — verify HTTP method is POST on post_doc_intel_invoice.'
+                    : undefined,
         })
     } catch (error) {
         var message = error && error.message ? error.message : String(error)

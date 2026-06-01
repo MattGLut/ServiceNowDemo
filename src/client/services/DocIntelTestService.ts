@@ -15,6 +15,7 @@ export type DocIntelTestError = {
     error: string
     status?: number
     body?: string
+    hint?: string
 }
 
 function readFileAsBase64(file: File): Promise<string> {
@@ -61,7 +62,10 @@ export class DocIntelTestService {
         const data = (await response.json().catch(() => ({}))) as DocIntelTestSuccess & DocIntelTestError
 
         if (!response.ok) {
-            throw new Error(data.error || data.body || `HTTP error ${response.status}`)
+            const detail = [data.error, data.body, data.hint, data.status ? `Upstream HTTP ${data.status}` : null]
+                .filter(Boolean)
+                .join(' — ')
+            throw new Error(detail || `HTTP error ${response.status}`)
         }
 
         return data
