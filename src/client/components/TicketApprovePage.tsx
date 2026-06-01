@@ -5,6 +5,7 @@ import PortalLayout from './PortalLayout'
 import ProcessingPathBadge from './ProcessingPathBadge'
 import { BTN_PRIMARY } from './formStyles'
 import { TicketService } from '../services/TicketService'
+import { formatSubmittedAt } from '../utils/formatDateTime'
 import { ticketListUrl } from '../utils/ticketListFilter'
 import type { TicketAttachment, TicketRecord } from '../types/ticket'
 
@@ -32,10 +33,31 @@ function ApprovePageChrome({ backHref, title, ticket, children }: ApprovePageChr
             <div className="portal-approve-shell">
                 <header className="portal-approve-toolbar">
                     <div className="portal-approve-toolbar-row">
-                        <a href={backHref} className="portal-approve-back">
-                            ← Back to tickets
-                        </a>
-                        {title && <h1 className="portal-approve-title">{title}</h1>}
+                        <div className="portal-approve-toolbar-start">
+                            <a href={backHref} className="portal-approve-back">
+                                ← Back to tickets
+                            </a>
+                            <div className="portal-approve-toolbar-title-block min-w-0">
+                                {title && <h1 className="portal-approve-title">{title}</h1>}
+                                {ticket && (
+                                    <p className="portal-approve-header-summary">
+                                        {ticket.externalId && (
+                                            <span>
+                                                Contract{' '}
+                                                <span className="text-rh-text">{ticket.externalId}</span>
+                                            </span>
+                                        )}
+                                        {ticket.externalId && ticket.submittedAt && (
+                                            <span aria-hidden="true"> · </span>
+                                        )}
+                                        {ticket.submittedAt && (
+                                            <span>Submitted {formatSubmittedAt(ticket.submittedAt)}</span>
+                                        )}
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+                        {ticket && <ApproveTicketHeaderMeta ticket={ticket} />}
                         {ticket && (
                             <div className="portal-approve-toolbar-badges">
                                 <span className="portal-ticket-status">{ticket.statusLabel}</span>
@@ -43,7 +65,6 @@ function ApprovePageChrome({ backHref, title, ticket, children }: ApprovePageChr
                             </div>
                         )}
                     </div>
-                    {ticket && <ApproveTicketHeaderMeta ticket={ticket} />}
                 </header>
                 <div className="portal-approve-workspace">{children}</div>
             </div>

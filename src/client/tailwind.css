@@ -120,11 +120,19 @@
     }
 
     .portal-approve-toolbar-row {
-        @apply flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1;
+        @apply flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2 lg:flex-nowrap;
+    }
+
+    .portal-approve-toolbar-start {
+        @apply flex min-w-0 shrink-0 items-center gap-3 lg:max-w-[min(22rem,32%)];
+    }
+
+    .portal-approve-toolbar-title-block {
+        @apply min-w-0;
     }
 
     .portal-approve-toolbar-badges {
-        @apply flex shrink-0 flex-wrap items-center gap-2;
+        @apply flex shrink-0 flex-wrap items-center justify-end gap-2 lg:ml-auto;
     }
 
     .portal-approve-back {
@@ -159,52 +167,24 @@
         @apply min-h-[10rem] flex-1 rounded-lg border border-dashed border-rh-border bg-rh-bg/50 p-4;
     }
 
-    .portal-approve-header-meta {
-        @apply flex flex-col gap-1;
-    }
-
     .portal-approve-header-summary {
-        @apply m-0 text-xs text-rh-muted;
-    }
-
-    .portal-approve-details {
-        @apply text-sm;
-    }
-
-    .portal-approve-details-summary {
-        @apply cursor-pointer list-none text-xs font-medium text-rh-muted hover:text-rh-text;
-    }
-
-    .portal-approve-details-summary::before {
-        content: '▸ ';
-    }
-
-    .portal-approve-details[open] > .portal-approve-details-summary::before {
-        content: '▾ ';
-    }
-
-    .portal-approve-details-summary::-webkit-details-marker {
-        display: none;
-    }
-
-    .portal-approve-details-body {
-        @apply mt-2 flex flex-col gap-2 border-t border-rh-border/60 pt-2;
+        @apply m-0 mt-0.5 truncate text-xs text-rh-muted;
     }
 
     .portal-approve-header-dl {
-        @apply m-0 grid gap-2 text-xs sm:grid-cols-2 lg:grid-cols-4;
+        @apply m-0 grid w-full min-w-0 flex-1 grid-cols-2 gap-x-4 gap-y-1 text-xs sm:grid-cols-3 lg:w-auto;
+    }
+
+    .portal-approve-header-dl-item {
+        @apply min-w-0;
     }
 
     .portal-approve-header-dl dt {
-        @apply text-xs font-medium text-rh-muted;
+        @apply text-[0.65rem] font-medium uppercase tracking-wide text-rh-muted;
     }
 
     .portal-approve-header-dl dd {
-        @apply m-0 mt-0.5 text-rh-text;
-    }
-
-    .portal-approve-header-description {
-        @apply m-0 whitespace-pre-wrap text-sm text-rh-text;
+        @apply m-0 mt-0.5 truncate text-rh-text;
     }
 
     .portal-approve-pdf-panel {
