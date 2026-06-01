@@ -49,6 +49,18 @@ export function syncTicketListStatusInUrl(statusFilter: TicketListStatusFilter):
     window.history.replaceState({}, '', `${url.pathname}${url.search}`)
 }
 
+export function clearTicketListHighlightFromUrl(): void {
+    const url = new URL(window.location.href)
+
+    if (!url.searchParams.has('sys_id')) {
+        return
+    }
+
+    url.searchParams.delete('sys_id')
+    const query = url.searchParams.toString()
+    window.history.replaceState({}, '', query ? `${url.pathname}?${query}` : url.pathname)
+}
+
 export function emptyTicketListMessage(statusFilter: TicketListStatusFilter): string {
     switch (statusFilter) {
         case 'draft':
