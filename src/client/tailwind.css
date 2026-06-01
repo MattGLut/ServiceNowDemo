@@ -248,52 +248,28 @@
         @apply cursor-default text-rh-muted;
     }
 
-    .portal-approve-field-legend {
-        @apply flex flex-wrap gap-x-4 gap-y-1.5 rounded-lg border border-rh-border bg-rh-bg/80 px-3 py-2 text-[0.65rem] text-rh-muted;
-    }
-
-    .portal-approve-field-legend-item {
-        @apply inline-flex items-center gap-1.5;
-    }
-
-    .portal-approve-field-legend-swatch {
-        @apply h-2.5 w-2.5 shrink-0 rounded-sm border;
-    }
-
-    .portal-approve-field-legend-swatch--contract {
-        @apply border-sky-500/50 bg-sky-500/20;
-    }
-
-    .portal-approve-field-legend-swatch--vendor {
-        @apply border-violet-500/50 bg-violet-500/20;
-    }
-
-    .portal-approve-field-legend-swatch--doc-intel {
-        @apply border-emerald-500/50 bg-emerald-500/20;
-    }
-
     .portal-approve-field--source-contract {
-        @apply border-sky-500/45 bg-sky-950/40 focus:border-sky-400 focus:ring-sky-400/25;
+        @apply border-sky-600/40 bg-sky-500/20 focus:border-sky-400 focus:ring-sky-400/30;
     }
 
     .portal-approve-field--source-contract.portal-approve-field-readonly {
-        @apply bg-sky-950/50;
+        @apply bg-sky-500/25;
     }
 
     .portal-approve-field--source-vendor {
-        @apply border-violet-500/45 bg-violet-950/40 focus:border-violet-400 focus:ring-violet-400/25;
+        @apply border-violet-600/40 bg-violet-500/20 focus:border-violet-400 focus:ring-violet-400/30;
     }
 
     .portal-approve-field--source-vendor.portal-approve-field-readonly {
-        @apply bg-violet-950/50;
+        @apply bg-violet-500/25;
     }
 
     .portal-approve-field--source-doc-intel {
-        @apply border-emerald-500/45 bg-emerald-950/40 focus:border-emerald-400 focus:ring-emerald-400/25;
+        @apply border-emerald-600/40 bg-emerald-500/20 focus:border-emerald-400 focus:ring-emerald-400/30;
     }
 
     .portal-approve-field--source-doc-intel.portal-approve-field-readonly {
-        @apply bg-emerald-950/50;
+        @apply bg-emerald-500/25;
     }
 
     .portal-approve-header-dl {
@@ -345,11 +321,11 @@
     }
 
     .portal-approve-pdf-frame {
-        @apply relative min-h-0 flex-1 bg-rh-elevated;
+        @apply relative min-h-0 flex-1 bg-rh-bg px-4 sm:px-8;
     }
 
     .portal-approve-pdf-iframe {
-        @apply absolute inset-0 h-full w-full border-0;
+        @apply absolute inset-x-4 inset-y-0 border-0 sm:inset-x-8;
     }
 
     .portal-approve-pdf-fallback,
