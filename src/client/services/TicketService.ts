@@ -66,6 +66,11 @@ export function buildAttachmentDownloadUrl(attachmentSysId: string): string {
     return `/sys_attachment.do?sys_id=${encodeURIComponent(attachmentSysId)}`
 }
 
+/** Table API attachment stream; use with X-UserToken and blob URLs for in-browser preview. */
+export function buildAttachmentFileApiUrl(attachmentSysId: string): string {
+    return `/api/now/attachment/${encodeURIComponent(attachmentSysId)}/file`
+}
+
 function formatGlideDateTime(date: Date): string {
     const pad = (value: number) => String(value).padStart(2, '0')
 
@@ -312,5 +317,28 @@ export class TicketService {
                 downloadUrl: buildAttachmentDownloadUrl(attachmentSysId),
             }
         })
+    }
+
+    async fetchAttachmentFile(attachmentSysId: string): Promise<Blob> {
+        const response = await fetch(buildAttachmentFileApiUrl(attachmentSysId), {
+            headers: {
+                Accept: 'application/pdf,*/*',
+                'X-UserToken': window.g_ck,
+            },
+        })
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}))
+            throw new Error(errorData.error?.message || `HTTP error ${response.status}`)
+        }
+
+        const blob = await response.blob()
+        const type = blob.type || 'application/pdf'
+
+        if (type === 'application/octet-stream' || !type) {
+            return new Blob([blob], { type: 'application/pdf' })
+        }
+
+        return blob
     }
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { buildAttachmentDownloadUrl } from '../services/TicketService'
+import { TicketService, buildAttachmentDownloadUrl } from '../services/TicketService'
 import { formatFileSize } from '../utils/formatDateTime'
 import { INPUT_CLASS, LABEL_CLASS } from './formStyles'
 import type { TicketAttachment } from '../types/ticket'
@@ -15,6 +15,7 @@ function isPdfAttachment(attachment: TicketAttachment): boolean {
 }
 
 export default function ApproveAttachmentViewer({ attachments }: ApproveAttachmentViewerProps) {
+    const ticketService = useMemo(() => new TicketService(), [])
     const viewableAttachments = useMemo(
         () => attachments.filter(isPdfAttachment),
         [attachments]
@@ -22,6 +23,9 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
     const documents = viewableAttachments.length > 0 ? viewableAttachments : attachments
 
     const [selectedIndex, setSelectedIndex] = useState(0)
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+    const [previewLoading, setPreviewLoading] = useState(false)
+    const [previewError, setPreviewError] = useState<string | null>(null)
 
     useEffect(() => {
         setSelectedIndex(0)
@@ -29,6 +33,61 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
 
     const safeIndex = documents.length === 0 ? 0 : Math.min(selectedIndex, documents.length - 1)
     const current = documents[safeIndex]
+    const canPreview = Boolean(current && isPdfAttachment(current))
+
+    useEffect(() => {
+        if (!current || !canPreview) {
+            setPreviewUrl(null)
+            setPreviewError(null)
+            setPreviewLoading(false)
+            return
+        }
+
+        let cancelled = false
+
+        const loadPreview = async () => {
+            setPreviewLoading(true)
+            setPreviewError(null)
+            setPreviewUrl((previousUrl) => {
+                if (previousUrl) {
+                    URL.revokeObjectURL(previousUrl)
+                }
+                return null
+            })
+
+            try {
+                const blob = await ticketService.fetchAttachmentFile(current.sysId)
+                if (cancelled) {
+                    return
+                }
+                const objectUrl = URL.createObjectURL(blob)
+                setPreviewUrl(objectUrl)
+            } catch (err) {
+                if (cancelled) {
+                    return
+                }
+                const message = err instanceof Error ? err.message : 'Failed to load document'
+                setPreviewError(message)
+                console.error(err)
+            } finally {
+                if (!cancelled) {
+                    setPreviewLoading(false)
+                }
+            }
+        }
+
+        void loadPreview()
+
+        return () => {
+            cancelled = true
+            setPreviewUrl((previousUrl) => {
+                if (previousUrl) {
+                    URL.revokeObjectURL(previousUrl)
+                }
+                return null
+            })
+        }
+    }, [canPreview, current?.sysId, ticketService])
 
     if (documents.length === 0) {
         return (
@@ -38,8 +97,8 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
         )
     }
 
-    const viewUrl = buildAttachmentDownloadUrl(current.sysId)
-    const canEmbed = isPdfAttachment(current)
+    const downloadUrl = buildAttachmentDownloadUrl(current.sysId)
+    const openInTabUrl = previewUrl ?? downloadUrl
 
     return (
         <div className="portal-approve-pdf-panel">
@@ -69,29 +128,29 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
                 <div className="portal-approve-pdf-meta">
                     <span className="text-xs text-rh-muted">{formatFileSize(current.sizeBytes)}</span>
                     <a
-                        href={viewUrl}
+                        href={openInTabUrl}
                         className="text-xs text-rh-green no-underline hover:underline"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
                         Open in new tab
                     </a>
+                    <a
+                        href={downloadUrl}
+                        className="text-xs text-rh-muted no-underline hover:text-rh-text hover:underline"
+                        download={current.fileName}
+                    >
+                        Download
+                    </a>
                 </div>
             </div>
 
             <div className="portal-approve-pdf-frame">
-                {canEmbed ? (
-                    <iframe
-                        key={current.sysId}
-                        title={current.fileName}
-                        src={viewUrl}
-                        className="portal-approve-pdf-iframe"
-                    />
-                ) : (
+                {!canPreview && (
                     <div className="portal-approve-pdf-fallback">
                         <p className="portal-detail-message m-0">In-browser preview is only available for PDF files.</p>
                         <a
-                            href={viewUrl}
+                            href={downloadUrl}
                             className="mt-3 text-sm text-rh-green no-underline hover:underline"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -99,6 +158,33 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
                             Download {current.fileName}
                         </a>
                     </div>
+                )}
+
+                {canPreview && previewLoading && (
+                    <p className="portal-detail-message m-auto">Loading document…</p>
+                )}
+
+                {canPreview && previewError && (
+                    <div className="portal-approve-pdf-fallback">
+                        <p className="portal-detail-message m-0 text-red-400">{previewError}</p>
+                        <a
+                            href={downloadUrl}
+                            className="mt-3 text-sm text-rh-green no-underline hover:underline"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Download {current.fileName}
+                        </a>
+                    </div>
+                )}
+
+                {canPreview && previewUrl && !previewLoading && !previewError && (
+                    <iframe
+                        key={current.sysId}
+                        title={current.fileName}
+                        src={previewUrl}
+                        className="portal-approve-pdf-iframe"
+                    />
                 )}
             </div>
         </div>
