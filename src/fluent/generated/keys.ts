@@ -222,6 +222,7 @@ declare global {
                     {
                         table: 'sys_choice'
                         id: '220d4f05cf2343fa9cd4832733eb6b4e'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'status'
@@ -250,6 +251,7 @@ declare global {
                     {
                         table: 'sys_choice'
                         id: '29dc9a653ffe4cef99ea29e7ba0d6fc6'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'status'
@@ -511,6 +513,7 @@ declare global {
                     {
                         table: 'sys_choice'
                         id: '7e47340324a2446388d99538dbea258c'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'status'
@@ -531,6 +534,15 @@ declare global {
                             name: 'x_2058901_demo_ticket'
                             element: 'title'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: '805d57fcd2034fb497ead40128d1865c'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'status'
+                            value: 'posted'
                         }
                     },
                     {
@@ -667,6 +679,7 @@ declare global {
                     {
                         table: 'sys_choice'
                         id: 'b02485d9442d471380eefca196cec11d'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'status'
@@ -716,6 +729,7 @@ declare global {
                     {
                         table: 'sys_choice'
                         id: 'bea67a8e39de46068a8611ae5762352b'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'status'
@@ -735,6 +749,15 @@ declare global {
                         deleted: true
                         key: {
                             name: 'x_2058901_demo_incident_response'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: 'c483f19c8c8041af888ea98e8ec1a8f2'
+                        key: {
+                            name: 'x_2058901_demo_ticket'
+                            element: 'status'
+                            value: 'draft'
                         }
                     },
                     {
@@ -787,6 +810,7 @@ declare global {
                     {
                         table: 'sys_choice'
                         id: 'd8eae10b0d434434b1c6d8bc7d943bf0'
+                        deleted: true
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'status'

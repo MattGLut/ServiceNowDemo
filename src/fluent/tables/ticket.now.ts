@@ -41,15 +41,11 @@ export const x_2058901_demo_ticket = Table({
         status: ChoiceColumn({
             label: 'Status',
             readOnly: true,
-            default: 'submitted',
+            default: 'draft',
             choices: {
-                submitted: { label: 'Submitted' },
-                stp_queued: { label: 'STP Queued' },
-                di_processing: { label: 'DI Processing' },
-                pending_review: { label: 'Pending Review' },
+                draft: { label: 'Draft' },
                 approved: { label: 'Approved' },
-                ready_for_pickup: { label: 'Ready for Pickup' },
-                picked_up: { label: 'Picked Up' },
+                posted: { label: 'Posted' },
             },
         }),
         submitted_by: ReferenceColumn({

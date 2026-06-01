@@ -9,7 +9,7 @@ export default function HomePage() {
                     <p className="m-0 text-lg text-rh-text">Welcome</p>
                     <p className="mx-auto mt-3 mb-0 max-w-md text-sm text-rh-muted">
                         Create a new ticket with supporting documents. Tickets are stored in ServiceNow and
-                        start in Submitted status for downstream processing.
+                        start in Draft status for downstream processing.
                     </p>
                 </div>
             </section>

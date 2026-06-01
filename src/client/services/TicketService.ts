@@ -102,7 +102,7 @@ export class TicketService {
             workflow_type: input.workflowTypeSysId,
             external_id: contractNumber,
             stp_flag: input.stpFlag,
-            status: 'submitted',
+            status: 'draft',
             submitted_at: formatGlideDateTime(new Date()),
         }
 
