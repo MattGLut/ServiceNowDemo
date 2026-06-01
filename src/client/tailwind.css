@@ -23,6 +23,71 @@
 }
 
 @layer components {
+    /*
+     * Thin, dark-themed scrollbars for all scroll regions in the portal.
+     * (PDF iframe content keeps its own viewer scrollbars.)
+     */
+    .portal-shell,
+    .portal-shell * {
+        scrollbar-width: thin;
+        scrollbar-color: rgb(142 142 147 / 0.4) transparent;
+    }
+
+    .portal-shell *::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    .portal-shell *::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .portal-shell *::-webkit-scrollbar-thumb {
+        background-color: rgb(142 142 147 / 0.45);
+        border-radius: 9999px;
+    }
+
+    .portal-shell *::-webkit-scrollbar-thumb:hover {
+        background-color: rgb(142 142 147 / 0.7);
+    }
+
+    .portal-shell *::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
+    /* Fade in scrollbars when hovering a scroll panel (keeps layout calm at rest). */
+    .portal-approve-left,
+    .portal-approve-message-panel,
+    .portal-ticket-table-wrap,
+    .portal-immersive-main,
+    .portal-sidebar {
+        scrollbar-color: transparent transparent;
+    }
+
+    .portal-approve-left:hover,
+    .portal-approve-message-panel:hover,
+    .portal-ticket-table-wrap:hover,
+    .portal-immersive-main:hover,
+    .portal-sidebar:hover {
+        scrollbar-color: rgb(142 142 147 / 0.4) transparent;
+    }
+
+    .portal-approve-left::-webkit-scrollbar-thumb,
+    .portal-approve-message-panel::-webkit-scrollbar-thumb,
+    .portal-ticket-table-wrap::-webkit-scrollbar-thumb,
+    .portal-immersive-main::-webkit-scrollbar-thumb,
+    .portal-sidebar::-webkit-scrollbar-thumb {
+        background-color: transparent;
+    }
+
+    .portal-approve-left:hover::-webkit-scrollbar-thumb,
+    .portal-approve-message-panel:hover::-webkit-scrollbar-thumb,
+    .portal-ticket-table-wrap:hover::-webkit-scrollbar-thumb,
+    .portal-immersive-main:hover::-webkit-scrollbar-thumb,
+    .portal-sidebar:hover::-webkit-scrollbar-thumb {
+        background-color: rgb(142 142 147 / 0.45);
+    }
+
     .portal-shell {
         @apply flex h-full w-full flex-col overflow-hidden bg-rh-bg;
     }
@@ -152,7 +217,7 @@
     }
 
     .portal-approve-left {
-        @apply flex min-h-0 w-full flex-col gap-3 overflow-y-auto border-rh-border bg-rh-panel p-3 sm:p-4 lg:w-[min(36rem,46%)] lg:shrink-0 lg:border-r;
+        @apply flex min-h-0 w-full flex-col gap-3 overflow-y-auto overscroll-y-contain border-rh-border bg-rh-panel p-3 sm:p-4 lg:w-[min(36rem,46%)] lg:shrink-0 lg:border-r;
     }
 
     .portal-approve-right {
@@ -348,7 +413,7 @@
     }
 
     .portal-ticket-table-wrap {
-        @apply min-h-0 flex-1 overflow-x-hidden overflow-y-auto;
+        @apply min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain;
     }
 
     .portal-ticket-table {
@@ -511,7 +576,7 @@
     }
 
     .portal-immersive-main {
-        @apply min-h-0 flex-1 overflow-y-auto;
+        @apply min-h-0 flex-1 overflow-y-auto overscroll-y-contain;
     }
 
     .portal-detail-panel {
