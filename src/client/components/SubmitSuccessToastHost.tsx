@@ -2,11 +2,20 @@ import React, { useState } from 'react'
 import SubmitSuccessToast from './SubmitSuccessToast'
 import { consumePendingSubmitSuccessToast } from '../utils/submitSuccessToast'
 
-export default function SubmitSuccessToastHost() {
+type SubmitSuccessToastHostProps = {
+    onDismiss?: () => void
+}
+
+export default function SubmitSuccessToastHost({ onDismiss }: SubmitSuccessToastHostProps) {
     const [toast, setToast] = useState(() => consumePendingSubmitSuccessToast())
 
     if (!toast) {
         return null
+    }
+
+    const handleDismiss = () => {
+        setToast(null)
+        onDismiss?.()
     }
 
     return (
@@ -15,7 +24,7 @@ export default function SubmitSuccessToastHost() {
                 key={toast.sysId}
                 title={toast.title}
                 attachmentCount={toast.attachmentCount}
-                onDismiss={() => setToast(null)}
+                onDismiss={handleDismiss}
             />
         </div>
     )

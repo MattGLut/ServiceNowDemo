@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
-
-const TOAST_VISIBLE_MS = 4500
-const TOAST_FADE_MS = 400
+import {
+    SUBMIT_SUCCESS_TOAST_FADE_MS,
+    SUBMIT_SUCCESS_TOAST_VISIBLE_MS,
+} from '../utils/submitSuccessToast'
 
 type SubmitSuccessToastProps = {
     title: string
@@ -17,7 +18,7 @@ export default function SubmitSuccessToast({ title, attachmentCount, onDismiss }
     }, [])
 
     useEffect(() => {
-        const exitTimer = window.setTimeout(beginExit, TOAST_VISIBLE_MS)
+        const exitTimer = window.setTimeout(beginExit, SUBMIT_SUCCESS_TOAST_VISIBLE_MS)
         return () => window.clearTimeout(exitTimer)
     }, [beginExit])
 
@@ -26,7 +27,7 @@ export default function SubmitSuccessToast({ title, attachmentCount, onDismiss }
             return
         }
 
-        const removeTimer = window.setTimeout(onDismiss, TOAST_FADE_MS)
+        const removeTimer = window.setTimeout(onDismiss, SUBMIT_SUCCESS_TOAST_FADE_MS)
         return () => window.clearTimeout(removeTimer)
     }, [isExiting, onDismiss])
 
