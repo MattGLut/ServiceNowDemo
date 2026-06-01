@@ -5,7 +5,6 @@ import PortalLayout from './PortalLayout'
 import ProcessingPathBadge from './ProcessingPathBadge'
 import { BTN_PRIMARY } from './formStyles'
 import { TicketService } from '../services/TicketService'
-import { formatSubmittedAt } from '../utils/formatDateTime'
 import { ticketListUrl } from '../utils/ticketListFilter'
 import type { TicketAttachment, TicketRecord } from '../types/ticket'
 
@@ -32,41 +31,23 @@ function ApprovePageChrome({ backHref, title, ticket, children }: ApprovePageChr
         <PortalLayout fullWidth>
             <div className="portal-approve-shell">
                 <header className="portal-approve-toolbar">
-                    <div className="portal-approve-toolbar-row">
-                        <div className="portal-approve-toolbar-start">
-                            <a href={backHref} className="portal-approve-back">
-                                ← Back to tickets
-                            </a>
-                            <div className="portal-approve-toolbar-title-block min-w-0">
-                                {title && <h1 className="portal-approve-title">{title}</h1>}
-                                {ticket && (
-                                    <p className="portal-approve-header-summary">
-                                        {ticket.externalId && (
-                                            <span>
-                                                Contract{' '}
-                                                <span className="text-rh-text">{ticket.externalId}</span>
-                                            </span>
-                                        )}
-                                        {ticket.externalId && ticket.submittedAt && (
-                                            <span aria-hidden="true"> · </span>
-                                        )}
-                                        {ticket.submittedAt && (
-                                            <span>Submitted {formatSubmittedAt(ticket.submittedAt)}</span>
-                                        )}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
+                    <div className="portal-approve-toolbar-primary">
+                        <a href={backHref} className="portal-approve-back">
+                            ← Back to tickets
+                        </a>
+                        {title && <h1 className="portal-approve-title">{title}</h1>}
                         {ticket && (
-                            <div className="portal-approve-toolbar-end">
-                                <ApproveTicketHeaderMeta ticket={ticket} />
-                                <div className="portal-approve-toolbar-badges">
-                                    <span className="portal-ticket-status">{ticket.statusLabel}</span>
-                                    <ProcessingPathBadge stpFlag={ticket.stpFlag} />
-                                </div>
+                            <div className="portal-approve-toolbar-badges">
+                                <span className="portal-ticket-status">{ticket.statusLabel}</span>
+                                <ProcessingPathBadge stpFlag={ticket.stpFlag} />
                             </div>
                         )}
                     </div>
+                    {ticket && (
+                        <div className="portal-approve-header-strip">
+                            <ApproveTicketHeaderMeta ticket={ticket} />
+                        </div>
+                    )}
                 </header>
                 <div className="portal-approve-workspace">{children}</div>
             </div>

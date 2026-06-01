@@ -1,4 +1,5 @@
 import React from 'react'
+import { formatSubmittedAt } from '../utils/formatDateTime'
 import { formatWorkflowTypeLabel } from '../types/workflowType'
 import type { TicketRecord } from '../types/ticket'
 
@@ -17,7 +18,19 @@ export default function ApproveTicketHeaderMeta({ ticket }: ApproveTicketHeaderM
 
     return (
         <dl className="portal-approve-header-dl">
-            <div className="portal-approve-header-dl-item">
+            {ticket.externalId && (
+                <div className="portal-approve-header-dl-item">
+                    <dt>Contract</dt>
+                    <dd title={ticket.externalId}>{ticket.externalId}</dd>
+                </div>
+            )}
+            {ticket.submittedAt && (
+                <div className="portal-approve-header-dl-item">
+                    <dt>Submitted</dt>
+                    <dd>{formatSubmittedAt(ticket.submittedAt)}</dd>
+                </div>
+            )}
+            <div className="portal-approve-header-dl-item portal-approve-header-dl-item-wide">
                 <dt>Workflow type</dt>
                 <dd title={workflowLabel}>{workflowLabel}</dd>
             </div>
@@ -27,7 +40,7 @@ export default function ApproveTicketHeaderMeta({ ticket }: ApproveTicketHeaderM
                     {ticket.submittedByDisplay || '—'}
                 </dd>
             </div>
-            <div className="portal-approve-header-dl-item">
+            <div className="portal-approve-header-dl-item portal-approve-header-dl-item-sysid">
                 <dt>Sys ID</dt>
                 <dd className="font-mono" title={ticket.sysId}>
                     {ticket.sysId}
