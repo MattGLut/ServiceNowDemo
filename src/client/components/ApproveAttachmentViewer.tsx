@@ -13,6 +13,18 @@ function isPdfAttachment(attachment: TicketAttachment): boolean {
     return type.includes('pdf') || name.endsWith('.pdf')
 }
 
+/** Hide built-in PDF viewer thumbnail/nav pane (Chrome, Edge, Acrobat-style viewers). */
+function pdfEmbedUrl(blobOrFileUrl: string): string {
+    const params = 'navpanes=0&pagemode=none&view=FitH'
+    const hashIndex = blobOrFileUrl.indexOf('#')
+    if (hashIndex === -1) {
+        return `${blobOrFileUrl}#${params}`
+    }
+    const base = blobOrFileUrl.slice(0, hashIndex)
+    const existing = blobOrFileUrl.slice(hashIndex + 1)
+    return `${base}#${existing ? `${existing}&` : ''}${params}`
+}
+
 export default function ApproveAttachmentViewer({ attachments }: ApproveAttachmentViewerProps) {
     const ticketService = useMemo(() => new TicketService(), [])
     const viewableAttachments = useMemo(
@@ -98,7 +110,8 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
     }
 
     const downloadUrl = buildAttachmentDownloadUrl(current.sysId)
-    const openInTabUrl = previewUrl ?? downloadUrl
+    const openInTabUrl =
+        previewUrl && canPreview ? pdfEmbedUrl(previewUrl) : previewUrl ?? downloadUrl
 
     return (
         <div className="portal-approve-pdf-panel">
@@ -168,7 +181,7 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
                     <iframe
                         key={current.sysId}
                         title={current.fileName}
-                        src={previewUrl}
+                        src={pdfEmbedUrl(previewUrl)}
                         className="portal-approve-pdf-iframe"
                     />
                 )}
