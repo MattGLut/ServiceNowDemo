@@ -1,4 +1,5 @@
 import React from 'react'
+import DocIntelTestPage from './components/DocIntelTestPage'
 import HomePage from './components/HomePage'
 import TicketApprovePage from './components/TicketApprovePage'
 import TicketDetailPage from './components/TicketDetailPage'
@@ -23,6 +24,10 @@ export default function App() {
 
     if (page === 'submit') {
         return <TicketSubmitPage />
+    }
+
+    if (page === 'doc-intel-test') {
+        return <DocIntelTestPage />
     }
 
     return <HomePage />

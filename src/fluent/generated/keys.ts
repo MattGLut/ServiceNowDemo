@@ -9,6 +9,18 @@ declare global {
                         table: 'sys_module'
                         id: '0e3749029e224d5c8dffa70f9824870f'
                     }
+                    'doc-intel-test-api': {
+                        table: 'sys_ws_definition'
+                        id: 'f46d2d837046461e81591ab3f42f1539'
+                    }
+                    'doc-intel-test-invoice-route': {
+                        table: 'sys_ws_operation'
+                        id: '9f24f978959e485eb5465e605b71336d'
+                    }
+                    'doc-intel-test-rest-acl': {
+                        table: 'sys_security_acl'
+                        id: 'e6267d5d744c4ffd8ed16b39feb5bfc0'
+                    }
                     'incident-response-create-acl': {
                         table: 'sys_security_acl'
                         id: 'fc0ae24a621d41f2af509629e5a87834'
@@ -54,6 +66,10 @@ declare global {
                     'src_server_business-rules_ticket-set-submitter_server_js': {
                         table: 'sys_module'
                         id: '0a6c08e453224e78b96183c2e6a8aa29'
+                    }
+                    'src_server_scripted-rest_doc-intel-test-invoice_server_js': {
+                        table: 'sys_module'
+                        id: 'fa480963699c4626a4a3c662bf31e3f3'
                     }
                     'tailwind.generated.css': {
                         table: 'sys_ux_theme_asset'
@@ -252,6 +268,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sn_glider_source_artifact_m2m'
+                        id: '0c00287ee6f643618bb921642899844f'
+                        key: {
+                            application_file: 'd80e72df8380435fb911d316f3d0932c'
+                            source_artifact: '356c10c93994447d8245189fd940e015'
+                        }
+                    },
+                    {
                         table: 'sn_glider_source_artifact'
                         id: '0d3c23bf918c45878e4ea9f11dceb6ea'
                         key: {
@@ -387,6 +411,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sn_glider_source_artifact_m2m'
+                        id: '2a4521adb1a94e25b03c9922f4191541'
+                        key: {
+                            application_file: '32b08f7b0bd949839a4b5e581692e760'
+                            source_artifact: '356c10c93994447d8245189fd940e015'
+                        }
+                    },
+                    {
                         table: 'sys_security_acl_role'
                         id: '2a621f3feb5a4f2e98a7cff902092962'
                         key: {
@@ -449,6 +481,13 @@ declare global {
                                     name: 'itil'
                                 }
                             }
+                        }
+                    },
+                    {
+                        table: 'sn_glider_source_artifact'
+                        id: '356c10c93994447d8245189fd940e015'
+                        key: {
+                            name: 'x_2058901_demo_doc_intel_test.do - BYOUI Files'
                         }
                     },
                     {
@@ -692,6 +731,13 @@ declare global {
                         key: {
                             name: 'x_2058901_demo_incident_response'
                             element: 'NULL'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_page'
+                        id: '660fcf2a93a7446aa1e05ee20bd80a9d'
+                        key: {
+                            endpoint: 'x_2058901_demo_doc_intel_test.do'
                         }
                     },
                     {
@@ -1199,6 +1245,19 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: 'c5ed466840654e11815d969d56dd0983'
+                        key: {
+                            sys_security_acl: 'e6267d5d744c4ffd8ed16b39feb5bfc0'
+                            sys_user_role: {
+                                id: '3cd5cfdac31844c2a1a841bb149461a3'
+                                key: {
+                                    name: 'itil'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: 'c809fee7af5a4f11b8410d8468e9f3f7'
                         deleted: true
@@ -1311,6 +1370,14 @@ declare global {
                             name: 'x_2058901_demo_ticket_approval'
                             element: 'profit_center'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sn_glider_source_artifact_m2m'
+                        id: 'ed3dc4d419554410962cfc5a1a0a5eaa'
+                        key: {
+                            application_file: '660fcf2a93a7446aa1e05ee20bd80a9d'
+                            source_artifact: '356c10c93994447d8245189fd940e015'
                         }
                     },
                     {
