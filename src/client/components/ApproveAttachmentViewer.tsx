@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { TicketService, buildAttachmentDownloadUrl } from '../services/TicketService'
-import { formatFileSize } from '../utils/formatDateTime'
-import { INPUT_CLASS, LABEL_CLASS } from './formStyles'
+import { INPUT_CLASS } from './formStyles'
 import type { TicketAttachment } from '../types/ticket'
 
 type ApproveAttachmentViewerProps = {
@@ -34,9 +33,10 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
     const safeIndex = documents.length === 0 ? 0 : Math.min(selectedIndex, documents.length - 1)
     const current = documents[safeIndex]
     const canPreview = Boolean(current && isPdfAttachment(current))
+    const previewAttachmentSysId = canPreview ? current.sysId : null
 
     useEffect(() => {
-        if (!current || !canPreview) {
+        if (!previewAttachmentSysId) {
             setPreviewUrl(null)
             setPreviewError(null)
             setPreviewLoading(false)
@@ -56,7 +56,7 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
             })
 
             try {
-                const blob = await ticketService.fetchAttachmentFile(current.sysId)
+                const blob = await ticketService.fetchAttachmentFile(previewAttachmentSysId)
                 if (cancelled) {
                     return
                 }
@@ -87,7 +87,7 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
                 return null
             })
         }
-    }, [canPreview, current?.sysId, ticketService])
+    }, [previewAttachmentSysId, ticketService])
 
     if (documents.length === 0) {
         return (
@@ -103,46 +103,30 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
     return (
         <div className="portal-approve-pdf-panel">
             <div className="portal-approve-pdf-toolbar">
-                <div className="portal-approve-pdf-picker">
-                    <label htmlFor="approve-attachment-select" className={LABEL_CLASS}>
-                        Document
-                    </label>
-                    <div className="flex flex-wrap items-center gap-2">
-                        <select
-                            id="approve-attachment-select"
-                            className={`${INPUT_CLASS} portal-approve-pdf-select`}
-                            value={String(safeIndex)}
-                            onChange={(event) => setSelectedIndex(Number.parseInt(event.target.value, 10))}
-                        >
-                            {documents.map((attachment, index) => (
-                                <option key={attachment.sysId} value={String(index)}>
-                                    {attachment.fileName}
-                                </option>
-                            ))}
-                        </select>
-                        <span className="text-xs text-rh-muted whitespace-nowrap">
-                            {safeIndex + 1} of {documents.length}
-                        </span>
-                    </div>
-                </div>
-                <div className="portal-approve-pdf-meta">
-                    <span className="text-xs text-rh-muted">{formatFileSize(current.sizeBytes)}</span>
-                    <a
-                        href={openInTabUrl}
-                        className="text-xs text-rh-green no-underline hover:underline"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Open in new tab
-                    </a>
-                    <a
-                        href={downloadUrl}
-                        className="text-xs text-rh-muted no-underline hover:text-rh-text hover:underline"
-                        download={current.fileName}
-                    >
-                        Download
-                    </a>
-                </div>
+                <select
+                    id="approve-attachment-select"
+                    aria-label="Document"
+                    className={`${INPUT_CLASS} portal-approve-select-compact portal-approve-pdf-select`}
+                    value={String(safeIndex)}
+                    onChange={(event) => setSelectedIndex(Number.parseInt(event.target.value, 10))}
+                >
+                    {documents.map((attachment, index) => (
+                        <option key={attachment.sysId} value={String(index)}>
+                            {attachment.fileName}
+                        </option>
+                    ))}
+                </select>
+                <span className="text-xs text-rh-muted whitespace-nowrap">
+                    {safeIndex + 1} of {documents.length}
+                </span>
+                <a
+                    href={openInTabUrl}
+                    className="portal-approve-pdf-open-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Open in new tab
+                </a>
             </div>
 
             <div className="portal-approve-pdf-frame">
@@ -155,7 +139,7 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            Download {current.fileName}
+                            Open {current.fileName}
                         </a>
                     </div>
                 )}
@@ -168,12 +152,12 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
                     <div className="portal-approve-pdf-fallback">
                         <p className="portal-detail-message m-0 text-red-400">{previewError}</p>
                         <a
-                            href={downloadUrl}
+                            href={openInTabUrl}
                             className="mt-3 text-sm text-rh-green no-underline hover:underline"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            Download {current.fileName}
+                            Open in new tab
                         </a>
                     </div>
                 )}
