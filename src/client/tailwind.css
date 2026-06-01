@@ -116,19 +116,19 @@
     }
 
     .portal-approve-toolbar {
-        @apply flex shrink-0 flex-col gap-2 border-b border-rh-border bg-rh-panel px-4 py-2 sm:px-6 sm:py-2.5;
+        @apply shrink-0 border-b border-rh-border bg-rh-panel px-4 py-2 sm:px-6 sm:py-2.5;
     }
 
     .portal-approve-toolbar-primary {
-        @apply flex min-w-0 items-center gap-3;
+        @apply flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2 lg:flex-nowrap;
     }
 
     .portal-approve-toolbar-badges {
-        @apply ml-auto flex shrink-0 flex-wrap items-center gap-2;
+        @apply flex shrink-0 flex-wrap items-center gap-2;
     }
 
-    .portal-approve-header-strip {
-        @apply border-t border-rh-border/50 pt-2;
+    .portal-approve-header-meta-center {
+        @apply min-w-0 flex-1 basis-full px-0 lg:basis-auto lg:px-4;
     }
 
     .portal-approve-back {
@@ -136,7 +136,7 @@
     }
 
     .portal-approve-title {
-        @apply m-0 min-w-0 flex-1 truncate text-base font-bold tracking-tight text-rh-text sm:text-lg;
+        @apply m-0 max-w-[min(11rem,28vw)] shrink-0 truncate text-base font-bold tracking-tight text-rh-text sm:max-w-[14rem] sm:text-lg;
     }
 
     .portal-approve-workspace {
@@ -164,19 +164,19 @@
     }
 
     .portal-approve-header-dl {
-        @apply m-0 flex flex-wrap items-start gap-x-4 gap-y-2 text-xs sm:gap-x-5;
+        @apply m-0 flex w-full min-w-0 items-start justify-between gap-x-2 text-xs sm:gap-x-3;
     }
 
     .portal-approve-header-dl-item {
-        @apply min-w-0 max-w-[9rem];
+        @apply min-w-0 flex-1 px-0.5;
     }
 
     .portal-approve-header-dl-item-wide {
-        @apply max-w-[12rem] sm:max-w-[14rem];
+        @apply min-w-0 flex-[1.15] px-0.5;
     }
 
     .portal-approve-header-dl-item-sysid {
-        @apply max-w-[10.5rem] font-mono sm:max-w-[11.5rem];
+        @apply min-w-0 flex-1 px-0.5 font-mono;
     }
 
     .portal-approve-header-dl dt {
@@ -192,11 +192,15 @@
     }
 
     .portal-approve-pdf-toolbar {
-        @apply flex shrink-0 flex-wrap items-center gap-2 border-b border-rh-border px-3 py-2 sm:px-4;
+        @apply flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-rh-border px-3 py-2 sm:px-4;
+    }
+
+    .portal-approve-pdf-toolbar-left {
+        @apply flex min-w-0 flex-1 flex-wrap items-center gap-2;
     }
 
     .portal-approve-pdf-select {
-        @apply min-w-0 flex-1 max-w-md;
+        @apply min-w-0 max-w-md flex-1;
     }
 
     .portal-approve-select-compact {

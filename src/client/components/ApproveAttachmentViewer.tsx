@@ -103,22 +103,24 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
     return (
         <div className="portal-approve-pdf-panel">
             <div className="portal-approve-pdf-toolbar">
-                <select
-                    id="approve-attachment-select"
-                    aria-label="Document"
-                    className={`${INPUT_CLASS} portal-approve-select-compact portal-approve-pdf-select`}
-                    value={String(safeIndex)}
-                    onChange={(event) => setSelectedIndex(Number.parseInt(event.target.value, 10))}
-                >
-                    {documents.map((attachment, index) => (
-                        <option key={attachment.sysId} value={String(index)}>
-                            {attachment.fileName}
-                        </option>
-                    ))}
-                </select>
-                <span className="text-xs text-rh-muted whitespace-nowrap">
-                    {safeIndex + 1} of {documents.length}
-                </span>
+                <div className="portal-approve-pdf-toolbar-left">
+                    <select
+                        id="approve-attachment-select"
+                        aria-label="Document"
+                        className={`${INPUT_CLASS} portal-approve-select-compact portal-approve-pdf-select`}
+                        value={String(safeIndex)}
+                        onChange={(event) => setSelectedIndex(Number.parseInt(event.target.value, 10))}
+                    >
+                        {documents.map((attachment, index) => (
+                            <option key={attachment.sysId} value={String(index)}>
+                                {attachment.fileName}
+                            </option>
+                        ))}
+                    </select>
+                    <span className="text-xs text-rh-muted whitespace-nowrap">
+                        {safeIndex + 1} of {documents.length}
+                    </span>
+                </div>
                 <a
                     href={openInTabUrl}
                     className="portal-approve-pdf-open-link"
