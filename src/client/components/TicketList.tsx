@@ -1,8 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { TicketService } from '../services/TicketService'
 import { formatAttachmentSummary, formatSubmittedAt } from '../utils/formatDateTime'
+import {
+    emptyTicketListMessage,
+    getTicketListStatusFilterFromUrl,
+    syncTicketListStatusInUrl,
+    TICKET_STATUS_FILTER_OPTIONS,
+    type TicketListStatusFilter,
+} from '../utils/ticketListFilter'
 import ProcessingPathBadge from './ProcessingPathBadge'
-import { ticketViewUrl } from '../utils/portalPage'
+import { ticketApproveUrl, ticketViewUrl } from '../utils/portalPage'
 import type { TicketRecord } from '../types/ticket'
 
 type TicketListProps = {
@@ -12,6 +19,9 @@ type TicketListProps = {
 }
 
 export default function TicketList({ ticketService, refreshKey, highlightSysId }: TicketListProps) {
+    const [statusFilter, setStatusFilter] = useState<TicketListStatusFilter>(() =>
+        getTicketListStatusFilterFromUrl()
+    )
     const [tickets, setTickets] = useState<TicketRecord[]>([])
     const [attachmentNamesByTicket, setAttachmentNamesByTicket] = useState<Record<string, string[]>>({})
     const [loading, setLoading] = useState(true)
@@ -22,7 +32,7 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId }
         setError(null)
 
         try {
-            const records = await ticketService.list()
+            const records = await ticketService.list({ status: statusFilter })
             setTickets(records)
 
             try {
@@ -41,16 +51,51 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId }
         } finally {
             setLoading(false)
         }
-    }, [ticketService])
+    }, [ticketService, statusFilter])
 
     useEffect(() => {
         void loadTickets()
     }, [loadTickets, refreshKey])
 
+    useEffect(() => {
+        syncTicketListStatusInUrl(statusFilter)
+    }, [statusFilter])
+
+    const handleStatusFilterChange = (nextFilter: TicketListStatusFilter) => {
+        setStatusFilter(nextFilter)
+    }
+
     return (
         <>
             <div className="portal-submit-panel-header">
-                <h2 className="portal-submit-panel-title">My tickets</h2>
+                <div className="min-w-0">
+                    <h2 className="portal-submit-panel-title">Tickets</h2>
+                    <div
+                        className="portal-ticket-filters"
+                        role="group"
+                        aria-label="Filter by status"
+                    >
+                        {TICKET_STATUS_FILTER_OPTIONS.map((option) => {
+                            const isActive = statusFilter === option.value
+
+                            return (
+                                <button
+                                    key={option.value}
+                                    type="button"
+                                    className={
+                                        isActive
+                                            ? 'portal-ticket-filter-active'
+                                            : 'portal-ticket-filter'
+                                    }
+                                    aria-pressed={isActive}
+                                    onClick={() => handleStatusFilterChange(option.value)}
+                                >
+                                    {option.label}
+                                </button>
+                            )
+                        })}
+                    </div>
+                </div>
                 <button
                     type="button"
                     className="portal-submit-refresh"
@@ -73,7 +118,7 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId }
                 )}
 
                 {!error && !loading && tickets.length === 0 && (
-                    <p className="portal-submit-empty m-auto">No tickets submitted yet.</p>
+                    <p className="portal-submit-empty m-auto">{emptyTicketListMessage(statusFilter)}</p>
                 )}
 
                 {tickets.length > 0 && (
@@ -88,18 +133,18 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId }
                                 <col className="portal-ticket-col-actions" />
                             </colgroup>
                             <thead>
-                            <tr>
-                                <th scope="col">Title</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Path</th>
-                                <th scope="col" className="portal-ticket-col-date">
-                                    Submitted
-                                </th>
-                                <th scope="col">Files</th>
-                                <th scope="col" className="portal-ticket-col-actions">
-                                    <span className="sr-only">Actions</span>
-                                </th>
-                            </tr>
+                                <tr>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Path</th>
+                                    <th scope="col" className="portal-ticket-col-date">
+                                        Submitted
+                                    </th>
+                                    <th scope="col">Files</th>
+                                    <th scope="col" className="portal-ticket-col-actions">
+                                        <span className="sr-only">Actions</span>
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody>
                                 {tickets.map((ticket) => {
@@ -107,47 +152,49 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId }
                                     const attachmentLabel = formatAttachmentSummary(
                                         attachmentNamesByTicket[ticket.sysId] ?? []
                                     )
+                                    const actionHref =
+                                        ticket.status === 'draft'
+                                            ? ticketApproveUrl(ticket.sysId)
+                                            : ticketViewUrl(ticket.sysId)
+                                    const actionLabel = ticket.status === 'draft' ? 'Review' : 'View'
 
                                     return (
                                         <tr
                                             key={ticket.sysId}
                                             className={isHighlighted ? 'portal-ticket-row-highlight' : undefined}
                                         >
-                                        <td className="portal-ticket-cell-title">
-                                            <span className="portal-ticket-title">{ticket.title}</span>
-                                            {ticket.description && (
-                                                <span className="portal-ticket-description">
-                                                    {truncateDescription(ticket.description)}
+                                            <td className="portal-ticket-cell-title">
+                                                <span className="portal-ticket-title">{ticket.title}</span>
+                                                {ticket.description && (
+                                                    <span className="portal-ticket-description">
+                                                        {truncateDescription(ticket.description)}
+                                                    </span>
+                                                )}
+                                                <span className="portal-ticket-date-mobile">
+                                                    {formatSubmittedAt(ticket.submittedAt)}
                                                 </span>
-                                            )}
-                                            <span className="portal-ticket-date-mobile">
-                                                {formatSubmittedAt(ticket.submittedAt)}
-                                            </span>
-                                        </td>
-                                        <td className="portal-ticket-cell-status">
-                                            <span className="portal-ticket-status">{ticket.statusLabel}</span>
-                                        </td>
-                                        <td>
-                                            <ProcessingPathBadge stpFlag={ticket.stpFlag} />
-                                        </td>
-                                        <td className="portal-ticket-date portal-ticket-col-date">
-                                            <span className="portal-ticket-date-text">
-                                                {formatSubmittedAt(ticket.submittedAt)}
-                                            </span>
-                                        </td>
-                                        <td className="portal-ticket-col-files">
-                                            <span className="portal-ticket-attachments">
-                                                {attachmentLabel ?? '—'}
-                                            </span>
-                                        </td>
-                                        <td className="portal-ticket-col-actions">
-                                            <a
-                                                href={ticketViewUrl(ticket.sysId)}
-                                                className="portal-ticket-view-btn"
-                                            >
-                                                View
-                                            </a>
-                                        </td>
+                                            </td>
+                                            <td className="portal-ticket-cell-status">
+                                                <span className="portal-ticket-status">{ticket.statusLabel}</span>
+                                            </td>
+                                            <td>
+                                                <ProcessingPathBadge stpFlag={ticket.stpFlag} />
+                                            </td>
+                                            <td className="portal-ticket-date portal-ticket-col-date">
+                                                <span className="portal-ticket-date-text">
+                                                    {formatSubmittedAt(ticket.submittedAt)}
+                                                </span>
+                                            </td>
+                                            <td className="portal-ticket-col-files">
+                                                <span className="portal-ticket-attachments">
+                                                    {attachmentLabel ?? '—'}
+                                                </span>
+                                            </td>
+                                            <td className="portal-ticket-col-actions">
+                                                <a href={actionHref} className="portal-ticket-view-btn">
+                                                    {actionLabel}
+                                                </a>
+                                            </td>
                                         </tr>
                                     )
                                 })}
@@ -167,4 +214,3 @@ function truncateDescription(text: string, maxLength = 120): string {
     }
     return trimmed.slice(0, maxLength).trimEnd() + '…'
 }
-

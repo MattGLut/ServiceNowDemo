@@ -13,7 +13,7 @@ export default function PortalSidebar() {
                     {PORTAL_NAV_ACTIONS.map((item) => {
                         const isActive =
                             currentPage === item.page ||
-                            (item.page === 'approve-queue' && currentPage === 'approve-detail')
+                            (item.page === 'tickets' && currentPage === 'approve-detail')
 
                         return (
                             <li key={item.id}>

@@ -1,10 +1,4 @@
-export type PortalPage =
-    | 'home'
-    | 'submit'
-    | 'tickets'
-    | 'ticket-detail'
-    | 'approve-queue'
-    | 'approve-detail'
+export type PortalPage = 'home' | 'submit' | 'tickets' | 'ticket-detail' | 'approve-detail'
 
 export const PORTAL_HOME_PATH = '/x_2058901_demo_incident_manager.do'
 export const PORTAL_SUBMIT_PATH = '/x_2058901_demo_ticket_submit.do'
@@ -19,7 +13,10 @@ export function getPortalPage(): PortalPage {
 
     if (path.includes('ticket_approve')) {
         const sysId = getTicketSysIdFromUrl()
-        return sysId ? 'approve-detail' : 'approve-queue'
+        if (sysId) {
+            return 'approve-detail'
+        }
+        return 'tickets'
     }
 
     if (path.includes('ticket_view')) {

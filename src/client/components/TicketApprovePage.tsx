@@ -5,7 +5,7 @@ import { BTN_PRIMARY } from './formStyles'
 import { TicketService } from '../services/TicketService'
 import { formatFileSize, formatSubmittedAt } from '../utils/formatDateTime'
 import { formatWorkflowTypeLabel } from '../types/workflowType'
-import { PORTAL_APPROVE_PATH } from '../utils/portalPage'
+import { ticketListUrl } from '../utils/ticketListFilter'
 import type { TicketAttachment, TicketRecord } from '../types/ticket'
 
 type TicketApprovePageProps = {
@@ -59,7 +59,7 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
 
     if (loadState.status === 'loading') {
         return (
-            <ImmersiveLayout backHref={PORTAL_APPROVE_PATH} backLabel="Back to approval queue">
+            <ImmersiveLayout backHref={ticketListUrl('draft')} backLabel="Back to tickets">
                 <div className="portal-detail-panel">
                     <p className="portal-detail-message">Loading ticket…</p>
                 </div>
@@ -69,7 +69,7 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
 
     if (loadState.status === 'not-found') {
         return (
-            <ImmersiveLayout backHref={PORTAL_APPROVE_PATH} backLabel="Back to approval queue">
+            <ImmersiveLayout backHref={ticketListUrl('draft')} backLabel="Back to tickets">
                 <div className="portal-detail-panel">
                     <p className="portal-detail-message">Ticket not found.</p>
                     <p className="portal-detail-submessage">
@@ -84,15 +84,15 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
         const { ticket } = loadState
 
         return (
-            <ImmersiveLayout backHref={PORTAL_APPROVE_PATH} backLabel="Back to approval queue">
+            <ImmersiveLayout backHref={ticketListUrl('draft')} backLabel="Back to tickets">
                 <div className="portal-detail-panel">
                     <p className="portal-detail-message">This ticket is not awaiting approval.</p>
                     <p className="portal-detail-submessage">
                         Only draft tickets can be reviewed here. Current status:{' '}
                         <strong className="text-rh-text">{ticket.statusLabel}</strong>.
                     </p>
-                    <a href={PORTAL_APPROVE_PATH} className={`${BTN_PRIMARY} mt-6 inline-flex`}>
-                        Return to approval queue
+                    <a href={ticketListUrl('draft')} className={`${BTN_PRIMARY} mt-6 inline-flex`}>
+                        Return to tickets
                     </a>
                 </div>
             </ImmersiveLayout>
@@ -101,7 +101,7 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
 
     if (loadState.status === 'error') {
         return (
-            <ImmersiveLayout backHref={PORTAL_APPROVE_PATH} backLabel="Back to approval queue">
+            <ImmersiveLayout backHref={ticketListUrl('draft')} backLabel="Back to tickets">
                 <div className="portal-detail-panel">
                     <p className="portal-detail-message text-red-400">{loadState.message}</p>
                     <button type="button" className="portal-mobile-toggle mt-4" onClick={() => void loadTicket()}>
@@ -116,8 +116,8 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
 
     return (
         <ImmersiveLayout
-            backHref={PORTAL_APPROVE_PATH}
-            backLabel="Back to approval queue"
+            backHref={ticketListUrl('draft')}
+            backLabel="Back to tickets"
             title={ticket.title}
         >
             <div className="portal-detail-panel">
