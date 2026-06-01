@@ -104,6 +104,34 @@ declare global {
                         table: 'sys_security_acl'
                         id: 'a7944e1f902b49f1b6436409688f7492'
                     }
+                    'tsc-apim-header-accept': {
+                        table: 'sys_rest_message_headers'
+                        id: '31f9f65008cb4ceb8079774906cb666c'
+                    }
+                    'tsc-apim-header-doc-intel-content-type': {
+                        table: 'sys_rest_message_headers'
+                        id: '4cf20aa73a434b98a5648544003536a9'
+                    }
+                    'tsc-apim-header-subscription-key': {
+                        table: 'sys_rest_message_headers'
+                        id: '5199eb5959884c3fbd3199ce9f40077b'
+                    }
+                    'tsc-apim-method-get-contract': {
+                        table: 'sys_rest_message_fn'
+                        id: 'fffd40fff647489a87e216502494b31e'
+                    }
+                    'tsc-apim-method-get-vendor': {
+                        table: 'sys_rest_message_fn'
+                        id: 'dd91584f6e5e41de9a4d6e09aaefb669'
+                    }
+                    'tsc-apim-method-post-doc-intel-invoice': {
+                        table: 'sys_rest_message_fn'
+                        id: '20a8c5caf16e45f0a243e973c8d5ac26'
+                    }
+                    'tsc-apim-rest-message': {
+                        table: 'sys_rest_message'
+                        id: '241ceee2fc4c4bfda9465ef4e6a8e502'
+                    }
                     'workflow-type-ch11': {
                         table: 'x_2058901_demo_workflow_type'
                         id: 'b510ae7a5f8b4a298c7e9630f2065afa'

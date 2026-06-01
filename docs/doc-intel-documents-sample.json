@@ -1,0 +1,212 @@
+[
+  {
+    "DocumentType": "RMS_Document_Extraction_v19",
+    "Confidence": 0.999,
+    "Fields": {
+      "InvoiceNumber": {
+        "ValueString": "GSB1038474 - 01",
+        "Content": "GSB1038474 - 01",
+        "Confidence": 0.949
+      },
+      "InvoiceDate": {
+        "ValueString": "11/21/2024",
+        "Content": "11/21/2024",
+        "Confidence": 0.983
+      },
+      "InvoiceTotalAmount": {
+        "ValueString": "$135.00",
+        "Content": "$135.00",
+        "Confidence": 0.979
+      },
+      "OrderNumberOurs": {
+        "ValueString": "JRS7129",
+        "Content": "JRS7129",
+        "Confidence": 0.972
+      },
+      "VendorName": {
+        "ValueString": "Geo. S. Bush & Co.",
+        "Content": "Geo. S. Bush & Co.",
+        "Confidence": 0.965
+      },
+      "InvoiceDetails": {
+        "Confidence": 0.919
+      },
+      "ChargesSubTable": {
+        "ValueList": [
+          {
+            "ValueDictionary": {
+              "ChargesAmount": {
+                "ValueDictionary": {},
+                "FieldType": {},
+                "ValueString": "$135.00",
+                "ValueDate": null,
+                "ValueTime": null,
+                "ValuePhoneNumber": null,
+                "ValueDouble": null,
+                "ValueInt64": null,
+                "ValueSelectionMark": null,
+                "ValueSignature": null,
+                "ValueCountryRegion": null,
+                "ValueList": [],
+                "ValueCurrency": null,
+                "ValueAddress": null,
+                "ValueBoolean": null,
+                "ValueSelectionGroup": [],
+                "Content": "$135.00",
+                "BoundingRegions": [
+                  {
+                    "PageNumber": 1,
+                    "Polygon": [
+                      7.6249,
+                      3.9131,
+                      8.0407,
+                      3.9122,
+                      8.0409,
+                      4.0248,
+                      7.6251,
+                      4.0256
+                    ]
+                  }
+                ],
+                "Spans": [
+                  {
+                    "Offset": 2759,
+                    "Length": 7
+                  }
+                ],
+                "Confidence": 0.929
+              },
+              "ChargesDescription": {
+                "ValueDictionary": {},
+                "FieldType": {},
+                "ValueString": "Forwarding Fee",
+                "ValueDate": null,
+                "ValueTime": null,
+                "ValuePhoneNumber": null,
+                "ValueDouble": null,
+                "ValueInt64": null,
+                "ValueSelectionMark": null,
+                "ValueSignature": null,
+                "ValueCountryRegion": null,
+                "ValueList": [],
+                "ValueCurrency": null,
+                "ValueAddress": null,
+                "ValueBoolean": null,
+                "ValueSelectionGroup": [],
+                "Content": "Forwarding Fee",
+                "BoundingRegions": [
+                  {
+                    "PageNumber": 1,
+                    "Polygon": [
+                      2.8775,
+                      3.905,
+                      3.6695,
+                      3.9086,
+                      3.6689,
+                      4.0404,
+                      2.8769,
+                      4.0368
+                    ]
+                  }
+                ],
+                "Spans": [
+                  {
+                    "Offset": 2744,
+                    "Length": 14
+                  }
+                ],
+                "Confidence": 0.943
+              }
+            },
+            "FieldType": {},
+            "ValueString": null,
+            "ValueDate": null,
+            "ValueTime": null,
+            "ValuePhoneNumber": null,
+            "ValueDouble": null,
+            "ValueInt64": null,
+            "ValueSelectionMark": null,
+            "ValueSignature": null,
+            "ValueCountryRegion": null,
+            "ValueList": [],
+            "ValueCurrency": null,
+            "ValueAddress": null,
+            "ValueBoolean": null,
+            "ValueSelectionGroup": [],
+            "Content": null,
+            "BoundingRegions": [],
+            "Spans": [],
+            "Confidence": 0.729
+          }
+        ],
+        "Confidence": 0.889
+      },
+      "PageNumbers": {
+        "Confidence": 0.984
+      },
+      "InvoiceDueDate": {
+        "Confidence": 0.942
+      },
+      "InvoiceTotalCurrency": {
+        "Confidence": 0.975
+      },
+      "ContractNumberOurs": {
+        "Confidence": 0.98
+      },
+      "ContractNumberTheirs": {
+        "Confidence": 0.984
+      },
+      "BankACHRoutingNumber": {
+        "Confidence": 0.975
+      },
+      "BankACHAccountName": {
+        "Confidence": 0.975
+      },
+      "BankACHAccountNumber": {
+        "Confidence": 0.975
+      },
+      "BankWireSwiftCode": {
+        "Confidence": 0.982
+      },
+      "BankWireAccountReferenceNumber": {
+        "Confidence": 0.983
+      },
+      "RemitToAddress": {
+        "Confidence": 0.954
+      },
+      "ShipToAddress": {
+        "Confidence": 0.938
+      },
+      "SoldToAddress": {
+        "Confidence": 0.966
+      },
+      "OrderNumberTheirs": {
+        "Confidence": 0.971
+      },
+      "PaymentTerms": {
+        "Confidence": 0.97
+      },
+      "DiscountAmount": {
+        "Confidence": 0.975
+      },
+      "DiscountCurrency": {
+        "Confidence": 0.975
+      },
+      "ShipmentMode": {
+        "Confidence": 0.975
+      },
+      "ShipmentCarrier": {
+        "Confidence": 0.975
+      },
+      "ShipmentVessel": {
+        "Confidence": 0.97
+      },
+      "ShipmentDocumentNumber": {
+        "Confidence": 0.975
+      },
+      "ShipmentDate": {
+        "Confidence": 0.982
+      }
+    }
+  }
+]
