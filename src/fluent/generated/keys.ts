@@ -288,6 +288,13 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_page'
+                        id: '2f8747fb56284be6ae23c5bf39727334'
+                        key: {
+                            endpoint: 'x_2058901_demo_ticket_approve.do'
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: '307426b098cd472aa5eabcf0a264966a'
                         key: {
@@ -511,6 +518,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sn_glider_source_artifact_m2m'
+                        id: '7df53b2f271949d3b455dc73e9a64a00'
+                        key: {
+                            application_file: '2f8747fb56284be6ae23c5bf39727334'
+                            source_artifact: 'cd81223364dc43b4b27aaf1a4e176fc8'
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: '7e47340324a2446388d99538dbea258c'
                         deleted: true
@@ -700,6 +715,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sn_glider_source_artifact_m2m'
+                        id: 'b559d0103ca6490b9e150a76213ecaf8'
+                        key: {
+                            application_file: '32b08f7b0bd949839a4b5e581692e760'
+                            source_artifact: 'cd81223364dc43b4b27aaf1a4e176fc8'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: 'b6c6a9b58d104c7abecbcb927da433f6'
                         key: {
@@ -780,6 +803,13 @@ declare global {
                     },
                     {
                         table: 'sn_glider_source_artifact'
+                        id: 'cd81223364dc43b4b27aaf1a4e176fc8'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approve.do - BYOUI Files'
+                        }
+                    },
+                    {
+                        table: 'sn_glider_source_artifact'
                         id: 'd4573aa5dedc42beb42fcc697b168f65'
                         key: {
                             name: 'x_2058901_demo_ticket_list.do - BYOUI Files'
@@ -815,6 +845,14 @@ declare global {
                             name: 'x_2058901_demo_ticket'
                             element: 'status'
                             value: 'pending_review'
+                        }
+                    },
+                    {
+                        table: 'sn_glider_source_artifact_m2m'
+                        id: 'd9cff288e878462ea77151db3b213e0a'
+                        key: {
+                            application_file: 'd80e72df8380435fb911d316f3d0932c'
+                            source_artifact: 'cd81223364dc43b4b27aaf1a4e176fc8'
                         }
                     },
                     {
