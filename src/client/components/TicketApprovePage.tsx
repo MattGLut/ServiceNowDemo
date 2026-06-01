@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import ImmersiveLayout from './ImmersiveLayout'
+import PortalLayout from './PortalLayout'
 import ProcessingPathBadge from './ProcessingPathBadge'
 import { BTN_PRIMARY } from './formStyles'
 import { TicketService } from '../services/TicketService'
@@ -19,9 +19,44 @@ type LoadState =
     | { status: 'not-draft'; ticket: TicketRecord }
     | { status: 'ready'; ticket: TicketRecord; attachments: TicketAttachment[] }
 
+type ApprovePageChromeProps = {
+    backHref: string
+    title?: string
+    ticket?: TicketRecord
+    children: React.ReactNode
+}
+
+function ApprovePageChrome({ backHref, title, ticket, children }: ApprovePageChromeProps) {
+    return (
+        <PortalLayout fullWidth>
+            <div className="portal-approve-shell">
+                <header className="portal-approve-toolbar">
+                    <div className="portal-approve-toolbar-top">
+                        <a href={backHref} className="portal-approve-back">
+                            ← Back to tickets
+                        </a>
+                        {title && <h1 className="portal-approve-title">{title}</h1>}
+                    </div>
+                    {ticket && (
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span className="portal-ticket-status">{ticket.statusLabel}</span>
+                            <ProcessingPathBadge stpFlag={ticket.stpFlag} />
+                            <span className="font-mono text-xs text-rh-muted">{ticket.sysId}</span>
+                        </div>
+                    )}
+                </header>
+                <div className="portal-approve-workspace">
+                    <div className="portal-approve-panel">{children}</div>
+                </div>
+            </div>
+        </PortalLayout>
+    )
+}
+
 export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
     const ticketService = useMemo(() => new TicketService(), [])
     const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' })
+    const backHref = ticketListUrl('draft')
 
     const loadTicket = useCallback(async () => {
         if (!sysId) {
@@ -59,24 +94,20 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
 
     if (loadState.status === 'loading') {
         return (
-            <ImmersiveLayout backHref={ticketListUrl('draft')} backLabel="Back to tickets">
-                <div className="portal-detail-panel">
-                    <p className="portal-detail-message">Loading ticket…</p>
-                </div>
-            </ImmersiveLayout>
+            <ApprovePageChrome backHref={backHref} title="Review ticket">
+                <p className="portal-detail-message m-0">Loading ticket…</p>
+            </ApprovePageChrome>
         )
     }
 
     if (loadState.status === 'not-found') {
         return (
-            <ImmersiveLayout backHref={ticketListUrl('draft')} backLabel="Back to tickets">
-                <div className="portal-detail-panel">
-                    <p className="portal-detail-message">Ticket not found.</p>
-                    <p className="portal-detail-submessage">
-                        Open a ticket from the approval queue or provide a valid draft ticket sys_id.
-                    </p>
-                </div>
-            </ImmersiveLayout>
+            <ApprovePageChrome backHref={backHref} title="Review ticket">
+                <p className="portal-detail-message m-0">Ticket not found.</p>
+                <p className="portal-detail-submessage mt-2">
+                    Open a ticket from the tickets list or provide a valid draft ticket sys_id.
+                </p>
+            </ApprovePageChrome>
         )
     }
 
@@ -84,53 +115,37 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
         const { ticket } = loadState
 
         return (
-            <ImmersiveLayout backHref={ticketListUrl('draft')} backLabel="Back to tickets">
-                <div className="portal-detail-panel">
-                    <p className="portal-detail-message">This ticket is not awaiting approval.</p>
-                    <p className="portal-detail-submessage">
-                        Only draft tickets can be reviewed here. Current status:{' '}
-                        <strong className="text-rh-text">{ticket.statusLabel}</strong>.
-                    </p>
-                    <a href={ticketListUrl('draft')} className={`${BTN_PRIMARY} mt-6 inline-flex`}>
-                        Return to tickets
-                    </a>
-                </div>
-            </ImmersiveLayout>
+            <ApprovePageChrome backHref={backHref} title={ticket.title} ticket={ticket}>
+                <p className="portal-detail-message m-0">This ticket is not awaiting approval.</p>
+                <p className="portal-detail-submessage mt-2">
+                    Only draft tickets can be reviewed here. Current status:{' '}
+                    <strong className="text-rh-text">{ticket.statusLabel}</strong>.
+                </p>
+                <a href={backHref} className={`${BTN_PRIMARY} mt-6 inline-flex`}>
+                    Return to tickets
+                </a>
+            </ApprovePageChrome>
         )
     }
 
     if (loadState.status === 'error') {
         return (
-            <ImmersiveLayout backHref={ticketListUrl('draft')} backLabel="Back to tickets">
-                <div className="portal-detail-panel">
-                    <p className="portal-detail-message text-red-400">{loadState.message}</p>
-                    <button type="button" className="portal-mobile-toggle mt-4" onClick={() => void loadTicket()}>
-                        Retry
-                    </button>
-                </div>
-            </ImmersiveLayout>
+            <ApprovePageChrome backHref={backHref} title="Review ticket">
+                <p className="portal-detail-message m-0 text-red-400">{loadState.message}</p>
+                <button type="button" className="portal-mobile-toggle mt-4" onClick={() => void loadTicket()}>
+                    Retry
+                </button>
+            </ApprovePageChrome>
         )
     }
 
     const { ticket, attachments } = loadState
 
     return (
-        <ImmersiveLayout
-            backHref={ticketListUrl('draft')}
-            backLabel="Back to tickets"
-            title={ticket.title}
-        >
-            <div className="portal-detail-panel">
-                <div className="portal-detail-header">
-                    <div className="flex flex-wrap items-center gap-2">
-                        <span className="portal-ticket-status">{ticket.statusLabel}</span>
-                        <ProcessingPathBadge stpFlag={ticket.stpFlag} />
-                    </div>
-                    <p className="portal-detail-sys-id font-mono text-xs text-rh-muted">{ticket.sysId}</p>
-                </div>
-
-                <section className="portal-detail-section">
-                    <h3 className="portal-detail-section-title">Submitted ticket</h3>
+        <ApprovePageChrome backHref={backHref} title={ticket.title} ticket={ticket}>
+            <div className="portal-approve-grid">
+                <section className="portal-approve-section">
+                    <h2 className="portal-detail-section-title">Submitted ticket</h2>
                     <dl className="portal-detail-meta">
                         <div className="portal-detail-meta-row">
                             <dt>Submitted</dt>
@@ -159,7 +174,7 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
                         </div>
                     </dl>
                     <div className="portal-detail-description-block">
-                        <h4 className="portal-detail-label">Description</h4>
+                        <h3 className="portal-detail-label">Description</h3>
                         {ticket.description.trim() ? (
                             <p className="portal-detail-description">{ticket.description}</p>
                         ) : (
@@ -170,10 +185,10 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
                     </div>
                 </section>
 
-                <section className="portal-detail-section">
-                    <h3 className="portal-detail-section-title">Attachments</h3>
+                <section className="portal-approve-section">
+                    <h2 className="portal-detail-section-title">Attachments</h2>
                     {attachments.length === 0 ? (
-                        <p className="portal-detail-submessage">No files attached.</p>
+                        <p className="portal-detail-submessage m-0">No files attached.</p>
                     ) : (
                         <ul className="portal-detail-attachments">
                             {attachments.map((attachment) => (
@@ -193,26 +208,26 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
                         </ul>
                     )}
                 </section>
-
-                <section className="portal-detail-section portal-detail-future">
-                    <h3 className="portal-detail-section-title">Approval form</h3>
-                    <p className="portal-detail-submessage mb-4">
-                        Placeholder for AI-filled approval fields. Approvers will validate extracted values and
-                        confirm before the ticket moves to Approved status.
-                    </p>
-                    <div className="portal-intake-form rounded-lg border border-dashed border-rh-border bg-rh-bg/50 p-4">
-                        <p className="m-0 text-sm text-rh-muted">
-                            Approval fields (contract details, amounts, vendor, etc.) will appear here after document
-                            intelligence processing.
-                        </p>
-                    </div>
-                    <div className="portal-intake-form-actions mt-6">
-                        <button type="button" className={BTN_PRIMARY} disabled title="Coming soon">
-                            Approve ticket
-                        </button>
-                    </div>
-                </section>
             </div>
-        </ImmersiveLayout>
+
+            <section className="portal-approve-section min-h-[12rem] flex-1">
+                <h2 className="portal-detail-section-title">Approval form</h2>
+                <p className="portal-detail-submessage m-0 mb-4">
+                    Placeholder for AI-filled approval fields. Approvers will validate extracted values and confirm
+                    before the ticket moves to Approved status.
+                </p>
+                <div className="min-h-[8rem] flex-1 rounded-lg border border-dashed border-rh-border bg-rh-bg/50 p-4">
+                    <p className="m-0 text-sm text-rh-muted">
+                        Approval fields (contract details, amounts, vendor, etc.) will appear here after document
+                        intelligence processing.
+                    </p>
+                </div>
+                <div className="portal-intake-form-actions mt-6">
+                    <button type="button" className={BTN_PRIMARY} disabled title="Coming soon">
+                        Approve ticket
+                    </button>
+                </div>
+            </section>
+        </ApprovePageChrome>
     )
 }

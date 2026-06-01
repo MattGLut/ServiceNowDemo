@@ -11,9 +11,7 @@ export default function PortalSidebar() {
             <nav aria-label="Portal actions">
                 <ul className="portal-sidebar-list">
                     {PORTAL_NAV_ACTIONS.map((item) => {
-                        const isActive =
-                            currentPage === item.page ||
-                            (item.page === 'tickets' && currentPage === 'approve-detail')
+                        const isActive = currentPage === item.page
 
                         return (
                             <li key={item.id}>

@@ -1,20 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import type { TicketCreateResult } from '../types/ticket'
 
 const TOAST_VISIBLE_MS = 4500
 const TOAST_FADE_MS = 400
 
 type SubmitSuccessToastProps = {
-    submission: TicketCreateResult
+    title: string
     attachmentCount: number
     onDismiss: () => void
 }
 
-export default function SubmitSuccessToast({
-    submission,
-    attachmentCount,
-    onDismiss,
-}: SubmitSuccessToastProps) {
+export default function SubmitSuccessToast({ title, attachmentCount, onDismiss }: SubmitSuccessToastProps) {
     const [isExiting, setIsExiting] = useState(false)
 
     const beginExit = useCallback(() => {
@@ -48,7 +43,7 @@ export default function SubmitSuccessToast({
             <div className="min-w-0">
                 <p className="m-0 font-semibold text-rh-green">Ticket submitted</p>
                 <p className="mb-0 mt-1 text-sm text-rh-text">
-                    {submission.title}
+                    {title}
                     {attachmentCount > 0 && (
                         <span className="text-rh-muted">
                             {' '}

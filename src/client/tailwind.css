@@ -107,6 +107,46 @@
         @apply flex min-h-0 min-w-0 flex-1 flex-col;
     }
 
+    .portal-main-full {
+        @apply min-h-0 flex-1 overflow-hidden;
+    }
+
+    .portal-approve-shell {
+        @apply flex h-full min-h-0 w-full flex-col overflow-hidden;
+    }
+
+    .portal-approve-toolbar {
+        @apply flex shrink-0 flex-col gap-2 border-b border-rh-border bg-rh-panel px-4 py-3 sm:px-6 sm:py-4;
+    }
+
+    .portal-approve-toolbar-top {
+        @apply flex flex-wrap items-center gap-x-4 gap-y-2;
+    }
+
+    .portal-approve-back {
+        @apply shrink-0 text-sm text-rh-muted no-underline hover:text-rh-green;
+    }
+
+    .portal-approve-title {
+        @apply m-0 min-w-0 flex-1 truncate text-lg font-bold tracking-tight text-rh-text sm:text-xl;
+    }
+
+    .portal-approve-workspace {
+        @apply min-h-0 flex-1 overflow-y-auto bg-rh-bg px-4 py-4 sm:px-6 sm:py-6;
+    }
+
+    .portal-approve-panel {
+        @apply mx-auto flex w-full max-w-none flex-col gap-6;
+    }
+
+    .portal-approve-grid {
+        @apply grid gap-6 lg:grid-cols-2 lg:items-start;
+    }
+
+    .portal-approve-section {
+        @apply flex flex-col gap-3 rounded-lg border border-rh-border bg-rh-panel p-4 sm:p-5;
+    }
+
     .portal-form-page {
         @apply relative flex min-h-0 flex-1 flex-col overflow-hidden;
     }
