@@ -1,4 +1,4 @@
-# Ticket Intake Portal
+# Workflow Management Portal
 
 ServiceNow scoped application (`x_2058901_demo`) with a **React + TypeScript** UI page for hybrid ticket processing: straight-through (STP) automation and Azure Document Intelligence extraction with human review.
 
