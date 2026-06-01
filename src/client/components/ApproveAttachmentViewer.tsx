@@ -13,9 +13,30 @@ function isPdfAttachment(attachment: TicketAttachment): boolean {
     return type.includes('pdf') || name.endsWith('.pdf')
 }
 
-/** Hide built-in PDF viewer thumbnail/nav pane (Chrome, Edge, Acrobat-style viewers). */
-function pdfEmbedUrl(blobOrFileUrl: string): string {
-    const params = 'navpanes=0&pagemode=none&view=FitH'
+const DESKTOP_PDF_MIN_WIDTH_PX = 1024
+
+function useDesktopViewport(): boolean {
+    const [isDesktop, setIsDesktop] = useState(
+        () =>
+            typeof window !== 'undefined' &&
+            window.matchMedia(`(min-width: ${DESKTOP_PDF_MIN_WIDTH_PX}px)`).matches
+    )
+
+    useEffect(() => {
+        const mq = window.matchMedia(`(min-width: ${DESKTOP_PDF_MIN_WIDTH_PX}px)`)
+        const onChange = (event: MediaQueryListEvent) => setIsDesktop(event.matches)
+        setIsDesktop(mq.matches)
+        mq.addEventListener('change', onChange)
+        return () => mq.removeEventListener('change', onChange)
+    }, [])
+
+    return isDesktop
+}
+
+/** Hide nav pane; desktop opens at 100% zoom, smaller viewports fit to width. */
+function pdfEmbedUrl(blobOrFileUrl: string, desktopZoom100: boolean): string {
+    const viewPart = desktopZoom100 ? 'zoom=100' : 'view=FitH'
+    const params = `navpanes=0&pagemode=none&${viewPart}`
     const hashIndex = blobOrFileUrl.indexOf('#')
     if (hashIndex === -1) {
         return `${blobOrFileUrl}#${params}`
@@ -27,6 +48,7 @@ function pdfEmbedUrl(blobOrFileUrl: string): string {
 
 export default function ApproveAttachmentViewer({ attachments }: ApproveAttachmentViewerProps) {
     const ticketService = useMemo(() => new TicketService(), [])
+    const desktopZoom100 = useDesktopViewport()
     const viewableAttachments = useMemo(
         () => attachments.filter(isPdfAttachment),
         [attachments]
@@ -111,7 +133,9 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
 
     const downloadUrl = buildAttachmentDownloadUrl(current.sysId)
     const openInTabUrl =
-        previewUrl && canPreview ? pdfEmbedUrl(previewUrl) : previewUrl ?? downloadUrl
+        previewUrl && canPreview
+            ? pdfEmbedUrl(previewUrl, desktopZoom100)
+            : previewUrl ?? downloadUrl
 
     return (
         <div className="portal-approve-pdf-panel">
@@ -179,9 +203,9 @@ export default function ApproveAttachmentViewer({ attachments }: ApproveAttachme
 
                 {canPreview && previewUrl && !previewLoading && !previewError && (
                     <iframe
-                        key={current.sysId}
+                        key={`${current.sysId}-${desktopZoom100 ? '100' : 'fith'}`}
                         title={current.fileName}
-                        src={pdfEmbedUrl(previewUrl)}
+                        src={pdfEmbedUrl(previewUrl, desktopZoom100)}
                         className="portal-approve-pdf-iframe"
                     />
                 )}
