@@ -116,27 +116,19 @@
     }
 
     .portal-approve-toolbar {
-        @apply flex shrink-0 flex-col gap-1.5 border-b border-rh-border bg-rh-panel px-4 py-2 sm:px-6 sm:py-3;
+        @apply flex shrink-0 flex-col gap-2 border-b border-rh-border bg-rh-panel px-4 py-2 sm:px-6 sm:py-2.5;
     }
 
-    .portal-approve-toolbar-row {
-        @apply flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2 lg:flex-nowrap lg:justify-between;
-    }
-
-    .portal-approve-toolbar-start {
-        @apply flex min-w-0 flex-1 items-center gap-3;
-    }
-
-    .portal-approve-toolbar-title-block {
-        @apply min-w-0 flex-1;
-    }
-
-    .portal-approve-toolbar-end {
-        @apply flex shrink-0 flex-wrap items-center gap-3 lg:flex-nowrap;
+    .portal-approve-toolbar-primary {
+        @apply flex min-w-0 items-center gap-3;
     }
 
     .portal-approve-toolbar-badges {
-        @apply flex shrink-0 flex-wrap items-center gap-2;
+        @apply ml-auto flex shrink-0 flex-wrap items-center gap-2;
+    }
+
+    .portal-approve-header-strip {
+        @apply border-t border-rh-border/50 pt-2;
     }
 
     .portal-approve-back {
@@ -144,7 +136,7 @@
     }
 
     .portal-approve-title {
-        @apply m-0 min-w-0 truncate text-base font-bold tracking-tight text-rh-text sm:text-lg;
+        @apply m-0 min-w-0 flex-1 truncate text-base font-bold tracking-tight text-rh-text sm:text-lg;
     }
 
     .portal-approve-workspace {
@@ -171,16 +163,20 @@
         @apply min-h-[10rem] flex-1 rounded-lg border border-dashed border-rh-border bg-rh-bg/50 p-4;
     }
 
-    .portal-approve-header-summary {
-        @apply m-0 mt-0.5 text-xs leading-snug text-rh-muted;
-    }
-
     .portal-approve-header-dl {
-        @apply m-0 grid w-max max-w-full grid-cols-2 gap-x-3 gap-y-1 text-xs sm:grid-cols-3;
+        @apply m-0 flex flex-wrap items-start gap-x-4 gap-y-2 text-xs sm:gap-x-5;
     }
 
     .portal-approve-header-dl-item {
-        @apply max-w-[11rem] min-w-0 sm:max-w-[9.5rem] lg:max-w-[10.5rem];
+        @apply min-w-0 max-w-[9rem];
+    }
+
+    .portal-approve-header-dl-item-wide {
+        @apply max-w-[12rem] sm:max-w-[14rem];
+    }
+
+    .portal-approve-header-dl-item-sysid {
+        @apply max-w-[10.5rem] font-mono sm:max-w-[11.5rem];
     }
 
     .portal-approve-header-dl dt {
