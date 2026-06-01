@@ -497,15 +497,23 @@
     }
 
     .portal-ticket-table td {
-        @apply overflow-hidden border-b border-rh-border/60 px-2 py-2 align-top text-rh-text sm:px-3 sm:py-3;
+        @apply overflow-hidden border-b border-rh-border/60 px-2 py-2 align-middle text-rh-text sm:px-3 sm:py-2.5;
+    }
+
+    .portal-ticket-table tbody tr {
+        @apply h-14 sm:h-[3.75rem];
     }
 
     .portal-ticket-col-date {
         @apply hidden sm:table-cell;
     }
 
+    .portal-ticket-cell-title {
+        @apply max-w-0;
+    }
+
     .portal-ticket-description {
-        @apply mt-1 hidden text-xs text-rh-muted md:block;
+        @apply mt-0.5 hidden truncate text-xs text-rh-muted md:block;
     }
 
     .portal-ticket-attachments {
@@ -517,7 +525,7 @@
     }
 
     .portal-ticket-title {
-        @apply block font-medium text-rh-text;
+        @apply block truncate font-medium text-rh-text;
     }
 
     .portal-ticket-col-actions {
@@ -673,7 +681,19 @@
     }
 
     .portal-ticket-status {
-        @apply inline-block max-w-full truncate rounded-full bg-rh-elevated px-2 py-0.5 text-xs font-medium text-rh-text sm:px-2.5 sm:py-1;
+        @apply inline-block max-w-full truncate rounded-full border px-2 py-0.5 text-xs font-medium sm:px-2.5 sm:py-1;
+    }
+
+    .portal-ticket-status--draft {
+        @apply border-amber-500/45 bg-amber-500/15 text-amber-200;
+    }
+
+    .portal-ticket-status--approved {
+        @apply border-emerald-500/45 bg-emerald-500/15 text-emerald-200;
+    }
+
+    .portal-ticket-status--posted {
+        @apply border-sky-500/45 bg-sky-500/15 text-sky-200;
     }
 
     .portal-ticket-date {
@@ -685,7 +705,7 @@
     }
 
     .portal-ticket-date-mobile {
-        @apply mt-1 block text-xs text-rh-muted sm:hidden;
+        @apply mt-0.5 block truncate text-xs text-rh-muted sm:hidden;
     }
 
     .portal-home-hero {

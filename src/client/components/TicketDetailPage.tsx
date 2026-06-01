@@ -3,6 +3,7 @@ import ImmersiveLayout from './ImmersiveLayout'
 import ProcessingPathBadge from './ProcessingPathBadge'
 import { TicketService } from '../services/TicketService'
 import { formatFileSize, formatSubmittedAt } from '../utils/formatDateTime'
+import { ticketStatusBadgeClass } from '../utils/ticketStatusStyle'
 import { formatWorkflowTypeLabel } from '../types/workflowType'
 import type { TicketAttachment, TicketRecord } from '../types/ticket'
 
@@ -90,7 +91,7 @@ export default function TicketDetailPage({ sysId }: TicketDetailPageProps) {
             <div className="portal-detail-panel">
                 <div className="portal-detail-header">
                     <div className="flex flex-wrap items-center gap-2">
-                        <span className="portal-ticket-status">{ticket.statusLabel}</span>
+                        <span className={ticketStatusBadgeClass(ticket.status)}>{ticket.statusLabel}</span>
                         <ProcessingPathBadge stpFlag={ticket.stpFlag} />
                     </div>
                     <p className="portal-detail-sys-id font-mono text-xs text-rh-muted">{ticket.sysId}</p>

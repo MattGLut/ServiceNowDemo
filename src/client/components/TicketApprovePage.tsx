@@ -8,6 +8,7 @@ import { BTN_PRIMARY } from './formStyles'
 import { TicketApprovalService } from '../services/TicketApprovalService'
 import { TicketService } from '../services/TicketService'
 import { ticketListUrl } from '../utils/ticketListFilter'
+import { ticketStatusBadgeClass } from '../utils/ticketStatusStyle'
 import type { TicketApprovalRecord, TicketApprovalUpdateInput } from '../types/ticketApproval'
 import type { TicketAttachment, TicketRecord } from '../types/ticket'
 
@@ -52,7 +53,9 @@ function ApprovePageChrome({ backHref, title, ticket, children }: ApprovePageChr
                         )}
                         {ticket && (
                             <div className="portal-approve-toolbar-badges">
-                                <span className="portal-ticket-status">{ticket.statusLabel}</span>
+                                <span className={ticketStatusBadgeClass(ticket.status)}>
+                                    {ticket.statusLabel}
+                                </span>
                                 <ProcessingPathBadge stpFlag={ticket.stpFlag} />
                             </div>
                         )}
