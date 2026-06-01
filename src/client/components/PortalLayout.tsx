@@ -11,7 +11,7 @@ export default function PortalLayout({ children }: PortalLayoutProps) {
         <div className="portal-shell font-sans">
             <header className="portal-header">
                 <a href={PORTAL_HOME_PATH} className="portal-header-title">
-                    Ticket Intake Portal
+                    Workflow Management Portal
                 </a>
             </header>
             <div className="portal-body">
