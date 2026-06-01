@@ -160,19 +160,29 @@ export class TicketService {
     }
 
     async list(limit = 50): Promise<TicketRecord[]> {
+        const currentUserSysId = getCurrentUserSysId()
+        const queryParts = ['ORDERBYDESCsubmitted_at']
+
+        if (currentUserSysId) {
+            queryParts.unshift(`submitted_by=${currentUserSysId}`)
+        }
+
+        return this.queryTickets(queryParts.join('^'), limit)
+    }
+
+    async listDrafts(limit = 50): Promise<TicketRecord[]> {
+        return this.queryTickets('status=draft^ORDERBYDESCsubmitted_at', limit)
+    }
+
+    private async queryTickets(encodedQuery: string, limit: number): Promise<TicketRecord[]> {
         const params = new URLSearchParams({
             sysparm_display_value: 'all',
             sysparm_exclude_reference_link: 'true',
             sysparm_fields:
                 'sys_id,title,description,workflow_type,workflow_type.code,external_id,stp_flag,status,submitted_at,submitted_by',
             sysparm_limit: String(limit),
-            sysparm_query: 'ORDERBYDESCsubmitted_at',
+            sysparm_query: encodedQuery,
         })
-
-        const currentUserSysId = getCurrentUserSysId()
-        if (currentUserSysId) {
-            params.set('sysparm_query', `submitted_by=${currentUserSysId}^ORDERBYDESCsubmitted_at`)
-        }
 
         const response = await fetch(`/api/now/table/${this.tableName}?${params.toString()}`, {
             headers: this.getHeaders(),
