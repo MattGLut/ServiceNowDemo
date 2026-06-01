@@ -152,15 +152,42 @@
     }
 
     .portal-approve-left {
-        @apply flex min-h-0 w-full flex-col gap-3 overflow-y-auto border-rh-border bg-rh-panel p-3 sm:p-4 lg:w-[min(24rem,38%)] lg:max-w-md lg:shrink-0 lg:border-r;
+        @apply flex min-h-0 w-full flex-col gap-3 overflow-y-auto border-rh-border bg-rh-panel p-3 sm:p-4 lg:w-[min(36rem,46%)] lg:shrink-0 lg:border-r;
     }
 
     .portal-approve-right {
         @apply flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-rh-bg;
     }
 
-    .portal-approve-form-placeholder {
-        @apply min-h-[10rem] flex-1 rounded-lg border border-dashed border-rh-border bg-rh-bg/50 p-4;
+    .portal-approve-form {
+        @apply flex min-h-0 flex-1 flex-col gap-4;
+    }
+
+    .portal-approve-form-section {
+        @apply flex flex-col gap-2;
+    }
+
+    .portal-approve-form-section-title {
+        @apply m-0 text-xs font-semibold uppercase tracking-wide text-rh-muted;
+    }
+
+    .portal-approve-form-grid {
+        @apply grid grid-cols-1 gap-x-3 gap-y-3 sm:grid-cols-2;
+    }
+
+    .portal-approve-form-notes {
+        @apply flex flex-col gap-3;
+    }
+
+    .portal-approve-field-readonly {
+        @apply cursor-default bg-rh-elevated/60 text-rh-muted;
+    }
+
+    .portal-approve-field--high,
+    .portal-approve-field--medium,
+    .portal-approve-field--low,
+    .portal-approve-field--error {
+        /* Reserved for Document Intelligence confidence styling */
     }
 
     .portal-approve-header-dl {

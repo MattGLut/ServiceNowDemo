@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ApproveAttachmentViewer from './ApproveAttachmentViewer'
+import ApproveForm from './ApproveForm'
 import ApproveTicketHeaderMeta from './ApproveTicketHeaderMeta'
 import PortalLayout from './PortalLayout'
 import ProcessingPathBadge from './ProcessingPathBadge'
 import { BTN_PRIMARY } from './formStyles'
+import { TicketApprovalService } from '../services/TicketApprovalService'
 import { TicketService } from '../services/TicketService'
 import { ticketListUrl } from '../utils/ticketListFilter'
+import type { TicketApprovalRecord, TicketApprovalUpdateInput } from '../types/ticketApproval'
 import type { TicketAttachment, TicketRecord } from '../types/ticket'
 
 type TicketApprovePageProps = {
@@ -17,7 +20,13 @@ type LoadState =
     | { status: 'error'; message: string }
     | { status: 'not-found' }
     | { status: 'not-draft'; ticket: TicketRecord }
-    | { status: 'ready'; ticket: TicketRecord; attachments: TicketAttachment[] }
+    | {
+          status: 'ready'
+          ticket: TicketRecord
+          attachments: TicketAttachment[]
+          approval: TicketApprovalRecord
+      }
+    | { status: 'approval-missing'; ticket: TicketRecord; attachments: TicketAttachment[] }
 
 type ApprovePageChromeProps = {
     backHref: string
@@ -55,26 +64,23 @@ function ApprovePageChrome({ backHref, title, ticket, children }: ApprovePageChr
     )
 }
 
-function ApproveFormPanel() {
+type ApproveFormPanelProps = {
+    approval: TicketApprovalRecord
+    onApprove: (values: TicketApprovalUpdateInput) => Promise<void>
+}
+
+function ApproveFormPanel({ approval, onApprove }: ApproveFormPanelProps) {
     return (
         <section className="portal-approve-left">
             <h2 className="portal-detail-section-title">Approval form</h2>
-            <div className="portal-approve-form-placeholder">
-                <p className="m-0 text-sm text-rh-muted">
-                    AI-filled approval fields will appear here after document intelligence processing.
-                </p>
-            </div>
-            <div className="portal-intake-form-actions mt-auto pt-4">
-                <button type="button" className={BTN_PRIMARY} disabled title="Coming soon">
-                    Approve ticket
-                </button>
-            </div>
+            <ApproveForm approval={approval} onApprove={onApprove} />
         </section>
     )
 }
 
 export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
     const ticketService = useMemo(() => new TicketService(), [])
+    const approvalService = useMemo(() => new TicketApprovalService(), [])
     const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' })
     const backHref = ticketListUrl('draft')
 
@@ -99,24 +105,48 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
                 return
             }
 
-            const attachments = await ticketService.listAttachments(sysId)
-            setLoadState({ status: 'ready', ticket, attachments })
+            const [attachments, approval] = await Promise.all([
+                ticketService.listAttachments(sysId),
+                approvalService.getByTicketSysId(sysId),
+            ])
+
+            if (!approval) {
+                setLoadState({ status: 'approval-missing', ticket, attachments })
+                return
+            }
+
+            setLoadState({ status: 'ready', ticket, attachments, approval })
         } catch (err) {
             const message = err instanceof Error ? err.message : 'Unknown error'
             setLoadState({ status: 'error', message })
             console.error(err)
         }
-    }, [sysId, ticketService])
+    }, [sysId, ticketService, approvalService])
 
     useEffect(() => {
         void loadTicket()
     }, [loadTicket])
 
+    const handleApprove = useCallback(
+        async (values: TicketApprovalUpdateInput) => {
+            if (loadState.status !== 'ready') {
+                return
+            }
+
+            await approvalService.approve(loadState.approval.sysId, values)
+            window.location.href = ticketListUrl('approved')
+        },
+        [approvalService, loadState]
+    )
+
     if (loadState.status === 'loading') {
         return (
             <ApprovePageChrome backHref={backHref} title="Review ticket">
-                <div className="portal-approve-message-panel">
-                    <p className="portal-detail-message m-0">Loading ticket…</p>
+                <div className="portal-approve-split">
+                    <section className="portal-approve-left">
+                        <p className="portal-detail-message m-0 text-sm">Loading approval data…</p>
+                    </section>
+                    <div className="portal-approve-right" />
                 </div>
             </ApprovePageChrome>
         )
@@ -167,12 +197,42 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
         )
     }
 
-    const { ticket, attachments } = loadState
+    if (loadState.status === 'approval-missing') {
+        const { ticket, attachments } = loadState
+
+        return (
+            <ApprovePageChrome backHref={backHref} title={ticket.title} ticket={ticket}>
+                <div className="portal-approve-split">
+                    <section className="portal-approve-left">
+                        <p className="portal-detail-message m-0 text-sm text-red-400">
+                            No approval record found for this ticket.
+                        </p>
+                        <p className="portal-detail-submessage mt-2 text-sm">
+                            The create-on-insert business rule may not have run. Retry after deploy, or
+                            recreate the ticket.
+                        </p>
+                        <button
+                            type="button"
+                            className="portal-mobile-toggle mt-4"
+                            onClick={() => void loadTicket()}
+                        >
+                            Retry
+                        </button>
+                    </section>
+                    <div className="portal-approve-right">
+                        <ApproveAttachmentViewer attachments={attachments} />
+                    </div>
+                </div>
+            </ApprovePageChrome>
+        )
+    }
+
+    const { ticket, attachments, approval } = loadState
 
     return (
         <ApprovePageChrome backHref={backHref} title={ticket.title} ticket={ticket}>
             <div className="portal-approve-split">
-                <ApproveFormPanel />
+                <ApproveFormPanel approval={approval} onApprove={handleApprove} />
                 <div className="portal-approve-right">
                     <ApproveAttachmentViewer attachments={attachments} />
                 </div>

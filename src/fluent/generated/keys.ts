@@ -43,6 +43,14 @@ declare global {
                         id: 'edb883bb86cb4ddf8c010c17b6e28540'
                         deleted: true
                     }
+                    'src_server_business-rules_ticket-approval-complete_server_js': {
+                        table: 'sys_module'
+                        id: '22faedbd438e48e7bbab46343dc9d651'
+                    }
+                    'src_server_business-rules_ticket-create-approval_server_js': {
+                        table: 'sys_module'
+                        id: 'd1705d2a8e8346fc88f19e5e96cf654d'
+                    }
                     'src_server_business-rules_ticket-set-submitter_server_js': {
                         table: 'sys_module'
                         id: '0a6c08e453224e78b96183c2e6a8aa29'
@@ -52,9 +60,33 @@ declare global {
                         id: 'e93a6c30b37f47e9983f6dc12f76f882'
                         deleted: true
                     }
+                    'ticket-approval-complete-br': {
+                        table: 'sys_script'
+                        id: '8e52776d2b7f4d15ac0ec86114e5fcb4'
+                    }
+                    'ticket-approval-create-acl': {
+                        table: 'sys_security_acl'
+                        id: '13ceeadacb1244e6bed60eb599f5ac71'
+                    }
+                    'ticket-approval-delete-acl': {
+                        table: 'sys_security_acl'
+                        id: 'e962fef3c9ef4892a9f324ca94d43e98'
+                    }
+                    'ticket-approval-read-acl': {
+                        table: 'sys_security_acl'
+                        id: 'd26d78a8f96e4c2eb86337967995dcbe'
+                    }
+                    'ticket-approval-write-acl': {
+                        table: 'sys_security_acl'
+                        id: 'eaff950a7ebb4bb9b3ca183e059b0806'
+                    }
                     'ticket-create-acl': {
                         table: 'sys_security_acl'
                         id: '6878cb4b1d524380ac56969e01dcafca'
+                    }
+                    'ticket-create-approval-br': {
+                        table: 'sys_script'
+                        id: '037f2c1440d84f25a103b4adc81d10da'
                     }
                     'ticket-delete-acl': {
                         table: 'sys_security_acl'
@@ -153,6 +185,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_dictionary'
+                        id: '0513dbd66d354318a5766f1599fd21ba'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'supervisor_notes'
+                        }
+                    },
+                    {
                         table: 'sys_security_acl_role'
                         id: '05411b01ce4149e0bc9a314c9ee0f976'
                         deleted: true
@@ -164,6 +204,14 @@ declare global {
                                     name: 'itil'
                                 }
                             }
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '05a89b0119364255b2f115c44661a160'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'charge_payee_id'
                         }
                     },
                     {
@@ -183,6 +231,23 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: '0f32468ec5244ec4b9953bb93f7a8977'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'NULL'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '150b352e32ca495b90fae816342e1f4a'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'invoice_number'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: '1736dc70c48f4834a6223050f8d9b697'
                         key: {
@@ -196,6 +261,14 @@ declare global {
                         key: {
                             name: 'x_2058901_demo_workflow_type'
                             element: 'name'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '1c57ba878f594f5eb8addca0392353b7'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'tax_amount'
                         }
                     },
                     {
@@ -239,6 +312,24 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: '2367f27f0dad4c1abc033674c074db40'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'company_code'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '251a6b7414f64f25b1f34fb4c06e97c2'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'invoice_number'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: '2622c28013364fcd8d3f79e597c767af'
                         deleted: true
@@ -246,6 +337,15 @@ declare global {
                             name: 'x_2058901_demo_ticket'
                             element: 'request_type'
                             value: 'document'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '2903b5fb053f44b6b20da754d97b90f4'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'operator_notes'
+                            language: 'en'
                         }
                     },
                     {
@@ -333,6 +433,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: '36f00f33cc1143e4aa7b0b9a8ce695b0'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'charge_payee_name'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: '373346bdf82f48b3b2b9d0aea01c30bd'
                         key: {
@@ -347,6 +456,23 @@ declare global {
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'submitted_by'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '3b124ba6f9b746f79657ae7571a3b5bc'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'NULL'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '3e2b4594dedb4d86ad82a0e210fb4e45'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'ticket'
                             language: 'en'
                         }
                     },
@@ -391,6 +517,35 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '46172f944d6e4e58b6ec4bfa4eacb398'
+                        key: {
+                            sys_security_acl: '13ceeadacb1244e6bed60eb599f5ac71'
+                            sys_user_role: {
+                                id: '8908d766064441d0ab4106bdade7673b'
+                                key: {
+                                    name: 'itil'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'ua_table_licensing_config'
+                        id: '46b4e40d5994455081cb1db381929868'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '474b94af14c14173a7f831f0fe711c72'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'currency'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: '47d9d27bd8a94524a94ef3335b2df068'
                         deleted: true
@@ -406,6 +561,27 @@ declare global {
                         deleted: true
                         key: {
                             name: 'x_2058901_demo_incident_response'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '4a34300c258f49ccb12c45cad7994b05'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'subtotal_amount'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '4fa9c758ac044761a172f4cbb5fe1ed3'
+                        key: {
+                            sys_security_acl: 'e962fef3c9ef4892a9f324ca94d43e98'
+                            sys_user_role: {
+                                id: '16767bf84f0349a89db341617b288b17'
+                                key: {
+                                    name: 'itil'
+                                }
+                            }
                         }
                     },
                     {
@@ -439,6 +615,22 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_dictionary'
+                        id: '59fc1408d61e4635bbedb728ac3ce028'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'req_payment_date'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '5aa2d5c5fff041e98ddc611b16e724bd'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'profit_center'
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: '5de2525ea82b45e2a9dab8efea0e911c'
                         key: {
@@ -454,6 +646,15 @@ declare global {
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'request_type'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '5fe2a84dbcd2418b99bd19e5262d8a7e'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'approver_id'
+                            language: 'en'
                         }
                     },
                     {
@@ -480,11 +681,28 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: '66f10e0ec04d4d6dba1f8c71b0d189fc'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'supervisor_notes'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sn_glider_source_artifact_m2m'
                         id: '6b2cee5dc541487085028f905ce48897'
                         key: {
                             application_file: 'd80e72df8380435fb911d316f3d0932c'
                             source_artifact: 'a1c9c0e91e3b4900a70cb087471b578a'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '6c3eb55a5ca04a1b883e8dd24b1ff6b4'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'reviewer_notes'
                         }
                     },
                     {
@@ -510,11 +728,45 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: '745f76605e554381a58d80b487a69703'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'tax_amount'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sn_glider_source_artifact_m2m'
                         id: '7537acc3d5e84644b892f8765b35b821'
                         key: {
                             application_file: '32b08f7b0bd949839a4b5e581692e760'
                             source_artifact: '7e6f133a2b174248bab52eab426f1024'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '7584d5414d4a40c2b3640e00b36af210'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'total_amount'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '7a3bea0b80164251b86abca2b6209ece'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'payment_method'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '7ce05548642a4ff7950c50a7a6ae944b'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'total_amount'
+                            language: 'en'
                         }
                     },
                     {
@@ -552,6 +804,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: '7ef61f66d6454ed2a91c43fb88e2068a'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'charge_payee_id'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: '805d57fcd2034fb497ead40128d1865c'
                         key: {
@@ -561,10 +822,44 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: '8ba6c41450ed4c32ad88f2643aa06668'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'subtotal_amount'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '8dab6022bc4c4d3fac1760ab7906aa83'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'reviewer_notes'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '8db4223892e64a69a3429789848db961'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'currency'
+                        }
+                    },
+                    {
                         table: 'ua_table_licensing_config'
                         id: '8e8b80511ef94d9985ce4f8754c2513d'
                         key: {
                             name: 'x_2058901_demo_ticket'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '8e92fe0862254831813419b4781fdc7b'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'charge_payee_name'
                         }
                     },
                     {
@@ -579,6 +874,14 @@ declare global {
                     },
                     {
                         table: 'sys_dictionary'
+                        id: '93ea878c7a424c88935162496bff471e'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'approver_id'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
                         id: '99a2de24807f41ef8c2a5bb624b06c7f'
                         key: {
                             name: 'x_2058901_demo_ticket'
@@ -587,10 +890,48 @@ declare global {
                     },
                     {
                         table: 'sys_dictionary'
+                        id: '99b2c57e3dee41ca9c0d9858a9fd96f9'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'company_code'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '9b3414e66f36475dbe2534c8320ab02f'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'approved_at'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
                         id: '9be1ce0a32604c7b8644a99acbf2ac96'
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'submitted_by'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '9e9615a3dd13463eaa007e5aaa32caf5'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'ticket'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '9fce2e92bd684237856a1d588039400f'
+                        key: {
+                            sys_security_acl: 'eaff950a7ebb4bb9b3ca183e059b0806'
+                            sys_user_role: {
+                                id: '4341850397134b36a6de16658fb5b3c0'
+                                key: {
+                                    name: 'itil'
+                                }
+                            }
                         }
                     },
                     {
@@ -643,6 +984,27 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: 'a31b28d41d484590b5c1443958b1f5da'
+                        key: {
+                            sys_security_acl: 'd26d78a8f96e4c2eb86337967995dcbe'
+                            sys_user_role: {
+                                id: '5ef6d93dfb9849738ef931ebd819c1c2'
+                                key: {
+                                    name: 'itil'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'a33b8dc7c63040d49da82af3f719a969'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'operator_notes'
+                        }
+                    },
+                    {
                         table: 'sn_glider_source_artifact_m2m'
                         id: 'a4337dd28c624132a983efade058e8a5'
                         key: {
@@ -680,6 +1042,15 @@ declare global {
                         key: {
                             application_file: '41700b2561fb49a18b7b231f1033ff68'
                             source_artifact: '7e6f133a2b174248bab52eab426f1024'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: 'a99fa01864ca4f7a863f9b4e6d17ff39'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'approver_name'
+                            language: 'en'
                         }
                     },
                     {
@@ -724,6 +1095,14 @@ declare global {
                     },
                     {
                         table: 'sys_dictionary'
+                        id: 'b6adeeeaa39b4cf3b48986c244a75eb3'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'approved_at'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
                         id: 'b6c6a9b58d104c7abecbcb927da433f6'
                         key: {
                             name: 'x_2058901_demo_ticket'
@@ -757,6 +1136,14 @@ declare global {
                             name: 'x_2058901_demo_ticket'
                             element: 'status'
                             value: 'ready_for_pickup'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'bf044787bc5744dda68a06d6d7e1235a'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'approver_name'
                         }
                     },
                     {
@@ -806,6 +1193,13 @@ declare global {
                         id: 'cd81223364dc43b4b27aaf1a4e176fc8'
                         key: {
                             name: 'x_2058901_demo_ticket_approve.do - BYOUI Files'
+                        }
+                    },
+                    {
+                        table: 'sys_db_object'
+                        id: 'd0adbef85639481cbcf6d37701fdc621'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
                         }
                     },
                     {
@@ -884,6 +1278,15 @@ declare global {
                     },
                     {
                         table: 'sys_documentation'
+                        id: 'e13635ed9f054b7ab9c086f09762e1d9'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'profit_center'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
                         id: 'f0b1165f65aa49dead7ae64dd29642f8'
                         key: {
                             name: 'x_2058901_demo_workflow_type'
@@ -927,6 +1330,24 @@ declare global {
                                     name: 'itil'
                                 }
                             }
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: 'f4216fb56f4841849e189219c357f8a0'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'req_payment_date'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: 'f556a668d75647588b43451f4fb7daee'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'payment_method'
+                            language: 'en'
                         }
                     },
                     {
