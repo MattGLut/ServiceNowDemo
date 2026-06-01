@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { LABEL_CLASS, INPUT_CLASS, BTN_PRIMARY } from './formStyles'
 import { approvalRecordToFormValues } from '../services/TicketApprovalService'
-import {
-    APPROVAL_FIELD_SOURCE_CLASS,
-    APPROVAL_FIELD_SOURCE_LABELS,
-    type ApprovalFieldSource,
-} from '../types/approvalFieldSource'
+import { APPROVAL_FIELD_SOURCE_CLASS, type ApprovalFieldSource } from '../types/approvalFieldSource'
 import type { TicketApprovalRecord, TicketApprovalUpdateInput } from '../types/ticketApproval'
+
+/** Same as INPUT_CLASS but without bg — source classes supply tinted backgrounds. */
+const APPROVE_INPUT_BASE =
+    'w-full rounded-lg border px-3 py-2.5 text-sm text-rh-text placeholder:text-rh-muted focus:outline-none focus:ring-2'
 
 const TEXTAREA_CLASS = `${INPUT_CLASS} min-h-[4.5rem] resize-y`
 
@@ -34,33 +34,11 @@ function formatAmountDisplay(value: string): string {
 
 function inputClassForSource(source: ApprovalFieldSource, readOnly: boolean): string {
     const sourceClass = APPROVAL_FIELD_SOURCE_CLASS[source]
-    const parts = [INPUT_CLASS, sourceClass]
+    const parts = [APPROVE_INPUT_BASE, sourceClass]
     if (readOnly) {
         parts.push('portal-approve-field-readonly')
     }
     return parts.filter(Boolean).join(' ')
-}
-
-function FieldSourceLegend() {
-    const items: { source: ApprovalFieldSource; swatchClass: string }[] = [
-        { source: 'contract', swatchClass: 'portal-approve-field-legend-swatch--contract' },
-        { source: 'vendor', swatchClass: 'portal-approve-field-legend-swatch--vendor' },
-        { source: 'docIntel', swatchClass: 'portal-approve-field-legend-swatch--doc-intel' },
-    ]
-
-    return (
-        <div className="portal-approve-field-legend" role="note" aria-label="Field data sources">
-            {items.map(({ source, swatchClass }) => (
-                <span key={source} className="portal-approve-field-legend-item">
-                    <span className={`portal-approve-field-legend-swatch ${swatchClass}`} aria-hidden />
-                    {APPROVAL_FIELD_SOURCE_LABELS[source]}
-                </span>
-            ))}
-            <span className="portal-approve-field-legend-item text-rh-muted/80">
-                Notes — reviewer entry (no highlight)
-            </span>
-        </div>
-    )
 }
 
 type FieldProps = {
@@ -160,8 +138,6 @@ export default function ApproveForm({ approval, onApprove }: ApproveFormProps) {
 
     return (
         <div className="portal-approve-form">
-            <FieldSourceLegend />
-
             <section className="portal-approve-form-section">
                 <h3 className="portal-approve-form-section-title">Invoice &amp; amounts</h3>
                 <div className="portal-approve-form-grid">

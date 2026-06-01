@@ -4,13 +4,6 @@
  */
 export type ApprovalFieldSource = 'contract' | 'vendor' | 'docIntel' | 'manual'
 
-export const APPROVAL_FIELD_SOURCE_LABELS: Record<ApprovalFieldSource, string> = {
-    contract: 'Contract lookup',
-    vendor: 'Vendor lookup',
-    docIntel: 'Document Intelligence',
-    manual: 'Reviewer entry',
-}
-
 export const APPROVAL_FIELD_SOURCE_CLASS: Record<ApprovalFieldSource, string> = {
     contract: 'portal-approve-field--source-contract',
     vendor: 'portal-approve-field--source-vendor',
