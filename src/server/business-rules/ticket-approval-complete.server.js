@@ -1,4 +1,3 @@
-/* global GlideRecord */
 (function () {
     if (!current.approved_at) {
         return;

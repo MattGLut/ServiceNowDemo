@@ -1,4 +1,3 @@
-/* global gs, sn_ws, GlideStringUtil, GlideSysAttachment, GlideRecord, JSON */
 (function process(/* RESTAPIRequest */ request, /* RESTAPIResponse */ response) {
     var attachmentSysId = null
 
@@ -55,7 +54,7 @@
             var parsed
             try {
                 parsed = JSON.parse(responseBody)
-            } catch (parseError) {
+            } catch {
                 parsed = null
             }
 
