@@ -1,7 +1,6 @@
 import React from 'react'
 import HomePage from './components/HomePage'
 import TicketApprovePage from './components/TicketApprovePage'
-import TicketApproveQueuePage from './components/TicketApproveQueuePage'
 import TicketDetailPage from './components/TicketDetailPage'
 import TicketListPage from './components/TicketListPage'
 import TicketSubmitPage from './components/TicketSubmitPage'
@@ -16,10 +15,6 @@ export default function App() {
 
     if (page === 'approve-detail') {
         return <TicketApprovePage sysId={getTicketSysIdFromUrl()} />
-    }
-
-    if (page === 'approve-queue') {
-        return <TicketApproveQueuePage />
     }
 
     if (page === 'tickets') {

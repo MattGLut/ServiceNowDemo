@@ -1,4 +1,5 @@
 import { getCurrentUserSysId } from '../utils/currentUser'
+import type { TicketListStatusFilter } from '../utils/ticketListFilter'
 import type {
     TicketAttachment,
     TicketCreateInput,
@@ -159,19 +160,17 @@ export class TicketService {
         }
     }
 
-    async list(limit = 50): Promise<TicketRecord[]> {
-        const currentUserSysId = getCurrentUserSysId()
-        const queryParts = ['ORDERBYDESCsubmitted_at']
+    async list(options: { status?: TicketListStatusFilter; limit?: number } = {}): Promise<TicketRecord[]> {
+        const { status = 'all', limit = 50 } = options
+        const queryParts: string[] = []
 
-        if (currentUserSysId) {
-            queryParts.unshift(`submitted_by=${currentUserSysId}`)
+        if (status !== 'all') {
+            queryParts.push(`status=${status}`)
         }
 
-        return this.queryTickets(queryParts.join('^'), limit)
-    }
+        queryParts.push('ORDERBYDESCsubmitted_at')
 
-    async listDrafts(limit = 50): Promise<TicketRecord[]> {
-        return this.queryTickets('status=draft^ORDERBYDESCsubmitted_at', limit)
+        return this.queryTickets(queryParts.join('^'), limit)
     }
 
     private async queryTickets(encodedQuery: string, limit: number): Promise<TicketRecord[]> {

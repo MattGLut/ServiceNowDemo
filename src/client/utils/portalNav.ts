@@ -1,4 +1,4 @@
-import { PORTAL_APPROVE_PATH, PORTAL_SUBMIT_PATH, PORTAL_TICKETS_PATH, type PortalPage } from './portalPage'
+import { PORTAL_SUBMIT_PATH, PORTAL_TICKETS_PATH, type PortalPage } from './portalPage'
 
 export type PortalNavItem = {
     id: string
@@ -16,14 +16,8 @@ export const PORTAL_NAV_ACTIONS: PortalNavItem[] = [
     },
     {
         id: 'tickets',
-        label: 'My tickets',
+        label: 'Tickets',
         href: PORTAL_TICKETS_PATH,
         page: 'tickets',
-    },
-    {
-        id: 'approve',
-        label: 'Approve tickets',
-        href: PORTAL_APPROVE_PATH,
-        page: 'approve-queue',
     },
 ]
