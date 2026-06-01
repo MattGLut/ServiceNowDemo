@@ -19,13 +19,6 @@
             return
         }
 
-        var pdfBytes = GlideStringUtil.base64Decode(pdfBase64)
-        if (!pdfBytes) {
-            response.setStatus(400)
-            response.setBody({ error: 'pdf_base64 could not be decoded.' })
-            return
-        }
-
         var userGr = new GlideRecord('sys_user')
         if (!userGr.get(gs.getUserID())) {
             response.setStatus(500)
@@ -34,7 +27,7 @@
         }
 
         var attachment = new GlideSysAttachment()
-        attachmentSysId = attachment.write(userGr, fileName, 'application/pdf', pdfBytes)
+        attachmentSysId = attachment.writeBase64(userGr, fileName, 'application/pdf', pdfBase64)
 
         if (!attachmentSysId) {
             response.setStatus(500)
@@ -83,7 +76,7 @@
         var message = error && error.message ? error.message : String(error)
         gs.error('Doc Intel test endpoint failed: ' + message)
         response.setStatus(500)
-        response.setBody({ error: message })
+        response.setBody({ error: message, step: 'unexpected' })
     } finally {
         if (attachmentSysId) {
             new GlideSysAttachment().deleteAttachment(attachmentSysId)

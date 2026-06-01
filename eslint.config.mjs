@@ -33,7 +33,6 @@ export default tseslint.config(
                 request: 'readonly',
                 response: 'readonly',
                 sn_ws: 'readonly',
-                GlideStringUtil: 'readonly',
                 GlideSysAttachment: 'readonly',
                 GlideRecord: 'readonly',
             },
