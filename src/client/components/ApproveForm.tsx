@@ -1,9 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { LABEL_CLASS, INPUT_CLASS, BTN_PRIMARY } from './formStyles'
 import { approvalRecordToFormValues } from '../services/TicketApprovalService'
+import {
+    APPROVAL_FIELD_SOURCE_CLASS,
+    APPROVAL_FIELD_SOURCE_LABELS,
+    type ApprovalFieldSource,
+} from '../types/approvalFieldSource'
 import type { TicketApprovalRecord, TicketApprovalUpdateInput } from '../types/ticketApproval'
 
-const READONLY_INPUT_CLASS = `${INPUT_CLASS} portal-approve-field-readonly`
 const TEXTAREA_CLASS = `${INPUT_CLASS} min-h-[4.5rem] resize-y`
 
 type ApproveFormProps = {
@@ -28,16 +32,56 @@ function formatAmountDisplay(value: string): string {
     })
 }
 
+function inputClassForSource(source: ApprovalFieldSource, readOnly: boolean): string {
+    const sourceClass = APPROVAL_FIELD_SOURCE_CLASS[source]
+    const parts = [INPUT_CLASS, sourceClass]
+    if (readOnly) {
+        parts.push('portal-approve-field-readonly')
+    }
+    return parts.filter(Boolean).join(' ')
+}
+
+function FieldSourceLegend() {
+    const items: { source: ApprovalFieldSource; swatchClass: string }[] = [
+        { source: 'contract', swatchClass: 'portal-approve-field-legend-swatch--contract' },
+        { source: 'vendor', swatchClass: 'portal-approve-field-legend-swatch--vendor' },
+        { source: 'docIntel', swatchClass: 'portal-approve-field-legend-swatch--doc-intel' },
+    ]
+
+    return (
+        <div className="portal-approve-field-legend" role="note" aria-label="Field data sources">
+            {items.map(({ source, swatchClass }) => (
+                <span key={source} className="portal-approve-field-legend-item">
+                    <span className={`portal-approve-field-legend-swatch ${swatchClass}`} aria-hidden />
+                    {APPROVAL_FIELD_SOURCE_LABELS[source]}
+                </span>
+            ))}
+            <span className="portal-approve-field-legend-item text-rh-muted/80">
+                Notes — reviewer entry (no highlight)
+            </span>
+        </div>
+    )
+}
+
 type FieldProps = {
     label: string
     id: string
     value: string
     onChange: (value: string) => void
+    source: ApprovalFieldSource
     readOnly?: boolean
     type?: string
 }
 
-function FormField({ label, id, value, onChange, readOnly = false, type = 'text' }: FieldProps) {
+function FormField({
+    label,
+    id,
+    value,
+    onChange,
+    source,
+    readOnly = false,
+    type = 'text',
+}: FieldProps) {
     return (
         <div>
             <label htmlFor={id} className={LABEL_CLASS}>
@@ -46,7 +90,7 @@ function FormField({ label, id, value, onChange, readOnly = false, type = 'text'
             <input
                 id={id}
                 type={type}
-                className={readOnly ? READONLY_INPUT_CLASS : INPUT_CLASS}
+                className={inputClassForSource(source, readOnly)}
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
                 readOnly={readOnly}
@@ -116,36 +160,43 @@ export default function ApproveForm({ approval, onApprove }: ApproveFormProps) {
 
     return (
         <div className="portal-approve-form">
+            <FieldSourceLegend />
+
             <section className="portal-approve-form-section">
                 <h3 className="portal-approve-form-section-title">Invoice &amp; amounts</h3>
                 <div className="portal-approve-form-grid">
                     <FormField
                         label="Company Code"
                         id="company_code"
+                        source="contract"
                         value={values.companyCode}
                         onChange={(v) => setField('companyCode', v)}
                     />
                     <FormField
                         label="Invoice Number"
                         id="invoice_number"
+                        source="docIntel"
                         value={values.invoiceNumber}
                         onChange={(v) => setField('invoiceNumber', v)}
                     />
                     <FormField
                         label="Profit Center"
                         id="profit_center"
+                        source="contract"
                         value={values.profitCenter}
                         onChange={(v) => setField('profitCenter', v)}
                     />
                     <FormField
                         label="Currency"
                         id="currency"
+                        source="docIntel"
                         value={values.currency}
                         onChange={(v) => setField('currency', v)}
                     />
                     <FormField
                         label="Subtotal Amount"
                         id="subtotal_amount"
+                        source="docIntel"
                         value={subtotalDisplay}
                         onChange={() => {}}
                         readOnly
@@ -153,12 +204,14 @@ export default function ApproveForm({ approval, onApprove }: ApproveFormProps) {
                     <FormField
                         label="Tax Amount"
                         id="tax_amount"
+                        source="docIntel"
                         value={values.taxAmount}
                         onChange={(v) => setField('taxAmount', v)}
                     />
                     <FormField
                         label="Total Amount"
                         id="total_amount"
+                        source="docIntel"
                         value={totalDisplay}
                         onChange={() => {}}
                         readOnly
@@ -172,24 +225,28 @@ export default function ApproveForm({ approval, onApprove }: ApproveFormProps) {
                     <FormField
                         label="Approver Name"
                         id="approver_name"
+                        source="contract"
                         value={values.approverName}
                         onChange={(v) => setField('approverName', v)}
                     />
                     <FormField
                         label="Approver ID"
                         id="approver_id"
+                        source="contract"
                         value={values.approverId}
                         onChange={(v) => setField('approverId', v)}
                     />
                     <FormField
                         label="Payment Method"
                         id="payment_method"
+                        source="docIntel"
                         value={values.paymentMethod}
                         onChange={(v) => setField('paymentMethod', v)}
                     />
                     <FormField
                         label="Req Payment Date"
                         id="req_payment_date"
+                        source="docIntel"
                         type="date"
                         value={values.reqPaymentDate}
                         onChange={(v) => setField('reqPaymentDate', v)}
@@ -203,12 +260,14 @@ export default function ApproveForm({ approval, onApprove }: ApproveFormProps) {
                     <FormField
                         label="Charge Payee ID"
                         id="charge_payee_id"
+                        source="vendor"
                         value={values.chargePayeeId}
                         onChange={(v) => setField('chargePayeeId', v)}
                     />
                     <FormField
                         label="Charge Payee Name"
                         id="charge_payee_name"
+                        source="docIntel"
                         value={values.chargePayeeName}
                         onChange={(v) => setField('chargePayeeName', v)}
                     />
