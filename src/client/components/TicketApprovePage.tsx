@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import ApproveAttachmentViewer from './ApproveAttachmentViewer'
+import ApproveTicketHeaderMeta from './ApproveTicketHeaderMeta'
 import PortalLayout from './PortalLayout'
-import ProcessingPathBadge from './ProcessingPathBadge'
 import { BTN_PRIMARY } from './formStyles'
 import { TicketService } from '../services/TicketService'
-import { formatFileSize, formatSubmittedAt } from '../utils/formatDateTime'
-import { formatWorkflowTypeLabel } from '../types/workflowType'
 import { ticketListUrl } from '../utils/ticketListFilter'
 import type { TicketAttachment, TicketRecord } from '../types/ticket'
 
@@ -37,19 +36,34 @@ function ApprovePageChrome({ backHref, title, ticket, children }: ApprovePageChr
                         </a>
                         {title && <h1 className="portal-approve-title">{title}</h1>}
                     </div>
-                    {ticket && (
-                        <div className="flex flex-wrap items-center gap-2">
-                            <span className="portal-ticket-status">{ticket.statusLabel}</span>
-                            <ProcessingPathBadge stpFlag={ticket.stpFlag} />
-                            <span className="font-mono text-xs text-rh-muted">{ticket.sysId}</span>
-                        </div>
-                    )}
+                    {ticket && <ApproveTicketHeaderMeta ticket={ticket} />}
                 </header>
-                <div className="portal-approve-workspace">
-                    <div className="portal-approve-panel">{children}</div>
-                </div>
+                <div className="portal-approve-workspace">{children}</div>
             </div>
         </PortalLayout>
+    )
+}
+
+function ApproveFormPanel() {
+    return (
+        <section className="portal-approve-left">
+            <h2 className="portal-detail-section-title">Approval form</h2>
+            <p className="portal-detail-submessage m-0">
+                Placeholder for AI-filled approval fields. Approvers will validate extracted values and confirm
+                before the ticket moves to Approved status.
+            </p>
+            <div className="portal-approve-form-placeholder">
+                <p className="m-0 text-sm text-rh-muted">
+                    Approval fields (contract details, amounts, vendor, etc.) will appear here after document
+                    intelligence processing.
+                </p>
+            </div>
+            <div className="portal-intake-form-actions mt-auto pt-6">
+                <button type="button" className={BTN_PRIMARY} disabled title="Coming soon">
+                    Approve ticket
+                </button>
+            </div>
+        </section>
     )
 }
 
@@ -95,7 +109,9 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
     if (loadState.status === 'loading') {
         return (
             <ApprovePageChrome backHref={backHref} title="Review ticket">
-                <p className="portal-detail-message m-0">Loading ticket…</p>
+                <div className="portal-approve-message-panel">
+                    <p className="portal-detail-message m-0">Loading ticket…</p>
+                </div>
             </ApprovePageChrome>
         )
     }
@@ -103,10 +119,12 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
     if (loadState.status === 'not-found') {
         return (
             <ApprovePageChrome backHref={backHref} title="Review ticket">
-                <p className="portal-detail-message m-0">Ticket not found.</p>
-                <p className="portal-detail-submessage mt-2">
-                    Open a ticket from the tickets list or provide a valid draft ticket sys_id.
-                </p>
+                <div className="portal-approve-message-panel">
+                    <p className="portal-detail-message m-0">Ticket not found.</p>
+                    <p className="portal-detail-submessage mt-2">
+                        Open a ticket from the tickets list or provide a valid draft ticket sys_id.
+                    </p>
+                </div>
             </ApprovePageChrome>
         )
     }
@@ -116,14 +134,16 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
 
         return (
             <ApprovePageChrome backHref={backHref} title={ticket.title} ticket={ticket}>
-                <p className="portal-detail-message m-0">This ticket is not awaiting approval.</p>
-                <p className="portal-detail-submessage mt-2">
-                    Only draft tickets can be reviewed here. Current status:{' '}
-                    <strong className="text-rh-text">{ticket.statusLabel}</strong>.
-                </p>
-                <a href={backHref} className={`${BTN_PRIMARY} mt-6 inline-flex`}>
-                    Return to tickets
-                </a>
+                <div className="portal-approve-message-panel">
+                    <p className="portal-detail-message m-0">This ticket is not awaiting approval.</p>
+                    <p className="portal-detail-submessage mt-2">
+                        Only draft tickets can be reviewed here. Current status:{' '}
+                        <strong className="text-rh-text">{ticket.statusLabel}</strong>.
+                    </p>
+                    <a href={backHref} className={`${BTN_PRIMARY} mt-6 inline-flex`}>
+                        Return to tickets
+                    </a>
+                </div>
             </ApprovePageChrome>
         )
     }
@@ -131,10 +151,12 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
     if (loadState.status === 'error') {
         return (
             <ApprovePageChrome backHref={backHref} title="Review ticket">
-                <p className="portal-detail-message m-0 text-red-400">{loadState.message}</p>
-                <button type="button" className="portal-mobile-toggle mt-4" onClick={() => void loadTicket()}>
-                    Retry
-                </button>
+                <div className="portal-approve-message-panel">
+                    <p className="portal-detail-message m-0 text-red-400">{loadState.message}</p>
+                    <button type="button" className="portal-mobile-toggle mt-4" onClick={() => void loadTicket()}>
+                        Retry
+                    </button>
+                </div>
             </ApprovePageChrome>
         )
     }
@@ -143,91 +165,12 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
 
     return (
         <ApprovePageChrome backHref={backHref} title={ticket.title} ticket={ticket}>
-            <div className="portal-approve-grid">
-                <section className="portal-approve-section">
-                    <h2 className="portal-detail-section-title">Submitted ticket</h2>
-                    <dl className="portal-detail-meta">
-                        <div className="portal-detail-meta-row">
-                            <dt>Submitted</dt>
-                            <dd>{formatSubmittedAt(ticket.submittedAt)}</dd>
-                        </div>
-                        <div className="portal-detail-meta-row">
-                            <dt>Workflow type</dt>
-                            <dd>
-                                {ticket.workflowTypeCode && ticket.workflowTypeName
-                                    ? formatWorkflowTypeLabel({
-                                          code: ticket.workflowTypeCode,
-                                          name: ticket.workflowTypeName,
-                                      })
-                                    : ticket.workflowTypeName || '—'}
-                            </dd>
-                        </div>
-                        {ticket.externalId && (
-                            <div className="portal-detail-meta-row">
-                                <dt>Contract number</dt>
-                                <dd>{ticket.externalId}</dd>
-                            </div>
-                        )}
-                        <div className="portal-detail-meta-row">
-                            <dt>Submitted by</dt>
-                            <dd>{ticket.submittedByDisplay || '—'}</dd>
-                        </div>
-                    </dl>
-                    <div className="portal-detail-description-block">
-                        <h3 className="portal-detail-label">Description</h3>
-                        {ticket.description.trim() ? (
-                            <p className="portal-detail-description">{ticket.description}</p>
-                        ) : (
-                            <p className="portal-detail-description portal-detail-description-empty">
-                                No description.
-                            </p>
-                        )}
-                    </div>
-                </section>
-
-                <section className="portal-approve-section">
-                    <h2 className="portal-detail-section-title">Attachments</h2>
-                    {attachments.length === 0 ? (
-                        <p className="portal-detail-submessage m-0">No files attached.</p>
-                    ) : (
-                        <ul className="portal-detail-attachments">
-                            {attachments.map((attachment) => (
-                                <li key={attachment.sysId} className="portal-detail-attachment-item">
-                                    <a
-                                        href={attachment.downloadUrl}
-                                        className="portal-detail-attachment-link"
-                                        download={attachment.fileName}
-                                    >
-                                        <span className="portal-detail-attachment-name">{attachment.fileName}</span>
-                                        <span className="portal-detail-attachment-meta">
-                                            {formatFileSize(attachment.sizeBytes)}
-                                        </span>
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </section>
+            <div className="portal-approve-split">
+                <ApproveFormPanel />
+                <div className="portal-approve-right">
+                    <ApproveAttachmentViewer attachments={attachments} />
+                </div>
             </div>
-
-            <section className="portal-approve-section min-h-[12rem] flex-1">
-                <h2 className="portal-detail-section-title">Approval form</h2>
-                <p className="portal-detail-submessage m-0 mb-4">
-                    Placeholder for AI-filled approval fields. Approvers will validate extracted values and confirm
-                    before the ticket moves to Approved status.
-                </p>
-                <div className="min-h-[8rem] flex-1 rounded-lg border border-dashed border-rh-border bg-rh-bg/50 p-4">
-                    <p className="m-0 text-sm text-rh-muted">
-                        Approval fields (contract details, amounts, vendor, etc.) will appear here after document
-                        intelligence processing.
-                    </p>
-                </div>
-                <div className="portal-intake-form-actions mt-6">
-                    <button type="button" className={BTN_PRIMARY} disabled title="Coming soon">
-                        Approve ticket
-                    </button>
-                </div>
-            </section>
         </ApprovePageChrome>
     )
 }
