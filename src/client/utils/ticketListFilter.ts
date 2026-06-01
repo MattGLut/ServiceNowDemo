@@ -26,12 +26,22 @@ export function getTicketListStatusFilterFromUrl(): TicketListStatusFilter {
     return 'all'
 }
 
-export function ticketListUrl(statusFilter: TicketListStatusFilter = 'all'): string {
-    if (statusFilter === 'all') {
-        return PORTAL_TICKETS_PATH
+export function ticketListUrl(
+    statusFilter: TicketListStatusFilter = 'all',
+    options?: { highlightSysId?: string }
+): string {
+    const params = new URLSearchParams()
+
+    if (statusFilter !== 'all') {
+        params.set('status', statusFilter)
     }
 
-    return `${PORTAL_TICKETS_PATH}?status=${encodeURIComponent(statusFilter)}`
+    if (options?.highlightSysId) {
+        params.set('sys_id', options.highlightSysId)
+    }
+
+    const query = params.toString()
+    return query ? `${PORTAL_TICKETS_PATH}?${query}` : PORTAL_TICKETS_PATH
 }
 
 export function syncTicketListStatusInUrl(statusFilter: TicketListStatusFilter): void {

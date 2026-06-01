@@ -1,20 +1,13 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import PortalLayout from './PortalLayout'
-import SubmitSuccessToast from './SubmitSuccessToast'
 import TicketIntakeForm from './TicketIntakeForm'
 import { TicketService } from '../services/TicketService'
-import type { TicketCreateResult } from '../types/ticket'
+import { ticketListUrl } from '../utils/ticketListFilter'
+import { savePendingSubmitSuccessToast } from '../utils/submitSuccessToast'
 
 export default function TicketSubmitPage() {
     const ticketService = useMemo(() => new TicketService(), [])
     const [error, setError] = useState<string | null>(null)
-    const [lastSubmission, setLastSubmission] = useState<TicketCreateResult | null>(null)
-    const [attachmentCount, setAttachmentCount] = useState(0)
-
-    const dismissSuccess = useCallback(() => {
-        setLastSubmission(null)
-        setAttachmentCount(0)
-    }, [])
 
     const handleSubmit = async (input: {
         title: string
@@ -25,16 +18,15 @@ export default function TicketSubmitPage() {
         files: File[]
     }) => {
         setError(null)
-        setLastSubmission(null)
 
-        let result: TicketCreateResult | null = null
+        let createdSysId: string | null = null
 
         try {
             if (input.files.length === 0) {
                 throw new Error('At least one PDF attachment is required.')
             }
 
-            result = await ticketService.create({
+            const result = await ticketService.create({
                 title: input.title,
                 description: input.description,
                 workflowTypeSysId: input.workflowTypeSysId,
@@ -42,16 +34,21 @@ export default function TicketSubmitPage() {
                 stpFlag: input.stpFlag,
             })
 
+            createdSysId = result.sysId
             await ticketService.uploadAttachments(result.sysId, input.files)
 
-            setLastSubmission(result)
-            setAttachmentCount(input.files.length)
+            savePendingSubmitSuccessToast({
+                sysId: result.sysId,
+                title: result.title,
+                attachmentCount: input.files.length,
+            })
+            window.location.assign(ticketListUrl('draft', { highlightSysId: result.sysId }))
             return result
         } catch (err) {
             const message = err instanceof Error ? err.message : 'Unknown error'
             setError(
-                result
-                    ? `Ticket was created but a follow-up step failed: ${message} (sys_id: ${result.sysId})`
+                createdSysId
+                    ? `Ticket was created but a follow-up step failed: ${message} (sys_id: ${createdSysId})`
                     : 'Failed to submit ticket: ' + message
             )
             console.error(err)
@@ -62,17 +59,6 @@ export default function TicketSubmitPage() {
     return (
         <PortalLayout>
             <div className="portal-form-page">
-                {lastSubmission && (
-                    <div className="portal-toast-region">
-                        <SubmitSuccessToast
-                            key={lastSubmission.sysId}
-                            submission={lastSubmission}
-                            attachmentCount={attachmentCount}
-                            onDismiss={dismissSuccess}
-                        />
-                    </div>
-                )}
-
                 {error && (
                     <div className="portal-submit-banner portal-submit-banner-error mx-4 mt-4 flex shrink-0 items-center justify-between sm:mx-6">
                         <span>{error}</span>
