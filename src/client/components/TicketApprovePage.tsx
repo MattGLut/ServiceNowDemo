@@ -72,7 +72,6 @@ type ApproveFormPanelProps = {
 function ApproveFormPanel({ approval, onApprove }: ApproveFormPanelProps) {
     return (
         <section className="portal-approve-left">
-            <h2 className="portal-detail-section-title">Approval form</h2>
             <ApproveForm approval={approval} onApprove={onApprove} />
         </section>
     )

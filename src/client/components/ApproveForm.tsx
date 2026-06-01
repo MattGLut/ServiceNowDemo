@@ -245,7 +245,7 @@ export default function ApproveForm({ approval, onApprove }: ApproveFormProps) {
                 </p>
             )}
 
-            <div className="portal-intake-form-actions mt-auto pt-2">
+            <div className="portal-intake-form-actions mt-auto pt-2 pb-4">
                 <button
                     type="button"
                     className={BTN_PRIMARY}
