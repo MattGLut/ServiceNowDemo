@@ -10,6 +10,7 @@ import {
 } from '../utils/ticketListFilter'
 import ProcessingPathBadge from './ProcessingPathBadge'
 import { ticketApproveUrl, ticketViewUrl } from '../utils/portalPage'
+import { ticketStatusBadgeClass } from '../utils/ticketStatusStyle'
 import type { TicketRecord } from '../types/ticket'
 
 type TicketListProps = {
@@ -164,10 +165,15 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId }
                                             className={isHighlighted ? 'portal-ticket-row-highlight' : undefined}
                                         >
                                             <td className="portal-ticket-cell-title">
-                                                <span className="portal-ticket-title">{ticket.title}</span>
+                                                <span className="portal-ticket-title" title={ticket.title}>
+                                                    {ticket.title}
+                                                </span>
                                                 {ticket.description && (
-                                                    <span className="portal-ticket-description">
-                                                        {truncateDescription(ticket.description)}
+                                                    <span
+                                                        className="portal-ticket-description"
+                                                        title={ticket.description}
+                                                    >
+                                                        {ticket.description}
                                                     </span>
                                                 )}
                                                 <span className="portal-ticket-date-mobile">
@@ -175,7 +181,9 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId }
                                                 </span>
                                             </td>
                                             <td className="portal-ticket-cell-status">
-                                                <span className="portal-ticket-status">{ticket.statusLabel}</span>
+                                                <span className={ticketStatusBadgeClass(ticket.status)}>
+                                                    {ticket.statusLabel}
+                                                </span>
                                             </td>
                                             <td>
                                                 <ProcessingPathBadge stpFlag={ticket.stpFlag} />
@@ -205,12 +213,4 @@ export default function TicketList({ ticketService, refreshKey, highlightSysId }
             </div>
         </>
     )
-}
-
-function truncateDescription(text: string, maxLength = 120): string {
-    const trimmed = text.trim()
-    if (trimmed.length <= maxLength) {
-        return trimmed
-    }
-    return trimmed.slice(0, maxLength).trimEnd() + '…'
 }
