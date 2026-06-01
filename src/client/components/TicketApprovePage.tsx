@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ApproveAttachmentViewer from './ApproveAttachmentViewer'
 import ApproveTicketHeaderMeta from './ApproveTicketHeaderMeta'
 import PortalLayout from './PortalLayout'
+import ProcessingPathBadge from './ProcessingPathBadge'
 import { BTN_PRIMARY } from './formStyles'
 import { TicketService } from '../services/TicketService'
 import { ticketListUrl } from '../utils/ticketListFilter'
@@ -30,11 +31,17 @@ function ApprovePageChrome({ backHref, title, ticket, children }: ApprovePageChr
         <PortalLayout fullWidth>
             <div className="portal-approve-shell">
                 <header className="portal-approve-toolbar">
-                    <div className="portal-approve-toolbar-top">
+                    <div className="portal-approve-toolbar-row">
                         <a href={backHref} className="portal-approve-back">
                             ← Back to tickets
                         </a>
                         {title && <h1 className="portal-approve-title">{title}</h1>}
+                        {ticket && (
+                            <div className="portal-approve-toolbar-badges">
+                                <span className="portal-ticket-status">{ticket.statusLabel}</span>
+                                <ProcessingPathBadge stpFlag={ticket.stpFlag} />
+                            </div>
+                        )}
                     </div>
                     {ticket && <ApproveTicketHeaderMeta ticket={ticket} />}
                 </header>
@@ -48,17 +55,12 @@ function ApproveFormPanel() {
     return (
         <section className="portal-approve-left">
             <h2 className="portal-detail-section-title">Approval form</h2>
-            <p className="portal-detail-submessage m-0">
-                Placeholder for AI-filled approval fields. Approvers will validate extracted values and confirm
-                before the ticket moves to Approved status.
-            </p>
             <div className="portal-approve-form-placeholder">
                 <p className="m-0 text-sm text-rh-muted">
-                    Approval fields (contract details, amounts, vendor, etc.) will appear here after document
-                    intelligence processing.
+                    AI-filled approval fields will appear here after document intelligence processing.
                 </p>
             </div>
-            <div className="portal-intake-form-actions mt-auto pt-6">
+            <div className="portal-intake-form-actions mt-auto pt-4">
                 <button type="button" className={BTN_PRIMARY} disabled title="Coming soon">
                     Approve ticket
                 </button>

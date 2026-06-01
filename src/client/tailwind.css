@@ -116,11 +116,15 @@
     }
 
     .portal-approve-toolbar {
-        @apply flex shrink-0 flex-col gap-2 border-b border-rh-border bg-rh-panel px-4 py-3 sm:px-6 sm:py-4;
+        @apply flex shrink-0 flex-col gap-1.5 border-b border-rh-border bg-rh-panel px-4 py-2 sm:px-6 sm:py-3;
     }
 
-    .portal-approve-toolbar-top {
-        @apply flex flex-wrap items-center gap-x-4 gap-y-2;
+    .portal-approve-toolbar-row {
+        @apply flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1;
+    }
+
+    .portal-approve-toolbar-badges {
+        @apply flex shrink-0 flex-wrap items-center gap-2;
     }
 
     .portal-approve-back {
@@ -128,7 +132,7 @@
     }
 
     .portal-approve-title {
-        @apply m-0 min-w-0 flex-1 truncate text-lg font-bold tracking-tight text-rh-text sm:text-xl;
+        @apply m-0 min-w-0 flex-1 truncate text-base font-bold tracking-tight text-rh-text sm:text-lg;
     }
 
     .portal-approve-workspace {
@@ -144,7 +148,7 @@
     }
 
     .portal-approve-left {
-        @apply flex min-h-0 w-full flex-col gap-4 overflow-y-auto border-rh-border bg-rh-panel p-4 sm:p-5 lg:w-[min(24rem,38%)] lg:max-w-md lg:shrink-0 lg:border-r;
+        @apply flex min-h-0 w-full flex-col gap-3 overflow-y-auto border-rh-border bg-rh-panel p-3 sm:p-4 lg:w-[min(24rem,38%)] lg:max-w-md lg:shrink-0 lg:border-r;
     }
 
     .portal-approve-right {
@@ -156,15 +160,39 @@
     }
 
     .portal-approve-header-meta {
-        @apply flex flex-col gap-3 border-t border-rh-border/60 pt-3;
+        @apply flex flex-col gap-1;
     }
 
-    .portal-approve-header-meta-badges {
-        @apply flex flex-wrap items-center gap-2;
+    .portal-approve-header-summary {
+        @apply m-0 text-xs text-rh-muted;
+    }
+
+    .portal-approve-details {
+        @apply text-sm;
+    }
+
+    .portal-approve-details-summary {
+        @apply cursor-pointer list-none text-xs font-medium text-rh-muted hover:text-rh-text;
+    }
+
+    .portal-approve-details-summary::before {
+        content: '▸ ';
+    }
+
+    .portal-approve-details[open] > .portal-approve-details-summary::before {
+        content: '▾ ';
+    }
+
+    .portal-approve-details-summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .portal-approve-details-body {
+        @apply mt-2 flex flex-col gap-2 border-t border-rh-border/60 pt-2;
     }
 
     .portal-approve-header-dl {
-        @apply m-0 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4;
+        @apply m-0 grid gap-2 text-xs sm:grid-cols-2 lg:grid-cols-4;
     }
 
     .portal-approve-header-dl dt {
@@ -176,7 +204,7 @@
     }
 
     .portal-approve-header-description {
-        @apply m-0 line-clamp-3 whitespace-pre-wrap text-sm text-rh-text;
+        @apply m-0 whitespace-pre-wrap text-sm text-rh-text;
     }
 
     .portal-approve-pdf-panel {
@@ -184,19 +212,19 @@
     }
 
     .portal-approve-pdf-toolbar {
-        @apply flex shrink-0 flex-wrap items-end justify-between gap-3 border-b border-rh-border px-4 py-3 sm:px-5;
+        @apply flex shrink-0 flex-wrap items-center gap-2 border-b border-rh-border px-3 py-2 sm:px-4;
     }
 
-    .portal-approve-pdf-picker {
-        @apply min-w-0 flex-1;
+    .portal-approve-pdf-select {
+        @apply min-w-0 flex-1 max-w-md;
     }
 
-    .portal-approve-pdf-picker .portal-approve-pdf-select {
-        @apply max-w-md;
+    .portal-approve-select-compact {
+        @apply py-1.5 text-xs;
     }
 
-    .portal-approve-pdf-meta {
-        @apply flex shrink-0 flex-col items-end gap-1;
+    .portal-approve-pdf-open-link {
+        @apply shrink-0 text-xs text-rh-green no-underline hover:underline;
     }
 
     .portal-approve-pdf-frame {
