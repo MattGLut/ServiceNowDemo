@@ -221,7 +221,7 @@
     }
 
     .portal-approve-right {
-        @apply flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-rh-bg px-4 sm:px-6;
+        @apply flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-rh-bg;
     }
 
     .portal-approve-form {
@@ -297,7 +297,7 @@
     }
 
     .portal-approve-pdf-panel {
-        @apply flex h-full min-h-0 flex-col;
+        @apply flex h-full min-h-0 flex-1 flex-col;
     }
 
     .portal-approve-pdf-toolbar {
@@ -321,11 +321,11 @@
     }
 
     .portal-approve-pdf-frame {
-        @apply relative min-h-0 flex-1 bg-rh-bg;
+        @apply flex min-h-0 flex-1 flex-col bg-rh-bg;
     }
 
     .portal-approve-pdf-iframe {
-        @apply absolute inset-0 border-0;
+        @apply min-h-0 w-full flex-1 border-0;
     }
 
     .portal-approve-pdf-fallback,

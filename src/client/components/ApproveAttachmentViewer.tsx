@@ -15,7 +15,7 @@ function isPdfAttachment(attachment: TicketAttachment): boolean {
 
 /** Hide built-in PDF viewer thumbnail/nav pane (Chrome, Edge, Acrobat-style viewers). */
 function pdfEmbedUrl(blobOrFileUrl: string): string {
-    const params = 'navpanes=0&pagemode=none&view=Fit'
+    const params = 'navpanes=0&pagemode=none&view=FitH'
     const hashIndex = blobOrFileUrl.indexOf('#')
     if (hashIndex === -1) {
         return `${blobOrFileUrl}#${params}`
