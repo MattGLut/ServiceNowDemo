@@ -221,7 +221,7 @@
     }
 
     .portal-approve-right {
-        @apply flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-rh-bg;
+        @apply flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-rh-bg px-3 sm:px-4;
     }
 
     .portal-approve-form {
@@ -301,7 +301,7 @@
     }
 
     .portal-approve-pdf-toolbar {
-        @apply flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-rh-border px-3 py-2 sm:px-4;
+        @apply flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-rh-border py-2;
     }
 
     .portal-approve-pdf-toolbar-left {
