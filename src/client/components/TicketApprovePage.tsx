@@ -57,11 +57,13 @@ function ApprovePageChrome({ backHref, title, ticket, children }: ApprovePageChr
                                 )}
                             </div>
                         </div>
-                        {ticket && <ApproveTicketHeaderMeta ticket={ticket} />}
                         {ticket && (
-                            <div className="portal-approve-toolbar-badges">
-                                <span className="portal-ticket-status">{ticket.statusLabel}</span>
-                                <ProcessingPathBadge stpFlag={ticket.stpFlag} />
+                            <div className="portal-approve-toolbar-end">
+                                <ApproveTicketHeaderMeta ticket={ticket} />
+                                <div className="portal-approve-toolbar-badges">
+                                    <span className="portal-ticket-status">{ticket.statusLabel}</span>
+                                    <ProcessingPathBadge stpFlag={ticket.stpFlag} />
+                                </div>
                             </div>
                         )}
                     </div>
