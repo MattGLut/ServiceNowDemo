@@ -274,15 +274,6 @@ MapDocIntelToApproval.prototype = {
             this.getFieldConfidence(fields, 'VendorName')
         )
 
-        var paymentTerms = this.getFieldString(fields, 'PaymentTerms')
-        this.setMappedValue(
-            values,
-            confidence,
-            'payment_method',
-            paymentTerms,
-            this.getFieldConfidence(fields, 'PaymentTerms')
-        )
-
         if (document.Confidence !== null && document.Confidence !== undefined) {
             confidence._document = document.Confidence
         }
