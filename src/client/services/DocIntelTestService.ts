@@ -27,6 +27,16 @@ type ScriptedRestEnvelope<T> = {
     error?: DocIntelTestError
 }
 
+function unwrapEnvelope<T>(envelope: ScriptedRestEnvelope<T>): T {
+    if (envelope.result !== undefined && envelope.result !== null) {
+        return envelope.result
+    }
+    if (envelope.error !== undefined) {
+        return envelope.error as T
+    }
+    return {} as T
+}
+
 function readFileAsBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
         const reader = new FileReader()
@@ -71,16 +81,17 @@ export class DocIntelTestService {
         const envelope = (await response.json().catch(() => ({}))) as ScriptedRestEnvelope<
             DocIntelTestSuccess & DocIntelTestError
         >
-        const data = envelope.result ?? envelope
+        const data = unwrapEnvelope(envelope)
 
         if (!response.ok) {
+            const err = data as DocIntelTestError
             const detail = [
-                data.error,
-                data.rest_error_message,
-                data.body,
-                data.hint,
-                data.endpoint ? `Endpoint: ${data.endpoint}` : null,
-                data.status ? `Upstream HTTP ${data.status}` : null,
+                err.error,
+                err.rest_error_message,
+                err.body,
+                err.hint,
+                err.endpoint ? `Endpoint: ${err.endpoint}` : null,
+                err.status ? `Upstream HTTP ${err.status}` : null,
             ]
                 .filter(Boolean)
                 .join(' — ')
