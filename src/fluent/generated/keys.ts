@@ -414,6 +414,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sn_glider_source_artifact_m2m'
+                        id: '1f68ecc758be47e090917ea7afb4cd83'
+                        key: {
+                            application_file: '78fe24d3a5ac4429b3d5f4e7e71489c2'
+                            source_artifact: '24b23aa611d54809902d7c462d8fb4c5'
+                        }
+                    },
+                    {
                         table: 'sys_choice_set'
                         id: '1f7039b5201a4239a29279b956a189e0'
                         key: {
@@ -477,6 +485,13 @@ declare global {
                             name: 'x_2058901_demo_ticket_approval'
                             element: 'contract_status'
                             value: 'complete'
+                        }
+                    },
+                    {
+                        table: 'sn_glider_source_artifact'
+                        id: '24b23aa611d54809902d7c462d8fb4c5'
+                        key: {
+                            name: 'x_2058901_demo_contract_test.do - BYOUI Files'
                         }
                     },
                     {
@@ -552,6 +567,14 @@ declare global {
                         key: {
                             name: 'x_2058901_demo_workflow_type'
                             element: 'code'
+                        }
+                    },
+                    {
+                        table: 'sn_glider_source_artifact_m2m'
+                        id: '2c11fa068a98474fb68eb71d00d249d3'
+                        key: {
+                            application_file: '32b08f7b0bd949839a4b5e581692e760'
+                            source_artifact: '24b23aa611d54809902d7c462d8fb4c5'
                         }
                     },
                     {
@@ -1000,6 +1023,13 @@ declare global {
                         key: {
                             name: 'x_2058901_demo_ticket_approval'
                             element: 'total_amount'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_page'
+                        id: '78fe24d3a5ac4429b3d5f4e7e71489c2'
+                        key: {
+                            endpoint: 'x_2058901_demo_contract_test.do'
                         }
                     },
                     {
@@ -1479,6 +1509,14 @@ declare global {
                         id: 'bff39ae26b7b4e5793ddc92c987a0121'
                         key: {
                             endpoint: 'x_2058901_demo_incident_manager.do'
+                        }
+                    },
+                    {
+                        table: 'sn_glider_source_artifact_m2m'
+                        id: 'c0e2c9c16e414b208495a70b6eb89dfd'
+                        key: {
+                            application_file: 'd80e72df8380435fb911d316f3d0932c'
+                            source_artifact: '24b23aa611d54809902d7c462d8fb4c5'
                         }
                     },
                     {

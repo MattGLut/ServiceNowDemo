@@ -1,6 +1,6 @@
 import React from 'react'
 import PortalLayout from './PortalLayout'
-import { PORTAL_DOC_INTEL_TEST_PATH } from '../utils/portalPage'
+import { PORTAL_CONTRACT_TEST_PATH, PORTAL_DOC_INTEL_TEST_PATH } from '../utils/portalPage'
 
 export default function HomePage() {
     return (
@@ -12,9 +12,12 @@ export default function HomePage() {
                         Create a new ticket with supporting documents. Tickets are stored in ServiceNow and
                         start in Draft status for downstream processing.
                     </p>
-                    <p className="mx-auto mt-4 mb-0 text-sm">
+                    <p className="mx-auto mt-4 mb-0 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm">
                         <a href={PORTAL_DOC_INTEL_TEST_PATH} className="text-rh-green hover:underline">
                             Test Doc Intel endpoint
+                        </a>
+                        <a href={PORTAL_CONTRACT_TEST_PATH} className="text-rh-green hover:underline">
+                            Test Contract API endpoint
                         </a>
                     </p>
                 </div>
