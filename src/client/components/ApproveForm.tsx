@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import ConfidenceHint from './ConfidenceHint'
 import { LABEL_CLASS, INPUT_CLASS, BTN_PRIMARY } from './formStyles'
-import { approvalRecordToFormValues } from '../services/TicketApprovalService'
+import { approvalRecordToFormValues, getFieldConfidenceScore } from '../services/TicketApprovalService'
 import { APPROVAL_FIELD_SOURCE_CLASS, type ApprovalFieldSource } from '../types/approvalFieldSource'
-import type { TicketApprovalRecord, TicketApprovalUpdateInput } from '../types/ticketApproval'
+import type { TicketApprovalFormValues, TicketApprovalRecord, TicketApprovalUpdateInput } from '../types/ticketApproval'
 
 /** Same as INPUT_CLASS but without bg — source classes supply tinted backgrounds. */
 const APPROVE_INPUT_BASE =
@@ -50,6 +51,7 @@ type FieldProps = {
     source: ApprovalFieldSource
     readOnly?: boolean
     type?: string
+    confidence?: number
 }
 
 function FormField({
@@ -60,12 +62,16 @@ function FormField({
     source,
     readOnly = false,
     type = 'text',
+    confidence,
 }: FieldProps) {
     return (
         <div>
-            <label htmlFor={id} className={LABEL_CLASS}>
-                {label}
-            </label>
+            <div className="portal-approve-field-label-row">
+                <label htmlFor={id} className={LABEL_CLASS}>
+                    {label}
+                </label>
+                {confidence != null && <ConfidenceHint score={confidence} fieldLabel={label} />}
+            </div>
             <input
                 id={id}
                 type={type}
@@ -136,6 +142,10 @@ export default function ApproveForm({ approval, extracting = false, onApprove }:
 
     const subtotalDisplay = formatAmountDisplay(values.subtotalAmount)
     const totalDisplay = formatAmountDisplay(values.totalAmount)
+    const fieldConfidence = approval.fieldConfidence
+
+    const confidenceFor = (key: keyof TicketApprovalFormValues) =>
+        getFieldConfidenceScore(fieldConfidence, key)
 
     return (
         <div className="portal-approve-form">
@@ -155,6 +165,7 @@ export default function ApproveForm({ approval, extracting = false, onApprove }:
                         source="docIntel"
                         value={values.invoiceNumber}
                         onChange={(v) => setField('invoiceNumber', v)}
+                        confidence={confidenceFor('invoiceNumber')}
                     />
                     <FormField
                         label="Profit Center"
@@ -169,6 +180,7 @@ export default function ApproveForm({ approval, extracting = false, onApprove }:
                         source="docIntel"
                         value={values.currency}
                         onChange={(v) => setField('currency', v)}
+                        confidence={confidenceFor('currency')}
                     />
                     <FormField
                         label="Subtotal Amount"
@@ -177,6 +189,7 @@ export default function ApproveForm({ approval, extracting = false, onApprove }:
                         value={subtotalDisplay}
                         onChange={() => {}}
                         readOnly
+                        confidence={confidenceFor('subtotalAmount')}
                     />
                     <FormField
                         label="Tax Amount"
@@ -184,6 +197,7 @@ export default function ApproveForm({ approval, extracting = false, onApprove }:
                         source="docIntel"
                         value={values.taxAmount}
                         onChange={(v) => setField('taxAmount', v)}
+                        confidence={confidenceFor('taxAmount')}
                     />
                     <FormField
                         label="Total Amount"
@@ -192,6 +206,7 @@ export default function ApproveForm({ approval, extracting = false, onApprove }:
                         value={totalDisplay}
                         onChange={() => {}}
                         readOnly
+                        confidence={confidenceFor('totalAmount')}
                     />
                 </div>
             </section>
@@ -227,6 +242,7 @@ export default function ApproveForm({ approval, extracting = false, onApprove }:
                         type="date"
                         value={values.reqPaymentDate}
                         onChange={(v) => setField('reqPaymentDate', v)}
+                        confidence={confidenceFor('reqPaymentDate')}
                     />
                 </div>
             </section>
@@ -247,6 +263,7 @@ export default function ApproveForm({ approval, extracting = false, onApprove }:
                         source="docIntel"
                         value={values.chargePayeeName}
                         onChange={(v) => setField('chargePayeeName', v)}
+                        confidence={confidenceFor('chargePayeeName')}
                     />
                 </div>
             </section>
