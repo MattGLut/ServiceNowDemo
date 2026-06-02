@@ -15,7 +15,7 @@ Server-side contract auto-fill uses the same outbound REST message as Doc Intel.
 ## Flow
 
 1. Ticket insert creates an approval row (`ticket-create-approval` BR, order 200).
-2. `ticket-fetch-contract` BR (order 300) calls Contract Details and maps fields onto the approval row.
+2. `ticket-fetch-contract` **async** BR (order 300) calls Contract Details and maps fields onto the approval row. Must be async — scoped apps cannot perform outbound HTTP from synchronous business rules.
 3. PDF attachment still triggers Doc Intel separately.
 
 ## Test UI page
