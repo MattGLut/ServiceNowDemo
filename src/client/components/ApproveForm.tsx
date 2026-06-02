@@ -216,7 +216,7 @@ export default function ApproveForm({ approval, extracting = false, onApprove }:
                     <FormField
                         label="Payment Method"
                         id="payment_method"
-                        source="docIntel"
+                        source="contract"
                         value={values.paymentMethod}
                         onChange={(v) => setField('paymentMethod', v)}
                     />
