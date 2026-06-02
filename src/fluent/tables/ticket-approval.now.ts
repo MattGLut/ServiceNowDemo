@@ -102,5 +102,21 @@ export const x_2058901_demo_ticket_approval = Table({
         field_confidence: JsonColumn({
             label: 'Field Confidence',
         }),
+        contract_status: ChoiceColumn({
+            label: 'Contract Status',
+            choices: {
+                pending: { label: 'Pending' },
+                complete: { label: 'Complete' },
+                failed: { label: 'Failed' },
+                skipped: { label: 'Skipped' },
+            },
+        }),
+        contract_error: StringColumn({
+            label: 'Contract Error',
+            maxLength: 500,
+        }),
+        contract_processed_at: DateTimeColumn({
+            label: 'Contract Processed At',
+        }),
     },
 })

@@ -1,5 +1,7 @@
 export type DiStatus = 'pending' | 'complete' | 'failed' | 'skipped'
 
+export type ContractStatus = 'pending' | 'complete' | 'failed' | 'skipped'
+
 export type TicketApprovalRecord = {
     sysId: string
     ticketSysId: string
@@ -23,12 +25,24 @@ export type TicketApprovalRecord = {
     diStatus: DiStatus | ''
     diError: string
     diProcessedAt: string
+    contractStatus: ContractStatus | ''
+    contractError: string
+    contractProcessedAt: string
     fieldConfidence: ApprovalFieldConfidence
 }
 
 export type TicketApprovalFormValues = Omit<
     TicketApprovalRecord,
-    'sysId' | 'ticketSysId' | 'approvedAt' | 'diStatus' | 'diError' | 'diProcessedAt' | 'fieldConfidence'
+    | 'sysId'
+    | 'ticketSysId'
+    | 'approvedAt'
+    | 'diStatus'
+    | 'diError'
+    | 'diProcessedAt'
+    | 'contractStatus'
+    | 'contractError'
+    | 'contractProcessedAt'
+    | 'fieldConfidence'
 >
 
 export type ApprovalFieldConfidence = Partial<

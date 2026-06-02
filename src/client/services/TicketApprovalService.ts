@@ -1,5 +1,6 @@
 import type {
     ApprovalFieldConfidence,
+    ContractStatus,
     DiStatus,
     TicketApprovalFormValues,
     TicketApprovalRecord,
@@ -41,13 +42,21 @@ function formatGlideDateTime(date: Date): string {
 }
 
 const APPROVAL_FIELDS =
-    'sys_id,ticket,company_code,invoice_number,profit_center,currency,subtotal_amount,tax_amount,total_amount,approver_name,approver_id,payment_method,req_payment_date,charge_payee_id,charge_payee_name,reviewer_notes,supervisor_notes,operator_notes,approved_at,di_status,di_error,di_processed_at,field_confidence'
+    'sys_id,ticket,company_code,invoice_number,profit_center,currency,subtotal_amount,tax_amount,total_amount,approver_name,approver_id,payment_method,req_payment_date,charge_payee_id,charge_payee_name,reviewer_notes,supervisor_notes,operator_notes,approved_at,di_status,di_error,di_processed_at,contract_status,contract_error,contract_processed_at,field_confidence'
 
 const DI_STATUSES: DiStatus[] = ['pending', 'complete', 'failed', 'skipped']
+const CONTRACT_STATUSES: ContractStatus[] = ['pending', 'complete', 'failed', 'skipped']
 
 function parseDiStatus(value: string): DiStatus | '' {
     if (DI_STATUSES.includes(value as DiStatus)) {
         return value as DiStatus
+    }
+    return ''
+}
+
+function parseContractStatus(value: string): ContractStatus | '' {
+    if (CONTRACT_STATUSES.includes(value as ContractStatus)) {
+        return value as ContractStatus
     }
     return ''
 }
@@ -149,6 +158,9 @@ function mapApprovalRow(row: Record<string, GlideFieldValue>): TicketApprovalRec
         diStatus: parseDiStatus(unwrapGlideValue(row.di_status)),
         diError: unwrapGlideField(row.di_error),
         diProcessedAt: unwrapGlideField(row.di_processed_at),
+        contractStatus: parseContractStatus(unwrapGlideValue(row.contract_status)),
+        contractError: unwrapGlideField(row.contract_error),
+        contractProcessedAt: unwrapGlideField(row.contract_processed_at),
         fieldConfidence: parseFieldConfidence(row.field_confidence),
     }
 }
