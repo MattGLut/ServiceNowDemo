@@ -3,5 +3,5 @@ export function formatConfidencePercent(score: number): string {
 }
 
 export function formatConfidenceTooltip(score: number): string {
-    return `Document Intelligence confidence: ${formatConfidencePercent(score)}`
+    return `Doc Intel Confidence: ${formatConfidencePercent(score)}`
 }
