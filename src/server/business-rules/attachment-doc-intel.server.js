@@ -60,7 +60,6 @@
     }
 
     approvalGr.setWorkflow(false)
-    approvalGr.setAutoSysFields(false)
 
     if (ticketGr.stp_flag == true) {
         approvalGr.di_status = 'skipped'
@@ -95,7 +94,6 @@
         }
 
         approvalGr.setWorkflow(false)
-        approvalGr.setAutoSysFields(false)
         applyMappedValues(approvalGr, mapped)
         approvalGr.di_status = 'complete'
         approvalGr.di_error = ''
@@ -114,7 +112,6 @@
 
         if (approvalGr.get(approvalGr.getUniqueValue())) {
             approvalGr.setWorkflow(false)
-            approvalGr.setAutoSysFields(false)
             approvalGr.di_status = 'failed'
             approvalGr.di_error = truncateError(message)
             approvalGr.di_processed_at = new GlideDateTime()
