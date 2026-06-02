@@ -1,4 +1,5 @@
 import React from 'react'
+import ContractTestPage from './components/ContractTestPage'
 import DocIntelTestPage from './components/DocIntelTestPage'
 import HomePage from './components/HomePage'
 import TicketApprovePage from './components/TicketApprovePage'
@@ -28,6 +29,10 @@ export default function App() {
 
     if (page === 'doc-intel-test') {
         return <DocIntelTestPage />
+    }
+
+    if (page === 'contract-test') {
+        return <ContractTestPage />
     }
 
     return <HomePage />

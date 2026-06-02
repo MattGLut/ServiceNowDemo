@@ -18,6 +18,10 @@ Server-side contract auto-fill uses the same outbound REST message as Doc Intel.
 2. `ticket-fetch-contract` BR (order 300) calls Contract Details and maps fields onto the approval row.
 3. PDF attachment still triggers Doc Intel separately.
 
+## Test UI page
+
+Open **`/x_2058901_demo_contract_test.do`** (also linked from the portal home page). Enter a contract number and submit to call the proxy below.
+
 ## Test scripted REST
 
 `POST /api/x_2058901_demo/contract_test/details`
