@@ -1,0 +1,31 @@
+{
+    "data": [
+        {
+            "contractNo": "CDH0144105",
+            "contractApprovalStatus": "Approved",
+            "contractType": "ZC20",
+            "contractTypeDescription": "Purchase",
+            "companyCode": "1360",
+            "profitCenter": "DHA1",
+            "picId": "H8790",
+            "picName": "Nagisa Kratz",
+            "approverId": "D6822",
+            "approverName": "Steven Watts",
+            "customerId": "",
+            "customerName": "",
+            "vendorOrCreditorId": "ZA146933",
+            "vendorOrCreditorName": "MITSUI & CO. PLASTICS LTD.",
+            "incotermsPurchase": "CIP",
+            "incotermsPurchaseLocation": "CINCINNATI OH RAIL RAMP",
+            "purchaseTitleTransferPoint": "",
+            "incotermsSales": "",
+            "incotermsSalesLocation": "",
+            "purchasePaymentMethod": "T",
+            "paymentTerms": "060",
+            "paymentTermsDescription": "Net 60 Days",
+            "salesPaymentMethod": "",
+            "defaultAlternatePayeeId": "",
+            "defaultAlternatePayeeName": ""
+        }
+    ]
+}

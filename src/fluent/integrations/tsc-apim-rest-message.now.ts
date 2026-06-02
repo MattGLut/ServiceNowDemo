@@ -61,14 +61,13 @@ export const tscApimHeaderDocIntelContentType = Record({
     },
 })
 
-/** Placeholder — update rest_endpoint when contract lookup API is defined. */
 export const tscApimMethodGetContract = Record({
     $id: Now.ID['tsc-apim-method-get-contract'],
     table: 'sys_rest_message_fn',
     data: {
         function_name: 'get_contract',
         http_method: 'get',
-        rest_endpoint: '/TBD/contract/${contract_number}',
+        rest_endpoint: 'https://tsc-api.azure-api.net/rms/v1/UWFData/contracts',
         rest_message: tscApimRestMessage,
         authentication_type: 'inherit_from_parent',
     },

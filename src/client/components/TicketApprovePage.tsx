@@ -9,7 +9,12 @@ import { TicketApprovalService } from '../services/TicketApprovalService'
 import { TicketService } from '../services/TicketService'
 import { ticketListUrl } from '../utils/ticketListFilter'
 import { ticketStatusBadgeClass } from '../utils/ticketStatusStyle'
-import type { DiStatus, TicketApprovalRecord, TicketApprovalUpdateInput } from '../types/ticketApproval'
+import type {
+    ContractStatus,
+    DiStatus,
+    TicketApprovalRecord,
+    TicketApprovalUpdateInput,
+} from '../types/ticketApproval'
 import type { TicketAttachment, TicketRecord } from '../types/ticket'
 
 const DI_POLL_INTERVAL_MS = 3000
@@ -29,11 +34,71 @@ function isDiExtracting(
     return !approval.diStatus
 }
 
+function isContractLoading(approval: TicketApprovalRecord, ticket: TicketRecord): boolean {
+    if (ticket.stpFlag) {
+        return false
+    }
+    if (!ticket.externalId.trim()) {
+        return false
+    }
+    if (approval.contractStatus === 'pending') {
+        return true
+    }
+    return !approval.contractStatus
+}
+
+function shouldPollApproval(
+    approval: TicketApprovalRecord,
+    ticket: TicketRecord,
+    attachmentCount: number
+): boolean {
+    return isDiExtracting(approval, ticket, attachmentCount) || isContractLoading(approval, ticket)
+}
+
 type DocIntelStatusBannerProps = {
     diStatus: DiStatus | ''
     diError: string
     extracting: boolean
     onRefresh: () => void
+}
+
+type ContractStatusBannerProps = {
+    contractStatus: ContractStatus | ''
+    contractError: string
+    loading: boolean
+    onRefresh: () => void
+}
+
+function ContractStatusBanner({
+    contractStatus,
+    contractError,
+    loading,
+    onRefresh,
+}: ContractStatusBannerProps) {
+    if (contractStatus === 'failed') {
+        return (
+            <div className="portal-submit-banner portal-submit-banner-error mb-4" role="alert">
+                <p className="m-0 text-sm font-medium">Contract lookup failed</p>
+                {contractError && <p className="m-0 mt-1 text-sm">{contractError}</p>}
+                <p className="m-0 mt-2 text-sm text-rh-muted">
+                    You can still review and edit contract fields manually.
+                </p>
+            </div>
+        )
+    }
+
+    if (!loading) {
+        return null
+    }
+
+    return (
+        <div className="portal-submit-banner mb-4 border border-sky-500/40 bg-sky-500/10 text-sky-100">
+            <p className="m-0 text-sm">Loading contract data…</p>
+            <button type="button" className="portal-mobile-toggle mt-2 text-sm" onClick={onRefresh}>
+                Refresh
+            </button>
+        </div>
+    )
 }
 
 function DocIntelStatusBanner({ diStatus, diError, extracting, onRefresh }: DocIntelStatusBannerProps) {
@@ -122,20 +187,37 @@ function ApprovePageChrome({ backHref, title, ticket, children }: ApprovePageChr
 type ApproveFormPanelProps = {
     approval: TicketApprovalRecord
     extracting: boolean
+    contractLoading: boolean
     onRefresh: () => void
     onApprove: (values: TicketApprovalUpdateInput) => Promise<void>
 }
 
-function ApproveFormPanel({ approval, extracting, onRefresh, onApprove }: ApproveFormPanelProps) {
+function ApproveFormPanel({
+    approval,
+    extracting,
+    contractLoading,
+    onRefresh,
+    onApprove,
+}: ApproveFormPanelProps) {
     return (
         <section className="portal-approve-left">
+            <ContractStatusBanner
+                contractStatus={approval.contractStatus}
+                contractError={approval.contractError}
+                loading={contractLoading}
+                onRefresh={onRefresh}
+            />
             <DocIntelStatusBanner
                 diStatus={approval.diStatus}
                 diError={approval.diError}
                 extracting={extracting}
                 onRefresh={onRefresh}
             />
-            <ApproveForm approval={approval} extracting={extracting} onApprove={onApprove} />
+            <ApproveForm
+                approval={approval}
+                extracting={extracting || contractLoading}
+                onApprove={onApprove}
+            />
         </section>
     )
 }
@@ -195,7 +277,7 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
         }
 
         const { approval, ticket, attachments } = loadState
-        if (!isDiExtracting(approval, ticket, attachments.length)) {
+        if (!shouldPollApproval(approval, ticket, attachments.length)) {
             return
         }
 
@@ -346,6 +428,7 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
 
     const { ticket, attachments, approval } = loadState
     const extracting = isDiExtracting(approval, ticket, attachments.length)
+    const contractLoading = isContractLoading(approval, ticket)
 
     return (
         <ApprovePageChrome backHref={backHref} title={ticket.title} ticket={ticket}>
@@ -353,6 +436,7 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
                 <ApproveFormPanel
                     approval={approval}
                     extracting={extracting}
+                    contractLoading={contractLoading}
                     onRefresh={() => void refreshApproval()}
                     onApprove={handleApprove}
                 />
