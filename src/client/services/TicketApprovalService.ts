@@ -1,4 +1,6 @@
 import type {
+    ApprovalFieldConfidence,
+    DiStatus,
     TicketApprovalRecord,
     TicketApprovalUpdateInput,
 } from '../types/ticketApproval'
@@ -38,7 +40,33 @@ function formatGlideDateTime(date: Date): string {
 }
 
 const APPROVAL_FIELDS =
-    'sys_id,ticket,company_code,invoice_number,profit_center,currency,subtotal_amount,tax_amount,total_amount,approver_name,approver_id,payment_method,req_payment_date,charge_payee_id,charge_payee_name,reviewer_notes,supervisor_notes,operator_notes,approved_at'
+    'sys_id,ticket,company_code,invoice_number,profit_center,currency,subtotal_amount,tax_amount,total_amount,approver_name,approver_id,payment_method,req_payment_date,charge_payee_id,charge_payee_name,reviewer_notes,supervisor_notes,operator_notes,approved_at,di_status,di_error,di_processed_at,field_confidence'
+
+const DI_STATUSES: DiStatus[] = ['pending', 'complete', 'failed', 'skipped']
+
+function parseDiStatus(value: string): DiStatus | '' {
+    if (DI_STATUSES.includes(value as DiStatus)) {
+        return value as DiStatus
+    }
+    return ''
+}
+
+function parseFieldConfidence(raw: GlideFieldValue): ApprovalFieldConfidence {
+    const text = unwrapGlideField(raw)
+    if (!text) {
+        return {}
+    }
+
+    try {
+        const parsed: unknown = JSON.parse(text)
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+            return {}
+        }
+        return parsed as ApprovalFieldConfidence
+    } catch {
+        return {}
+    }
+}
 
 function mapApprovalRow(row: Record<string, GlideFieldValue>): TicketApprovalRecord {
     return {
@@ -61,6 +89,10 @@ function mapApprovalRow(row: Record<string, GlideFieldValue>): TicketApprovalRec
         supervisorNotes: unwrapGlideField(row.supervisor_notes),
         operatorNotes: unwrapGlideField(row.operator_notes),
         approvedAt: unwrapGlideField(row.approved_at),
+        diStatus: parseDiStatus(unwrapGlideValue(row.di_status)),
+        diError: unwrapGlideField(row.di_error),
+        diProcessedAt: unwrapGlideField(row.di_processed_at),
+        fieldConfidence: parseFieldConfidence(row.field_confidence),
     }
 }
 

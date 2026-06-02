@@ -1,3 +1,5 @@
+export type DiStatus = 'pending' | 'complete' | 'failed' | 'skipped'
+
 export type TicketApprovalRecord = {
     sysId: string
     ticketSysId: string
@@ -18,8 +20,19 @@ export type TicketApprovalRecord = {
     supervisorNotes: string
     operatorNotes: string
     approvedAt: string
+    diStatus: DiStatus | ''
+    diError: string
+    diProcessedAt: string
+    fieldConfidence: ApprovalFieldConfidence
 }
 
-export type TicketApprovalFormValues = Omit<TicketApprovalRecord, 'sysId' | 'ticketSysId' | 'approvedAt'>
+export type TicketApprovalFormValues = Omit<
+    TicketApprovalRecord,
+    'sysId' | 'ticketSysId' | 'approvedAt' | 'diStatus' | 'diError' | 'diProcessedAt' | 'fieldConfidence'
+>
+
+export type ApprovalFieldConfidence = Partial<
+    Record<keyof TicketApprovalFormValues | '_document', number>
+>
 
 export type TicketApprovalUpdateInput = TicketApprovalFormValues

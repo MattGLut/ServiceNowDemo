@@ -5,9 +5,17 @@ declare global {
         namespace Internal {
             interface Keys extends KeysRegistry {
                 explicit: {
+                    'attachment-doc-intel-br': {
+                        table: 'sys_script'
+                        id: '15d39c4463de4e39bef6bdd1538b6e64'
+                    }
                     bom_json: {
                         table: 'sys_module'
                         id: '0e3749029e224d5c8dffa70f9824870f'
+                    }
+                    'doc-intel-client-si': {
+                        table: 'sys_script_include'
+                        id: '1fcc91d7d0d042c789084309727fa1e9'
                     }
                     'doc-intel-test-api': {
                         table: 'sys_ws_definition'
@@ -46,9 +54,17 @@ declare global {
                         id: 'c7ca26a801c84a90a018a91683e363d0'
                         deleted: true
                     }
+                    'map-doc-intel-to-approval-si': {
+                        table: 'sys_script_include'
+                        id: 'a271c5a3b3924991acc473146a85c93e'
+                    }
                     package_json: {
                         table: 'sys_module'
                         id: 'f14c2b06cd1244be881bfe999c172a64'
+                    }
+                    'src_server_business-rules_attachment-doc-intel_server_js': {
+                        table: 'sys_module'
+                        id: 'e080c4cbb86c46c0a273ec7275d8d981'
                     }
                     'src_server_business-rules_incident-response-set-responder_server_js': {
                         table: 'sys_module'
@@ -66,6 +82,14 @@ declare global {
                     'src_server_business-rules_ticket-set-submitter_server_js': {
                         table: 'sys_module'
                         id: '0a6c08e453224e78b96183c2e6a8aa29'
+                    }
+                    'src_server_script-includes_doc-intel-client_server_js': {
+                        table: 'sys_module'
+                        id: '98fed16d2acf44c993cd4f3d919607c7'
+                    }
+                    'src_server_script-includes_map-doc-intel-to-approval_server_js': {
+                        table: 'sys_module'
+                        id: 'e4a279c24be246ee8c2f81721fc27c1c'
                     }
                     'src_server_scripted-rest_doc-intel-test-invoice_server_js': {
                         table: 'sys_module'
@@ -324,6 +348,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: '1cf2d84e048a4f1a8bbc37d0d4623742'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'di_processed_at'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sn_glider_source_artifact_m2m'
                         id: '201e60d27a3c4ad0b5c041af4e8edff4'
                         key: {
@@ -464,6 +497,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: '3295d1faac6544cc8b6cf3e94967079f'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'di_status'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_ux_lib_asset'
                         id: '32b08f7b0bd949839a4b5e581692e760'
                         key: {
@@ -556,6 +598,14 @@ declare global {
                         key: {
                             application_file: 'd80e72df8380435fb911d316f3d0932c'
                             source_artifact: '0d3c23bf918c45878e4ea9f11dceb6ea'
+                        }
+                    },
+                    {
+                        table: 'sys_choice_set'
+                        id: '404e78a8f56447a1a5073043e3b3f160'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'di_status'
                         }
                     },
                     {
@@ -665,6 +715,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_choice'
+                        id: '532882df29944066b6fa9ff0c43d3543'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'di_status'
+                            value: 'pending'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: '54ee7defc02f4a65ba27ce2d0b17334a'
                         key: {
@@ -695,6 +754,15 @@ declare global {
                         key: {
                             name: 'x_2058901_demo_ticket_approval'
                             element: 'profit_center'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: '5bc9d0a4363046dbbf45ab3e1b3e333a'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'di_status'
+                            value: 'skipped'
                         }
                     },
                     {
@@ -808,6 +876,14 @@ declare global {
                             name: 'x_2058901_demo_ticket_approval'
                             element: 'tax_amount'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '74842fa0cd754458953cb639d4411c13'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'di_status'
                         }
                     },
                     {
@@ -955,6 +1031,23 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_choice'
+                        id: '95f8f5e7219f4ac4a7e09885675c1fec'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'di_status'
+                            value: 'complete'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '9774e13ede294b4fa909dc93aae3f5d2'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'di_error'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: '99a2de24807f41ef8c2a5bb624b06c7f'
                         key: {
@@ -1087,6 +1180,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_choice'
+                        id: 'a45337b7fc8347b3830940a16863d5fa'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'di_status'
+                            value: 'failed'
+                        }
+                    },
+                    {
                         table: 'sn_glider_source_artifact_m2m'
                         id: 'a6b1b8b94d864205a1d2cf2435bdb029'
                         key: {
@@ -1147,6 +1249,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: 'b0fa8891c73d4d0291864e456b900f22'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'di_error'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_security_acl_role'
                         id: 'b41c3f8364d24e0baac33ef55ecf4b3e'
                         key: {
@@ -1181,6 +1292,14 @@ declare global {
                         key: {
                             name: 'x_2058901_demo_ticket'
                             element: 'description'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'b6d1f267a52a4d36bf2eff0c66ecd487'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'di_processed_at'
                         }
                     },
                     {
@@ -1245,6 +1364,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: 'c5ad1b5b2a2f409996c04fdbed41f4df'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'field_confidence'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_security_acl_role'
                         id: 'c5ed466840654e11815d969d56dd0983'
                         key: {
@@ -1301,6 +1429,14 @@ declare global {
                         id: 'd5fcd53405b24cefbf2f449dd565b1c5'
                         key: {
                             name: 'x_2058901_demo_ticket'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'd71d2cae8da648238ad4373d8d34228a'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'field_confidence'
                         }
                     },
                     {

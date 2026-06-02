@@ -9,8 +9,60 @@ import { TicketApprovalService } from '../services/TicketApprovalService'
 import { TicketService } from '../services/TicketService'
 import { ticketListUrl } from '../utils/ticketListFilter'
 import { ticketStatusBadgeClass } from '../utils/ticketStatusStyle'
-import type { TicketApprovalRecord, TicketApprovalUpdateInput } from '../types/ticketApproval'
+import type { DiStatus, TicketApprovalRecord, TicketApprovalUpdateInput } from '../types/ticketApproval'
 import type { TicketAttachment, TicketRecord } from '../types/ticket'
+
+const DI_POLL_INTERVAL_MS = 3000
+const DI_POLL_MAX_ATTEMPTS = 20
+
+function isDiExtracting(
+    approval: TicketApprovalRecord,
+    ticket: TicketRecord,
+    attachmentCount: number
+): boolean {
+    if (ticket.stpFlag || attachmentCount === 0) {
+        return false
+    }
+    if (approval.diStatus === 'pending') {
+        return true
+    }
+    return !approval.diStatus
+}
+
+type DocIntelStatusBannerProps = {
+    diStatus: DiStatus | ''
+    diError: string
+    extracting: boolean
+    onRefresh: () => void
+}
+
+function DocIntelStatusBanner({ diStatus, diError, extracting, onRefresh }: DocIntelStatusBannerProps) {
+    if (diStatus === 'failed') {
+        return (
+            <div className="portal-submit-banner portal-submit-banner-error mb-4" role="alert">
+                <p className="m-0 text-sm font-medium">Invoice extraction failed</p>
+                {diError && <p className="m-0 mt-1 text-sm">{diError}</p>}
+                <p className="m-0 mt-2 text-sm text-rh-muted">
+                    You can still review and edit fields manually, or re-upload the PDF after fixing
+                    configuration.
+                </p>
+            </div>
+        )
+    }
+
+    if (!extracting) {
+        return null
+    }
+
+    return (
+        <div className="portal-submit-banner mb-4 border border-amber-500/40 bg-amber-500/10 text-amber-100">
+            <p className="m-0 text-sm">Extracting invoice data from the PDF…</p>
+            <button type="button" className="portal-mobile-toggle mt-2 text-sm" onClick={onRefresh}>
+                Refresh
+            </button>
+        </div>
+    )
+}
 
 type TicketApprovePageProps = {
     sysId: string | null
@@ -69,13 +121,21 @@ function ApprovePageChrome({ backHref, title, ticket, children }: ApprovePageChr
 
 type ApproveFormPanelProps = {
     approval: TicketApprovalRecord
+    extracting: boolean
+    onRefresh: () => void
     onApprove: (values: TicketApprovalUpdateInput) => Promise<void>
 }
 
-function ApproveFormPanel({ approval, onApprove }: ApproveFormPanelProps) {
+function ApproveFormPanel({ approval, extracting, onRefresh, onApprove }: ApproveFormPanelProps) {
     return (
         <section className="portal-approve-left">
-            <ApproveForm approval={approval} onApprove={onApprove} />
+            <DocIntelStatusBanner
+                diStatus={approval.diStatus}
+                diError={approval.diError}
+                extracting={extracting}
+                onRefresh={onRefresh}
+            />
+            <ApproveForm approval={approval} extracting={extracting} onApprove={onApprove} />
         </section>
     )
 }
@@ -128,6 +188,61 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
     useEffect(() => {
         void loadTicket()
     }, [loadTicket])
+
+    useEffect(() => {
+        if (loadState.status !== 'ready') {
+            return
+        }
+
+        const { approval, ticket, attachments } = loadState
+        if (!isDiExtracting(approval, ticket, attachments.length)) {
+            return
+        }
+
+        let attempts = 0
+        const intervalId = window.setInterval(() => {
+            attempts += 1
+            if (attempts > DI_POLL_MAX_ATTEMPTS) {
+                window.clearInterval(intervalId)
+                return
+            }
+
+            void (async () => {
+                if (!sysId) {
+                    return
+                }
+
+                const refreshed = await approvalService.getByTicketSysId(sysId)
+                if (!refreshed) {
+                    return
+                }
+
+                setLoadState((current) => {
+                    if (current.status !== 'ready') {
+                        return current
+                    }
+                    return { ...current, approval: refreshed }
+                })
+            })()
+        }, DI_POLL_INTERVAL_MS)
+
+        return () => window.clearInterval(intervalId)
+    }, [loadState, sysId, approvalService])
+
+    const refreshApproval = useCallback(async () => {
+        if (!sysId || loadState.status !== 'ready') {
+            await loadTicket()
+            return
+        }
+
+        const refreshed = await approvalService.getByTicketSysId(sysId)
+        if (!refreshed) {
+            await loadTicket()
+            return
+        }
+
+        setLoadState({ ...loadState, approval: refreshed })
+    }, [sysId, loadState, approvalService, loadTicket])
 
     const handleApprove = useCallback(
         async (values: TicketApprovalUpdateInput) => {
@@ -230,11 +345,17 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
     }
 
     const { ticket, attachments, approval } = loadState
+    const extracting = isDiExtracting(approval, ticket, attachments.length)
 
     return (
         <ApprovePageChrome backHref={backHref} title={ticket.title} ticket={ticket}>
             <div className="portal-approve-split">
-                <ApproveFormPanel approval={approval} onApprove={handleApprove} />
+                <ApproveFormPanel
+                    approval={approval}
+                    extracting={extracting}
+                    onRefresh={() => void refreshApproval()}
+                    onApprove={handleApprove}
+                />
                 <div className="portal-approve-right">
                     <ApproveAttachmentViewer attachments={attachments} />
                 </div>
