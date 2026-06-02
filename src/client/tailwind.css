@@ -281,7 +281,7 @@
     }
 
     .portal-approve-confidence-hint {
-        @apply relative inline-flex;
+        @apply relative inline-flex -translate-y-0.5;
     }
 
     .portal-approve-confidence-hint-trigger {
