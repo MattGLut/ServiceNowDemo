@@ -12,6 +12,7 @@ const TEXTAREA_CLASS = `${INPUT_CLASS} min-h-[4.5rem] resize-y`
 
 type ApproveFormProps = {
     approval: TicketApprovalRecord
+    extracting?: boolean
     onApprove: (values: TicketApprovalUpdateInput) => Promise<void>
 }
 
@@ -101,7 +102,7 @@ function TextAreaField({ label, id, value, onChange }: TextAreaFieldProps) {
     )
 }
 
-export default function ApproveForm({ approval, onApprove }: ApproveFormProps) {
+export default function ApproveForm({ approval, extracting = false, onApprove }: ApproveFormProps) {
     const [values, setValues] = useState<TicketApprovalUpdateInput>(() =>
         approvalRecordToFormValues(approval)
     )
@@ -284,7 +285,7 @@ export default function ApproveForm({ approval, onApprove }: ApproveFormProps) {
                 <button
                     type="button"
                     className={BTN_PRIMARY}
-                    disabled={submitting || Boolean(approval.approvedAt)}
+                    disabled={submitting || extracting || Boolean(approval.approvedAt)}
                     onClick={() => void handleApprove()}
                 >
                     {submitting ? 'Approving…' : approval.approvedAt ? 'Already approved' : 'Approve ticket'}

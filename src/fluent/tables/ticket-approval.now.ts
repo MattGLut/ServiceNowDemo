@@ -7,6 +7,8 @@ import {
     DateColumn,
     DateTimeColumn,
     DecimalColumn,
+    ChoiceColumn,
+    JsonColumn,
 } from '@servicenow/sdk/core'
 
 export const x_2058901_demo_ticket_approval = Table({
@@ -80,6 +82,25 @@ export const x_2058901_demo_ticket_approval = Table({
         }),
         approved_at: DateTimeColumn({
             label: 'Approved At',
+        }),
+        di_status: ChoiceColumn({
+            label: 'Doc Intel Status',
+            choices: {
+                pending: { label: 'Pending' },
+                complete: { label: 'Complete' },
+                failed: { label: 'Failed' },
+                skipped: { label: 'Skipped' },
+            },
+        }),
+        di_error: StringColumn({
+            label: 'Doc Intel Error',
+            maxLength: 500,
+        }),
+        di_processed_at: DateTimeColumn({
+            label: 'Doc Intel Processed At',
+        }),
+        field_confidence: JsonColumn({
+            label: 'Field Confidence',
         }),
     },
 })
