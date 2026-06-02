@@ -9,3 +9,12 @@ Record({
         name: 'Charges Payable',
     },
 })
+
+Record({
+    $id: Now.ID['workflow-type-pi01'],
+    table: 'x_2058901_demo_workflow_type',
+    data: {
+        code: 'PI01',
+        name: 'PI01',
+    },
+})
