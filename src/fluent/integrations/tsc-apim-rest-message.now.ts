@@ -20,12 +20,11 @@ export const tscApimRestMessage = Record({
 
 export const tscApimHeaderSubscriptionKey = Record({
     $id: Now.ID['tsc-apim-header-subscription-key'],
-    $meta: { installMethod: 'once' },
     table: 'sys_rest_message_headers',
     data: {
         rest_message: tscApimRestMessage,
         name: 'Ocp-Apim-Subscription-Key',
-        value: '', // Set on instance; apply_once so deploy does not overwrite your key
+        value: '',
     },
 })
 
@@ -45,7 +44,7 @@ export const tscApimMethodPostDocIntelInvoice = Record({
     data: {
         function_name: 'post_doc_intel_invoice',
         http_method: 'post',
-        rest_endpoint: '/DocIntel/v1/trained/invoice/pdf',
+        rest_endpoint: 'https://tsc-api.azure-api.net/DocIntel/v1/trained/invoice/pdf',
         rest_message: tscApimRestMessage,
         authentication_type: 'inherit_from_parent',
     },
