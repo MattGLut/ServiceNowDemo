@@ -35,6 +35,8 @@ export default tseslint.config(
                 sn_ws: 'readonly',
                 GlideSysAttachment: 'readonly',
                 GlideRecord: 'readonly',
+                GlideDateTime: 'readonly',
+                Class: 'readonly',
                 x_2058901_demo: 'readonly',
             },
         },

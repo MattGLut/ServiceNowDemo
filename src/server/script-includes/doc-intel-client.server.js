@@ -81,7 +81,7 @@ DocIntelClient.prototype = {
         var parsed
         try {
             parsed = JSON.parse(responseBody)
-        } catch (parseError) {
+        } catch {
             throw new Error('Doc Intel response was not valid JSON.')
         }
 

@@ -27,7 +27,7 @@
         var column
 
         for (column in values) {
-            if (values.hasOwnProperty(column) && values[column]) {
+            if (Object.prototype.hasOwnProperty.call(values, column) && values[column]) {
                 approvalGr.setValue(column, values[column])
             }
         }
