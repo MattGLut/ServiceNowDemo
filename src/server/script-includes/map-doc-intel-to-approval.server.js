@@ -15,6 +15,9 @@ MapDocIntelToApproval.prototype = {
             return ''
         }
         var value = field.ValueString
+        if (value === null || value === undefined || String(value).trim() === '') {
+            value = field.Content
+        }
         if (value === null || value === undefined) {
             return ''
         }
@@ -73,6 +76,116 @@ MapDocIntelToApproval.prototype = {
         return String(amount)
     },
 
+    inferCurrencyFromAmount: function (amountString) {
+        var value = (amountString || '').trim()
+        if (!value) {
+            return ''
+        }
+        if (value.indexOf('$') !== -1) {
+            return 'USD'
+        }
+        if (value.indexOf('€') !== -1) {
+            return 'EUR'
+        }
+        if (value.indexOf('£') !== -1) {
+            return 'GBP'
+        }
+        return ''
+    },
+
+    parseChargesSubTable: function (fields) {
+        var chargesField = this.getFieldObject(fields, 'ChargesSubTable')
+        if (!chargesField || !chargesField.ValueList || !chargesField.ValueList.length) {
+            return { subtotal: '', tax: '', confidence: null }
+        }
+
+        var subtotalSum = 0
+        var taxSum = 0
+        var hasSubtotalLines = false
+        var hasTaxLines = false
+        var lineConfidence = null
+        var index
+
+        for (index = 0; index < chargesField.ValueList.length; index++) {
+            var row = chargesField.ValueList[index]
+            var rowDict = row && row.ValueDictionary ? row.ValueDictionary : null
+            if (!rowDict) {
+                continue
+            }
+
+            var amountField = rowDict.ChargesAmount
+            var amountString =
+                amountField && amountField.ValueString != null
+                    ? String(amountField.ValueString)
+                    : amountField && amountField.Content
+                      ? String(amountField.Content)
+                      : ''
+            var parsedAmount = this.parseAmount(amountString)
+            if (!parsedAmount) {
+                continue
+            }
+
+            var amount = parseFloat(parsedAmount)
+            if (isNaN(amount)) {
+                continue
+            }
+
+            var description = ''
+            if (rowDict.ChargesDescription) {
+                if (rowDict.ChargesDescription.ValueString) {
+                    description = String(rowDict.ChargesDescription.ValueString)
+                } else if (rowDict.ChargesDescription.Content) {
+                    description = String(rowDict.ChargesDescription.Content)
+                }
+            }
+            description = description.toLowerCase()
+
+            var isTaxLine = /(^|\s)(tax|vat|gst|hst|pst)(\s|$)/.test(description)
+
+            if (isTaxLine) {
+                taxSum += amount
+                hasTaxLines = true
+            } else {
+                subtotalSum += amount
+                hasSubtotalLines = true
+            }
+
+            if (amountField && amountField.Confidence !== null && amountField.Confidence !== undefined) {
+                lineConfidence =
+                    lineConfidence === null
+                        ? amountField.Confidence
+                        : Math.min(lineConfidence, amountField.Confidence)
+            }
+        }
+
+        if (lineConfidence === null && chargesField.Confidence !== null && chargesField.Confidence !== undefined) {
+            lineConfidence = chargesField.Confidence
+        }
+
+        return {
+            subtotal: hasSubtotalLines ? String(subtotalSum) : '',
+            tax: hasTaxLines ? String(taxSum) : '',
+            confidence: lineConfidence,
+        }
+    },
+
+    deriveTaxFromTotals: function (totalAmount, subtotalAmount, existingTax) {
+        if (existingTax) {
+            return existingTax
+        }
+        if (!totalAmount || !subtotalAmount) {
+            return ''
+        }
+
+        var total = parseFloat(totalAmount)
+        var subtotal = parseFloat(subtotalAmount)
+        if (isNaN(total) || isNaN(subtotal) || total <= subtotal) {
+            return ''
+        }
+
+        return String(total - subtotal)
+    },
+
     setMappedValue: function (values, confidence, column, value, confScore) {
         if (value) {
             values[column] = value
@@ -114,7 +227,8 @@ MapDocIntelToApproval.prototype = {
                 this.getFieldConfidence(fields, 'InvoiceDueDate')
         )
 
-        var totalAmount = this.parseAmount(this.getFieldString(fields, 'InvoiceTotalAmount'))
+        var invoiceTotalRaw = this.getFieldString(fields, 'InvoiceTotalAmount')
+        var totalAmount = this.parseAmount(invoiceTotalRaw)
         this.setMappedValue(
             values,
             confidence,
@@ -123,13 +237,32 @@ MapDocIntelToApproval.prototype = {
             this.getFieldConfidence(fields, 'InvoiceTotalAmount')
         )
 
+        var charges = this.parseChargesSubTable(fields)
+        this.setMappedValue(
+            values,
+            confidence,
+            'subtotal_amount',
+            charges.subtotal,
+            charges.confidence
+        )
+
+        var taxAmount = this.deriveTaxFromTotals(totalAmount, charges.subtotal, charges.tax)
+        this.setMappedValue(values, confidence, 'tax_amount', taxAmount, charges.confidence)
+
         var currency = this.getFieldString(fields, 'InvoiceTotalCurrency')
+        if (!currency) {
+            currency = this.inferCurrencyFromAmount(invoiceTotalRaw)
+        }
+        if (!currency) {
+            currency = this.getFieldString(fields, 'DiscountCurrency')
+        }
         this.setMappedValue(
             values,
             confidence,
             'currency',
             currency,
-            this.getFieldConfidence(fields, 'InvoiceTotalCurrency')
+            this.getFieldConfidence(fields, 'InvoiceTotalCurrency') ||
+                this.getFieldConfidence(fields, 'InvoiceTotalAmount')
         )
 
         var vendorName = this.getFieldString(fields, 'VendorName')
