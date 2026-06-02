@@ -20,11 +20,12 @@ export const tscApimRestMessage = Record({
 
 export const tscApimHeaderSubscriptionKey = Record({
     $id: Now.ID['tsc-apim-header-subscription-key'],
+    $meta: { installMethod: 'once' },
     table: 'sys_rest_message_headers',
     data: {
         rest_message: tscApimRestMessage,
         name: 'Ocp-Apim-Subscription-Key',
-        value: '',
+        value: '', // Set on instance; apply_once so deploy does not overwrite your key
     },
 })
 
@@ -55,7 +56,7 @@ export const tscApimHeaderDocIntelContentType = Record({
     table: 'sys_rest_message_headers',
     data: {
         rest_message: tscApimRestMessage,
-        rest_message_function: tscApimMethodPostDocIntelInvoice,
+        rest_message_fn: tscApimMethodPostDocIntelInvoice,
         name: 'Content-Type',
         value: 'application/pdf',
     },
