@@ -16,6 +16,15 @@ export type DocIntelTestError = {
     status?: number
     body?: string
     hint?: string
+    endpoint?: string
+    have_error?: boolean
+    rest_error_message?: string
+    rest_error_code?: number | null
+}
+
+type ScriptedRestEnvelope<T> = {
+    result?: T
+    error?: DocIntelTestError
 }
 
 function readFileAsBase64(file: File): Promise<string> {
@@ -59,15 +68,25 @@ export class DocIntelTestService {
             }),
         })
 
-        const data = (await response.json().catch(() => ({}))) as DocIntelTestSuccess & DocIntelTestError
+        const envelope = (await response.json().catch(() => ({}))) as ScriptedRestEnvelope<
+            DocIntelTestSuccess & DocIntelTestError
+        >
+        const data = envelope.result ?? envelope
 
         if (!response.ok) {
-            const detail = [data.error, data.body, data.hint, data.status ? `Upstream HTTP ${data.status}` : null]
+            const detail = [
+                data.error,
+                data.rest_error_message,
+                data.body,
+                data.hint,
+                data.endpoint ? `Endpoint: ${data.endpoint}` : null,
+                data.status ? `Upstream HTTP ${data.status}` : null,
+            ]
                 .filter(Boolean)
                 .join(' — ')
             throw new Error(detail || `HTTP error ${response.status}`)
         }
 
-        return data
+        return data as DocIntelTestSuccess
     }
 }

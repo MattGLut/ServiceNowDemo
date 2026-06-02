@@ -55,7 +55,7 @@ export const tscApimHeaderDocIntelContentType = Record({
     table: 'sys_rest_message_headers',
     data: {
         rest_message: tscApimRestMessage,
-        rest_message_function: tscApimMethodPostDocIntelInvoice,
+        rest_message_fn: tscApimMethodPostDocIntelInvoice,
         name: 'Content-Type',
         value: 'application/pdf',
     },
