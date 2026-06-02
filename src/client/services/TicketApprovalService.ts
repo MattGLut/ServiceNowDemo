@@ -1,6 +1,7 @@
 import type {
     ApprovalFieldConfidence,
     DiStatus,
+    TicketApprovalFormValues,
     TicketApprovalRecord,
     TicketApprovalUpdateInput,
 } from '../types/ticketApproval'
@@ -51,6 +52,55 @@ function parseDiStatus(value: string): DiStatus | '' {
     return ''
 }
 
+const CONFIDENCE_SNAKE_TO_CAMEL: Record<string, keyof TicketApprovalFormValues> = {
+    company_code: 'companyCode',
+    invoice_number: 'invoiceNumber',
+    profit_center: 'profitCenter',
+    currency: 'currency',
+    subtotal_amount: 'subtotalAmount',
+    tax_amount: 'taxAmount',
+    total_amount: 'totalAmount',
+    approver_name: 'approverName',
+    approver_id: 'approverId',
+    payment_method: 'paymentMethod',
+    req_payment_date: 'reqPaymentDate',
+    charge_payee_id: 'chargePayeeId',
+    charge_payee_name: 'chargePayeeName',
+    reviewer_notes: 'reviewerNotes',
+    supervisor_notes: 'supervisorNotes',
+    operator_notes: 'operatorNotes',
+}
+
+function toConfidenceScore(value: unknown): number | undefined {
+    if (typeof value !== 'number' || Number.isNaN(value)) {
+        return undefined
+    }
+    return value
+}
+
+function normalizeFieldConfidence(parsed: Record<string, unknown>): ApprovalFieldConfidence {
+    const normalized: ApprovalFieldConfidence = {}
+
+    for (const [key, raw] of Object.entries(parsed)) {
+        const score = toConfidenceScore(raw)
+        if (score === undefined) {
+            continue
+        }
+
+        if (key === '_document') {
+            normalized._document = score
+            continue
+        }
+
+        const camelKey = CONFIDENCE_SNAKE_TO_CAMEL[key]
+        if (camelKey) {
+            normalized[camelKey] = score
+        }
+    }
+
+    return normalized
+}
+
 function parseFieldConfidence(raw: GlideFieldValue): ApprovalFieldConfidence {
     const text = unwrapGlideField(raw)
     if (!text) {
@@ -62,10 +112,17 @@ function parseFieldConfidence(raw: GlideFieldValue): ApprovalFieldConfidence {
         if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
             return {}
         }
-        return parsed as ApprovalFieldConfidence
+        return normalizeFieldConfidence(parsed as Record<string, unknown>)
     } catch {
         return {}
     }
+}
+
+export function getFieldConfidenceScore(
+    confidence: ApprovalFieldConfidence,
+    key: keyof TicketApprovalFormValues
+): number | undefined {
+    return toConfidenceScore(confidence[key])
 }
 
 function mapApprovalRow(row: Record<string, GlideFieldValue>): TicketApprovalRecord {

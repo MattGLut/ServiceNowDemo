@@ -184,6 +184,10 @@ declare global {
                         table: 'sys_security_acl'
                         id: 'd2af8756a56245dbbe435b1fcf41a0d3'
                     }
+                    'workflow-type-pi01': {
+                        table: 'x_2058901_demo_workflow_type'
+                        id: 'fdb3722ac3464c3ba5120390a7834407'
+                    }
                     'workflow-type-read-acl': {
                         table: 'sys_security_acl'
                         id: 'f5800be61c4d4bffb7beeac418046fda'
