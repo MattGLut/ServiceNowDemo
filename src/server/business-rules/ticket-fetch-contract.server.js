@@ -10,15 +10,28 @@
         return text.substring(0, CONTRACT_ERROR_MAX)
     }
 
-    function findApprovalByTicket(ticketSysId) {
+    function forEachApprovalByTicket(ticketSysId, callback) {
         var approvalGr = new GlideRecord(APPROVAL_TABLE)
         approvalGr.addQuery('ticket', ticketSysId)
-        approvalGr.setLimit(1)
         approvalGr.query()
-        if (!approvalGr.next()) {
-            return null
+        while (approvalGr.next()) {
+            callback(approvalGr)
         }
-        return approvalGr
+    }
+
+    function allApprovalsContractComplete(ticketSysId) {
+        var approvalGr = new GlideRecord(APPROVAL_TABLE)
+        approvalGr.addQuery('ticket', ticketSysId)
+        approvalGr.query()
+        if (!approvalGr.hasNext()) {
+            return false
+        }
+        while (approvalGr.next()) {
+            if (approvalGr.contract_status != 'complete') {
+                return false
+            }
+        }
+        return true
     }
 
     function applyMappedValues(approvalGr, mapped) {
@@ -33,38 +46,50 @@
     }
 
     var ticketSysId = current.sys_id
-    var approvalGr = findApprovalByTicket(ticketSysId)
-    if (!approvalGr) {
+    var hasApproval = false
+
+    forEachApprovalByTicket(ticketSysId, function () {
+        hasApproval = true
+    })
+
+    if (!hasApproval) {
         gs.error('ticket-fetch-contract: approval row missing for ticket ' + ticketSysId)
         return
     }
 
-    approvalGr.setWorkflow(false)
-
     if (current.stp_flag == true) {
-        approvalGr.contract_status = 'skipped'
-        approvalGr.contract_error = ''
-        approvalGr.contract_processed_at = new GlideDateTime()
-        approvalGr.update()
+        forEachApprovalByTicket(ticketSysId, function (approvalGr) {
+            approvalGr.setWorkflow(false)
+            approvalGr.contract_status = 'skipped'
+            approvalGr.contract_error = ''
+            approvalGr.contract_processed_at = new GlideDateTime()
+            approvalGr.update()
+        })
         return
     }
 
     var contractNumber = (current.external_id || '').trim()
     if (!contractNumber) {
-        approvalGr.contract_status = 'failed'
-        approvalGr.contract_error = truncateError('Contract number (external_id) is required.')
-        approvalGr.contract_processed_at = new GlideDateTime()
+        forEachApprovalByTicket(ticketSysId, function (approvalGr) {
+            approvalGr.setWorkflow(false)
+            approvalGr.contract_status = 'failed'
+            approvalGr.contract_error = truncateError('Contract number (external_id) is required.')
+            approvalGr.contract_processed_at = new GlideDateTime()
+            approvalGr.update()
+        })
+        return
+    }
+
+    if (allApprovalsContractComplete(ticketSysId)) {
+        return
+    }
+
+    forEachApprovalByTicket(ticketSysId, function (approvalGr) {
+        approvalGr.setWorkflow(false)
+        approvalGr.contract_status = 'pending'
+        approvalGr.contract_error = ''
         approvalGr.update()
-        return
-    }
-
-    if (approvalGr.contract_status == 'complete') {
-        return
-    }
-
-    approvalGr.contract_status = 'pending'
-    approvalGr.contract_error = ''
-    approvalGr.update()
+    })
 
     try {
         var client = new x_2058901_demo.ContractClient()
@@ -72,26 +97,24 @@
         var mapper = new x_2058901_demo.MapContractToApproval()
         var mapped = mapper.mapContracts(result.contracts, result.contractId)
 
-        if (!approvalGr.get(approvalGr.getUniqueValue())) {
-            throw new Error('Approval row disappeared during Contract API processing.')
-        }
-
-        approvalGr.setWorkflow(false)
-        applyMappedValues(approvalGr, mapped)
-        approvalGr.contract_status = 'complete'
-        approvalGr.contract_error = ''
-        approvalGr.contract_processed_at = new GlideDateTime()
-        approvalGr.update()
+        forEachApprovalByTicket(ticketSysId, function (approvalGr) {
+            approvalGr.setWorkflow(false)
+            applyMappedValues(approvalGr, mapped)
+            approvalGr.contract_status = 'complete'
+            approvalGr.contract_error = ''
+            approvalGr.contract_processed_at = new GlideDateTime()
+            approvalGr.update()
+        })
     } catch (error) {
         var message = error && error.message ? error.message : String(error)
         gs.error('ticket-fetch-contract failed ticket=' + ticketSysId + ': ' + message)
 
-        if (approvalGr.get(approvalGr.getUniqueValue())) {
+        forEachApprovalByTicket(ticketSysId, function (approvalGr) {
             approvalGr.setWorkflow(false)
             approvalGr.contract_status = 'failed'
             approvalGr.contract_error = truncateError(message)
             approvalGr.contract_processed_at = new GlideDateTime()
             approvalGr.update()
-        }
+        })
     }
 })()
