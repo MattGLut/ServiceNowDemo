@@ -28,6 +28,9 @@ export type TicketApprovalRecord = {
     contractStatus: ContractStatus | ''
     contractError: string
     contractProcessedAt: string
+    workflowTypeSysId: string
+    workflowTypeCode: string
+    isHybridSegment: boolean
     fieldConfidence: ApprovalFieldConfidence
 }
 
@@ -42,6 +45,9 @@ export type TicketApprovalFormValues = Omit<
     | 'contractStatus'
     | 'contractError'
     | 'contractProcessedAt'
+    | 'workflowTypeSysId'
+    | 'workflowTypeCode'
+    | 'isHybridSegment'
     | 'fieldConfidence'
 >
 

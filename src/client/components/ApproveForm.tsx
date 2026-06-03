@@ -14,6 +14,7 @@ const TEXTAREA_CLASS = `${INPUT_CLASS} min-h-[4.5rem] resize-y`
 type ApproveFormProps = {
     approval: TicketApprovalRecord
     extracting?: boolean
+    segmentLabel?: string
     onApprove: (values: TicketApprovalUpdateInput) => Promise<void>
 }
 
@@ -108,7 +109,12 @@ function TextAreaField({ label, id, value, onChange }: TextAreaFieldProps) {
     )
 }
 
-export default function ApproveForm({ approval, extracting = false, onApprove }: ApproveFormProps) {
+export default function ApproveForm({
+    approval,
+    extracting = false,
+    segmentLabel,
+    onApprove,
+}: ApproveFormProps) {
     const [values, setValues] = useState<TicketApprovalUpdateInput>(() =>
         approvalRecordToFormValues(approval)
     )
@@ -146,6 +152,12 @@ export default function ApproveForm({ approval, extracting = false, onApprove }:
 
     const confidenceFor = (key: keyof TicketApprovalFormValues) =>
         getFieldConfidenceScore(fieldConfidence, key)
+
+    const approveLabel = approval.approvedAt
+        ? 'Already approved'
+        : segmentLabel
+          ? `Approve ${segmentLabel} segment`
+          : 'Approve ticket'
 
     return (
         <div className="portal-approve-form">
@@ -301,7 +313,7 @@ export default function ApproveForm({ approval, extracting = false, onApprove }:
                     disabled={submitting || extracting || Boolean(approval.approvedAt)}
                     onClick={() => void handleApprove()}
                 >
-                    {submitting ? 'Approving…' : approval.approvedAt ? 'Already approved' : 'Approve ticket'}
+                    {submitting ? 'Approving…' : approveLabel}
                 </button>
             </div>
         </div>

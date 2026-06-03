@@ -389,11 +389,28 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: '19bde76cd7214107b33848b97e0c7583'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'is_hybrid_segment'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: '1adc667b4fb647bebeec3056f6b1b80b'
                         key: {
                             name: 'x_2058901_demo_workflow_type'
                             element: 'name'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '1b6e348d6ad2478fb69e919616f027bf'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'workflow_type'
                         }
                     },
                     {
@@ -500,6 +517,15 @@ declare global {
                         key: {
                             name: 'x_2058901_demo_ticket_approval'
                             element: 'invoice_number'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '26050afe5b0e44dbb84559b4cc04a785'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'workflow_type'
                             language: 'en'
                         }
                     },
@@ -1696,6 +1722,14 @@ declare global {
                             name: 'x_2058901_demo_ticket_approval'
                             element: 'contract_status'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'eb50b1afb29f4baf91454086fac8cae1'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'is_hybrid_segment'
                         }
                     },
                     {

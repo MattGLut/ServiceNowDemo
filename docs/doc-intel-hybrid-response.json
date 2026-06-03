@@ -1,0 +1,79 @@
+{
+    "status": 200,
+    "file_name": "J R Simplot - JRS7121A Invoice Documents - invoice.pdf",
+    "documents": [
+        {
+            "Fields": {
+                "InvoiceNumber": {
+                    "ValueString": "JRS7121A",
+                    "Content": "JRS7121A",
+                    "Confidence": 0.983
+                },
+                "InvoiceDate": {
+                    "ValueString": "12/24/2024",
+                    "Content": "12/24/2024",
+                    "Confidence": 0.984
+                },
+                "InvoiceTotalAmount": {
+                    "ValueString": "$32,223.15",
+                    "Content": "$32,223.15",
+                    "Confidence": 0.972
+                },
+                "VendorName": {
+                    "ValueString": "J R Simplot",
+                    "Content": "J R Simplot",
+                    "Confidence": 0.963
+                },
+                "InvoiceDetails": {
+                    "ValueList": [
+                        {
+                            "ValueDictionary": {
+                                "ProductAmount": {
+                                    "ValueString": "$30,505.86",
+                                    "Content": "$30,505.86",
+                                    "Confidence": 0.898
+                                }
+                            }
+                        }
+                    ],
+                    "Confidence": 0.674
+                },
+                "ChargesSubTable": {
+                    "ValueList": [
+                        {
+                            "ValueDictionary": {
+                                "ChargesAmount": {
+                                    "ValueString": "$1,702.29",
+                                    "Content": "$1,702.29",
+                                    "Confidence": 0.757
+                                },
+                                "ChargesDescription": {
+                                    "ValueString": "Origin Inland Freight",
+                                    "Content": "Origin Inland Freight",
+                                    "Confidence": 0.921
+                                }
+                            }
+                        },
+                        {
+                            "ValueDictionary": {
+                                "ChargesAmount": {
+                                    "ValueString": "$15.00",
+                                    "Content": "$15.00",
+                                    "Confidence": 0.77
+                                },
+                                "ChargesDescription": {
+                                    "ValueString": "Temperature Recorders",
+                                    "Content": "Temperature Recorders",
+                                    "Confidence": 0.766
+                                }
+                            }
+                        }
+                    ],
+                    "Confidence": 0.84
+                }
+            },
+            "DocumentType": "RMS_Document_Extraction_v19",
+            "Confidence": 0.999
+        }
+    ]
+}

@@ -42,7 +42,7 @@ function formatGlideDateTime(date: Date): string {
 }
 
 const APPROVAL_FIELDS =
-    'sys_id,ticket,company_code,invoice_number,profit_center,currency,subtotal_amount,tax_amount,total_amount,approver_name,approver_id,payment_method,req_payment_date,charge_payee_id,charge_payee_name,reviewer_notes,supervisor_notes,operator_notes,approved_at,di_status,di_error,di_processed_at,contract_status,contract_error,contract_processed_at,field_confidence'
+    'sys_id,ticket,workflow_type,workflow_type.code,is_hybrid_segment,company_code,invoice_number,profit_center,currency,subtotal_amount,tax_amount,total_amount,approver_name,approver_id,payment_method,req_payment_date,charge_payee_id,charge_payee_name,reviewer_notes,supervisor_notes,operator_notes,approved_at,di_status,di_error,di_processed_at,contract_status,contract_error,contract_processed_at,field_confidence'
 
 const DI_STATUSES: DiStatus[] = ['pending', 'complete', 'failed', 'skipped']
 const CONTRACT_STATUSES: ContractStatus[] = ['pending', 'complete', 'failed', 'skipped']
@@ -134,10 +134,17 @@ export function getFieldConfidenceScore(
     return toConfidenceScore(confidence[key])
 }
 
+function parseBoolean(value: string): boolean {
+    return value === 'true' || value === '1'
+}
+
 function mapApprovalRow(row: Record<string, GlideFieldValue>): TicketApprovalRecord {
     return {
         sysId: unwrapGlideValue(row.sys_id),
         ticketSysId: unwrapGlideValue(row.ticket),
+        workflowTypeSysId: unwrapGlideValue(row.workflow_type),
+        workflowTypeCode: unwrapGlideField(row['workflow_type.code']) || unwrapGlideValue(row['workflow_type.code']),
+        isHybridSegment: parseBoolean(unwrapGlideValue(row.is_hybrid_segment)),
         companyCode: unwrapGlideField(row.company_code),
         invoiceNumber: unwrapGlideField(row.invoice_number),
         profitCenter: unwrapGlideField(row.profit_center),
@@ -208,13 +215,12 @@ export class TicketApprovalService {
         return headers
     }
 
-    async getByTicketSysId(ticketSysId: string): Promise<TicketApprovalRecord | null> {
+    async listByTicketSysId(ticketSysId: string): Promise<TicketApprovalRecord[]> {
         const params = new URLSearchParams({
             sysparm_display_value: 'all',
             sysparm_exclude_reference_link: 'true',
             sysparm_fields: APPROVAL_FIELDS,
-            sysparm_query: `ticket=${ticketSysId}`,
-            sysparm_limit: '1',
+            sysparm_query: `ticket=${ticketSysId}^ORDERBYworkflow_type.code`,
         })
 
         const response = await fetch(`/api/now/table/${this.tableName}?${params.toString()}`, {
@@ -228,10 +234,15 @@ export class TicketApprovalService {
 
         const { result } = await response.json()
         if (!Array.isArray(result) || result.length === 0) {
-            return null
+            return []
         }
 
-        return mapApprovalRow(result[0] as Record<string, GlideFieldValue>)
+        return result.map((row) => mapApprovalRow(row as Record<string, GlideFieldValue>))
+    }
+
+    async getByTicketSysId(ticketSysId: string): Promise<TicketApprovalRecord | null> {
+        const approvals = await this.listByTicketSysId(ticketSysId)
+        return approvals[0] ?? null
     }
 
     async update(sysId: string, input: TicketApprovalUpdateInput): Promise<void> {
