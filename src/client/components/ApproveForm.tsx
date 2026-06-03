@@ -212,7 +212,6 @@ export default function ApproveForm({ approval, extracting = false, onApprove }:
             </section>
 
             <section className="portal-approve-form-section">
-                <h3 className="portal-approve-form-section-title">Approver &amp; payment</h3>
                 <div className="portal-approve-form-grid">
                     <FormField
                         label="Approver Name"
@@ -248,7 +247,6 @@ export default function ApproveForm({ approval, extracting = false, onApprove }:
             </section>
 
             <section className="portal-approve-form-section">
-                <h3 className="portal-approve-form-section-title">Charge payee</h3>
                 <div className="portal-approve-form-grid">
                     <FormField
                         label="Charge Payee ID"
@@ -269,7 +267,6 @@ export default function ApproveForm({ approval, extracting = false, onApprove }:
             </section>
 
             <section className="portal-approve-form-section">
-                <h3 className="portal-approve-form-section-title">Notes</h3>
                 <div className="portal-approve-form-notes">
                     <TextAreaField
                         label="Reviewer Notes"
