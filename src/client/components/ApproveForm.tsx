@@ -150,7 +150,6 @@ export default function ApproveForm({ approval, extracting = false, onApprove }:
     return (
         <div className="portal-approve-form">
             <section className="portal-approve-form-section">
-                <h3 className="portal-approve-form-section-title">Invoice &amp; amounts</h3>
                 <div className="portal-approve-form-grid">
                     <FormField
                         label="Company Code"
