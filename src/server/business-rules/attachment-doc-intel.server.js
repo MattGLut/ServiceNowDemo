@@ -15,6 +15,9 @@
         'contract_status',
         'contract_error',
         'contract_processed_at',
+        'contract_number',
+        'tax_code',
+        'invoicing_party_id',
     ]
 
     function truncateError(message) {

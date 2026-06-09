@@ -2,6 +2,8 @@ export type DiStatus = 'pending' | 'complete' | 'failed' | 'skipped'
 
 export type ContractStatus = 'pending' | 'complete' | 'failed' | 'skipped'
 
+export type PayloadStatus = 'pending' | 'ready' | 'failed'
+
 export type TicketApprovalRecord = {
     sysId: string
     ticketSysId: string
@@ -32,6 +34,19 @@ export type TicketApprovalRecord = {
     workflowTypeCode: string
     isHybridSegment: boolean
     fieldConfidence: ApprovalFieldConfidence
+    contractNumber: string
+    realizeNumber: string
+    invoiceDate: string
+    invoiceSubnumber: string
+    taxCode: string
+    invoicingPartyId: string
+    chargeType: string
+    salesOrPurchase: string
+    lineProfitCenter: string
+    rtmPayloadJson: Record<string, unknown> | null
+    payloadStatus: PayloadStatus | ''
+    payloadBuiltAt: string
+    payloadError: string
 }
 
 export type TicketApprovalFormValues = Omit<
@@ -49,6 +64,10 @@ export type TicketApprovalFormValues = Omit<
     | 'workflowTypeCode'
     | 'isHybridSegment'
     | 'fieldConfidence'
+    | 'rtmPayloadJson'
+    | 'payloadStatus'
+    | 'payloadBuiltAt'
+    | 'payloadError'
 >
 
 export type ApprovalFieldConfidence = Partial<

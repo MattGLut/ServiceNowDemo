@@ -1,10 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ImmersiveLayout from './ImmersiveLayout'
 import ProcessingPathBadge from './ProcessingPathBadge'
+import WrtPayloadPanel from './WrtPayloadPanel'
+import { TicketApprovalService } from '../services/TicketApprovalService'
 import { TicketService } from '../services/TicketService'
 import { formatFileSize, formatSubmittedAt } from '../utils/formatDateTime'
 import { ticketStatusBadgeClass } from '../utils/ticketStatusStyle'
 import { formatWorkflowTypeLabel } from '../types/workflowType'
+import type { TicketApprovalRecord } from '../types/ticketApproval'
 import type { TicketAttachment, TicketRecord } from '../types/ticket'
 
 type TicketDetailPageProps = {
@@ -15,10 +18,11 @@ type LoadState =
     | { status: 'loading' }
     | { status: 'error'; message: string }
     | { status: 'not-found' }
-    | { status: 'ready'; ticket: TicketRecord; attachments: TicketAttachment[] }
+    | { status: 'ready'; ticket: TicketRecord; attachments: TicketAttachment[]; approvals: TicketApprovalRecord[] }
 
 export default function TicketDetailPage({ sysId }: TicketDetailPageProps) {
     const ticketService = useMemo(() => new TicketService(), [])
+    const approvalService = useMemo(() => new TicketApprovalService(), [])
     const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' })
 
     const loadTicket = useCallback(async () => {
@@ -38,13 +42,14 @@ export default function TicketDetailPage({ sysId }: TicketDetailPageProps) {
             }
 
             const attachments = await ticketService.listAttachments(sysId)
-            setLoadState({ status: 'ready', ticket, attachments })
+            const approvals = await approvalService.listByTicketSysId(sysId)
+            setLoadState({ status: 'ready', ticket, attachments, approvals })
         } catch (err) {
             const message = err instanceof Error ? err.message : 'Unknown error'
             setLoadState({ status: 'error', message })
             console.error(err)
         }
-    }, [sysId, ticketService])
+    }, [sysId, ticketService, approvalService])
 
     useEffect(() => {
         void loadTicket()
@@ -84,7 +89,10 @@ export default function TicketDetailPage({ sysId }: TicketDetailPageProps) {
         )
     }
 
-    const { ticket, attachments } = loadState
+    const { ticket, attachments, approvals } = loadState
+    const payloadApprovals = approvals.filter(
+        (approval) => approval.payloadStatus === 'ready' || approval.payloadStatus === 'failed'
+    )
 
     return (
         <ImmersiveLayout title={ticket.title}>
@@ -171,12 +179,21 @@ export default function TicketDetailPage({ sysId }: TicketDetailPageProps) {
                     )}
                 </section>
 
-                <section className="portal-detail-section portal-detail-future">
-                    <h3 className="portal-detail-section-title">Document intelligence review</h3>
-                    <p className="portal-detail-submessage">
-                        Coming in a later phase: extracted fields for human validation and approval, plus a{' '}
-                        <strong className="text-rh-text">Retry extraction</strong> action.
-                    </p>
+                <section className="portal-detail-section">
+                    <h3 className="portal-detail-section-title">WRT payloads</h3>
+                    {payloadApprovals.length === 0 ? (
+                        <p className="portal-detail-submessage">No WRT payloads built for this ticket yet.</p>
+                    ) : (
+                        <div className="portal-detail-wrt-payloads">
+                            {payloadApprovals.map((approval) => (
+                                <WrtPayloadPanel
+                                    key={approval.sysId}
+                                    approval={approval}
+                                    segmentLabel={approval.workflowTypeCode || undefined}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </section>
             </div>
         </ImmersiveLayout>

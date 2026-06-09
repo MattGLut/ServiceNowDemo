@@ -2,6 +2,7 @@ import type {
     ApprovalFieldConfidence,
     ContractStatus,
     DiStatus,
+    PayloadStatus,
     TicketApprovalFormValues,
     TicketApprovalRecord,
     TicketApprovalUpdateInput,
@@ -42,10 +43,11 @@ function formatGlideDateTime(date: Date): string {
 }
 
 const APPROVAL_FIELDS =
-    'sys_id,ticket,workflow_type,workflow_type.code,is_hybrid_segment,company_code,invoice_number,profit_center,currency,subtotal_amount,tax_amount,total_amount,approver_name,approver_id,payment_method,req_payment_date,charge_payee_id,charge_payee_name,reviewer_notes,supervisor_notes,operator_notes,approved_at,di_status,di_error,di_processed_at,contract_status,contract_error,contract_processed_at,field_confidence'
+    'sys_id,ticket,workflow_type,workflow_type.code,is_hybrid_segment,company_code,invoice_number,profit_center,currency,subtotal_amount,tax_amount,total_amount,approver_name,approver_id,payment_method,req_payment_date,charge_payee_id,charge_payee_name,reviewer_notes,supervisor_notes,operator_notes,approved_at,di_status,di_error,di_processed_at,contract_status,contract_error,contract_processed_at,field_confidence,contract_number,realize_number,invoice_date,invoice_subnumber,tax_code,invoicing_party_id,charge_type,sales_or_purchase,line_profit_center,rtm_payload_json,payload_status,payload_built_at,payload_error'
 
 const DI_STATUSES: DiStatus[] = ['pending', 'complete', 'failed', 'skipped']
 const CONTRACT_STATUSES: ContractStatus[] = ['pending', 'complete', 'failed', 'skipped']
+const PAYLOAD_STATUSES: PayloadStatus[] = ['pending', 'ready', 'failed']
 
 function parseDiStatus(value: string): DiStatus | '' {
     if (DI_STATUSES.includes(value as DiStatus)) {
@@ -59,6 +61,30 @@ function parseContractStatus(value: string): ContractStatus | '' {
         return value as ContractStatus
     }
     return ''
+}
+
+function parsePayloadStatus(value: string): PayloadStatus | '' {
+    if (PAYLOAD_STATUSES.includes(value as PayloadStatus)) {
+        return value as PayloadStatus
+    }
+    return ''
+}
+
+function parseRtmPayloadJson(raw: GlideFieldValue): Record<string, unknown> | null {
+    const text = unwrapGlideField(raw)
+    if (!text) {
+        return null
+    }
+
+    try {
+        const parsed: unknown = JSON.parse(text)
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+            return null
+        }
+        return parsed as Record<string, unknown>
+    } catch {
+        return null
+    }
 }
 
 const CONFIDENCE_SNAKE_TO_CAMEL: Record<string, keyof TicketApprovalFormValues> = {
@@ -169,6 +195,19 @@ function mapApprovalRow(row: Record<string, GlideFieldValue>): TicketApprovalRec
         contractError: unwrapGlideField(row.contract_error),
         contractProcessedAt: unwrapGlideField(row.contract_processed_at),
         fieldConfidence: parseFieldConfidence(row.field_confidence),
+        contractNumber: unwrapGlideField(row.contract_number),
+        realizeNumber: unwrapGlideField(row.realize_number),
+        invoiceDate: unwrapGlideValue(row.invoice_date),
+        invoiceSubnumber: unwrapGlideField(row.invoice_subnumber),
+        taxCode: unwrapGlideField(row.tax_code),
+        invoicingPartyId: unwrapGlideField(row.invoicing_party_id),
+        chargeType: unwrapGlideField(row.charge_type),
+        salesOrPurchase: unwrapGlideField(row.sales_or_purchase),
+        lineProfitCenter: unwrapGlideField(row.line_profit_center),
+        rtmPayloadJson: parseRtmPayloadJson(row.rtm_payload_json),
+        payloadStatus: parsePayloadStatus(unwrapGlideValue(row.payload_status)),
+        payloadBuiltAt: unwrapGlideField(row.payload_built_at),
+        payloadError: unwrapGlideField(row.payload_error),
     }
 }
 
@@ -195,6 +234,15 @@ function toApiPayload(input: TicketApprovalUpdateInput): Record<string, string> 
     setIfPresent('reviewer_notes', input.reviewerNotes.trim())
     setIfPresent('supervisor_notes', input.supervisorNotes.trim())
     setIfPresent('operator_notes', input.operatorNotes.trim())
+    setIfPresent('contract_number', input.contractNumber.trim())
+    setIfPresent('realize_number', input.realizeNumber.trim())
+    setIfPresent('invoice_date', input.invoiceDate.trim())
+    setIfPresent('invoice_subnumber', input.invoiceSubnumber.trim())
+    setIfPresent('tax_code', input.taxCode.trim())
+    setIfPresent('invoicing_party_id', input.invoicingPartyId.trim())
+    setIfPresent('charge_type', input.chargeType.trim())
+    setIfPresent('sales_or_purchase', input.salesOrPurchase.trim())
+    setIfPresent('line_profit_center', input.lineProfitCenter.trim())
 
     return payload
 }
@@ -297,6 +345,30 @@ export function approvalRecordToFormValues(
         reviewerNotes: record.reviewerNotes,
         supervisorNotes: record.supervisorNotes,
         operatorNotes: record.operatorNotes,
+        contractNumber: record.contractNumber,
+        realizeNumber: record.realizeNumber,
+        invoiceDate: record.invoiceDate,
+        invoiceSubnumber: record.invoiceSubnumber,
+        taxCode: record.taxCode,
+        invoicingPartyId: record.invoicingPartyId,
+        chargeType: record.chargeType,
+        salesOrPurchase: record.salesOrPurchase,
+        lineProfitCenter: record.lineProfitCenter,
+    }
+}
+
+export function applyApprovalFormDefaults(
+    values: TicketApprovalUpdateInput,
+    record: TicketApprovalRecord,
+    ticketExternalId: string
+): TicketApprovalUpdateInput {
+    return {
+        ...values,
+        contractNumber: values.contractNumber || record.contractNumber || ticketExternalId,
+        taxCode: values.taxCode || record.taxCode || 'I0',
+        invoicingPartyId: values.invoicingPartyId || record.invoicingPartyId || record.chargePayeeId,
+        lineProfitCenter: values.lineProfitCenter || record.lineProfitCenter || record.profitCenter,
+        invoiceDate: values.invoiceDate || record.invoiceDate || record.reqPaymentDate,
     }
 }
 
@@ -318,5 +390,14 @@ export function emptyApprovalFormValues(): TicketApprovalUpdateInput {
         reviewerNotes: '',
         supervisorNotes: '',
         operatorNotes: '',
+        contractNumber: '',
+        realizeNumber: '',
+        invoiceDate: '',
+        invoiceSubnumber: '',
+        taxCode: 'I0',
+        invoicingPartyId: '',
+        chargeType: '',
+        salesOrPurchase: '',
+        lineProfitCenter: '',
     }
 }

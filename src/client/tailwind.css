@@ -244,6 +244,30 @@
         @apply bg-amber-500/15 text-amber-100;
     }
 
+    .portal-wrt-payload-panel {
+        @apply mt-4 rounded-lg border border-rh-border bg-rh-elevated p-3;
+    }
+
+    .portal-wrt-payload-panel-error {
+        @apply border-red-500/40 bg-red-500/10;
+    }
+
+    .portal-wrt-payload-title {
+        @apply m-0 mb-2 text-sm font-semibold text-rh-text;
+    }
+
+    .portal-wrt-payload-message {
+        @apply text-rh-muted;
+    }
+
+    .portal-wrt-payload-pre {
+        @apply m-0 max-h-[400px] overflow-auto rounded-md border border-rh-border/60 bg-rh-bg p-3 font-mono text-xs leading-relaxed text-rh-text;
+    }
+
+    .portal-detail-wrt-payloads {
+        @apply flex flex-col gap-4;
+    }
+
     .portal-approve-right {
         @apply flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-rh-bg;
     }
