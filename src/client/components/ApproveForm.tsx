@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import ConfidenceHint from './ConfidenceHint'
 import { LABEL_CLASS, INPUT_CLASS, BTN_PRIMARY } from './formStyles'
-import { approvalRecordToFormValues, getFieldConfidenceScore } from '../services/TicketApprovalService'
+import { approvalRecordToFormValues, applyApprovalFormDefaults, getFieldConfidenceScore } from '../services/TicketApprovalService'
 import { APPROVAL_FIELD_SOURCE_CLASS, type ApprovalFieldSource } from '../types/approvalFieldSource'
 import type { TicketApprovalFormValues, TicketApprovalRecord, TicketApprovalUpdateInput } from '../types/ticketApproval'
 
@@ -13,6 +13,7 @@ const TEXTAREA_CLASS = `${INPUT_CLASS} min-h-[4.5rem] resize-y`
 
 type ApproveFormProps = {
     approval: TicketApprovalRecord
+    ticketExternalId: string
     extracting?: boolean
     segmentLabel?: string
     onApprove: (values: TicketApprovalUpdateInput) => Promise<void>
@@ -111,19 +112,24 @@ function TextAreaField({ label, id, value, onChange }: TextAreaFieldProps) {
 
 export default function ApproveForm({
     approval,
+    ticketExternalId,
     extracting = false,
     segmentLabel,
     onApprove,
 }: ApproveFormProps) {
+    const workflowCode = approval.workflowTypeCode
+    const isPi01 = workflowCode === 'PI01'
+    const isCh11 = workflowCode === 'CH11'
+
     const [values, setValues] = useState<TicketApprovalUpdateInput>(() =>
-        approvalRecordToFormValues(approval)
+        applyApprovalFormDefaults(approvalRecordToFormValues(approval), approval, ticketExternalId)
     )
     const [submitting, setSubmitting] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        setValues(approvalRecordToFormValues(approval))
-    }, [approval])
+        setValues(applyApprovalFormDefaults(approvalRecordToFormValues(approval), approval, ticketExternalId))
+    }, [approval, ticketExternalId])
 
     const setField = useCallback(
         <K extends keyof TicketApprovalUpdateInput>(key: K, value: TicketApprovalUpdateInput[K]) => {
@@ -276,6 +282,93 @@ export default function ApproveForm({
                     />
                 </div>
             </section>
+
+            {(isPi01 || isCh11) && (
+                <section className="portal-approve-form-section">
+                    <h3 className="portal-approve-form-section-title">RTM submission fields</h3>
+                    <div className="portal-approve-form-grid">
+                        <FormField
+                            label="Contract Number"
+                            id="contract_number"
+                            source="contract"
+                            value={values.contractNumber}
+                            onChange={(v) => setField('contractNumber', v)}
+                            readOnly
+                        />
+                        <FormField
+                            label="Realize Number"
+                            id="realize_number"
+                            source="manual"
+                            value={values.realizeNumber}
+                            onChange={(v) => setField('realizeNumber', v)}
+                        />
+                        <FormField
+                            label="Invoice Date"
+                            id="invoice_date"
+                            source="docIntel"
+                            type="date"
+                            value={values.invoiceDate}
+                            onChange={(v) => setField('invoiceDate', v)}
+                        />
+                        <FormField
+                            label="Invoice Subnumber"
+                            id="invoice_subnumber"
+                            source="manual"
+                            value={values.invoiceSubnumber}
+                            onChange={(v) => setField('invoiceSubnumber', v)}
+                        />
+                        <FormField
+                            label="Tax Code"
+                            id="tax_code"
+                            source="manual"
+                            value={values.taxCode}
+                            onChange={(v) => setField('taxCode', v)}
+                        />
+                        {isPi01 && (
+                            <FormField
+                                label="Invoicing Party ID"
+                                id="invoicing_party_id"
+                                source="contract"
+                                value={values.invoicingPartyId}
+                                onChange={(v) => setField('invoicingPartyId', v)}
+                            />
+                        )}
+                        {isCh11 && (
+                            <>
+                                <FormField
+                                    label="Charge Type"
+                                    id="charge_type"
+                                    source="manual"
+                                    value={values.chargeType}
+                                    onChange={(v) => setField('chargeType', v)}
+                                />
+                                <div>
+                                    <label htmlFor="sales_or_purchase" className={LABEL_CLASS}>
+                                        Sales or Purchase
+                                    </label>
+                                    <select
+                                        id="sales_or_purchase"
+                                        className={inputClassForSource('manual', false)}
+                                        value={values.salesOrPurchase}
+                                        onChange={(event) => setField('salesOrPurchase', event.target.value)}
+                                    >
+                                        <option value="">Select…</option>
+                                        <option value="S">S — Sales</option>
+                                        <option value="P">P — Purchase</option>
+                                    </select>
+                                </div>
+                                <FormField
+                                    label="Line Profit Center"
+                                    id="line_profit_center"
+                                    source="contract"
+                                    value={values.lineProfitCenter}
+                                    onChange={(v) => setField('lineProfitCenter', v)}
+                                />
+                            </>
+                        )}
+                    </div>
+                </section>
+            )}
 
             <section className="portal-approve-form-section">
                 <div className="portal-approve-form-notes">

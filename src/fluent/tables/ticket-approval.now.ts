@@ -127,5 +127,59 @@ export const x_2058901_demo_ticket_approval = Table({
         contract_processed_at: DateTimeColumn({
             label: 'Contract Processed At',
         }),
+        contract_number: StringColumn({
+            label: 'Contract Number',
+            maxLength: 50,
+        }),
+        realize_number: StringColumn({
+            label: 'Realize Number',
+            maxLength: 10,
+        }),
+        invoice_date: DateColumn({
+            label: 'Invoice Date',
+        }),
+        invoice_subnumber: StringColumn({
+            label: 'Invoice Subnumber',
+            maxLength: 1,
+        }),
+        tax_code: StringColumn({
+            label: 'Tax Code',
+            maxLength: 10,
+        }),
+        invoicing_party_id: StringColumn({
+            label: 'Invoicing Party ID',
+            maxLength: 40,
+        }),
+        charge_type: StringColumn({
+            label: 'Charge Type',
+            maxLength: 40,
+        }),
+        sales_or_purchase: StringColumn({
+            label: 'Sales or Purchase',
+            maxLength: 1,
+        }),
+        line_profit_center: StringColumn({
+            label: 'Line Profit Center',
+            maxLength: 40,
+        }),
+        rtm_payload_json: JsonColumn({
+            label: 'RTM Payload JSON',
+        }),
+        payload_status: ChoiceColumn({
+            label: 'Payload Status',
+            default: 'pending',
+            choices: {
+                pending: { label: 'Pending' },
+                ready: { label: 'Ready' },
+                failed: { label: 'Failed' },
+            },
+        }),
+        payload_built_at: DateTimeColumn({
+            label: 'Payload Built At',
+        }),
+        payload_error: StringColumn({
+            label: 'Payload Error',
+            maxLength: 500,
+        }),
     },
 })

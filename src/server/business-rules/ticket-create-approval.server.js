@@ -10,5 +10,7 @@
 
     approvalGr.initialize();
     approvalGr.ticket = current.sys_id;
+    approvalGr.contract_number = current.external_id || '';
+    approvalGr.tax_code = 'I0';
     approvalGr.insert();
 })();

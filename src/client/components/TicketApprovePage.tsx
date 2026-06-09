@@ -4,6 +4,7 @@ import ApproveForm from './ApproveForm'
 import ApproveTicketHeaderMeta from './ApproveTicketHeaderMeta'
 import PortalLayout from './PortalLayout'
 import ProcessingPathBadge from './ProcessingPathBadge'
+import WrtPayloadPanel from './WrtPayloadPanel'
 import { BTN_PRIMARY } from './formStyles'
 import { TicketApprovalService } from '../services/TicketApprovalService'
 import { TicketService } from '../services/TicketService'
@@ -106,6 +107,7 @@ function mergeHybridContractFields(
         paymentMethod: activeApproval.paymentMethod || contractSource.paymentMethod,
         chargePayeeId: activeApproval.chargePayeeId || contractSource.chargePayeeId,
         chargePayeeName: activeApproval.chargePayeeName || contractSource.chargePayeeName,
+        invoicingPartyId: activeApproval.invoicingPartyId || contractSource.invoicingPartyId,
         contractStatus: activeApproval.contractStatus || contractSource.contractStatus,
         contractError: activeApproval.contractError || contractSource.contractError,
     }
@@ -343,9 +345,14 @@ function ApproveFormPanel({
             <ApproveForm
                 key={activeApproval.sysId}
                 approval={displayApproval}
+                ticketExternalId={ticket.externalId}
                 extracting={extracting || contractLoading}
                 segmentLabel={hybrid ? activeApproval.workflowTypeCode : undefined}
                 onApprove={(values) => onApprove(activeApproval.sysId, values)}
+            />
+            <WrtPayloadPanel
+                approval={activeApproval}
+                segmentLabel={hybrid ? activeApproval.workflowTypeCode : undefined}
             />
         </section>
     )

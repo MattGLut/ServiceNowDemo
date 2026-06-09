@@ -69,6 +69,11 @@ MapContractToApproval.prototype = {
             'charge_payee_name',
             this.getContractString(contract, 'vendorOrCreditorName')
         )
+        this.setMappedValue(
+            values,
+            'invoicing_party_id',
+            this.getContractString(contract, 'vendorOrCreditorId')
+        )
 
         return { values: values }
     },
