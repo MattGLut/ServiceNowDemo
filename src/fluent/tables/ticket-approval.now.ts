@@ -9,6 +9,7 @@ import {
     DecimalColumn,
     ChoiceColumn,
     JsonColumn,
+    BooleanColumn,
 } from '@servicenow/sdk/core'
 
 export const x_2058901_demo_ticket_approval = Table({
@@ -22,6 +23,14 @@ export const x_2058901_demo_ticket_approval = Table({
             label: 'Ticket',
             referenceTable: 'x_2058901_demo_ticket',
             mandatory: true,
+        }),
+        workflow_type: ReferenceColumn({
+            label: 'Workflow Type',
+            referenceTable: 'x_2058901_demo_workflow_type',
+        }),
+        is_hybrid_segment: BooleanColumn({
+            label: 'Hybrid Segment',
+            default: false,
         }),
         company_code: StringColumn({
             label: 'Company Code',

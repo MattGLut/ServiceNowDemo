@@ -239,6 +239,23 @@ declare global {
                 }
                 composite: [
                     {
+                        table: 'sys_documentation'
+                        id: '013b71123ef347ae8dc29675e37060d1'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'workflow_type'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '016dc222be1c449495db8946b4dd99c2'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'is_hybrid_segment'
+                        }
+                    },
+                    {
                         table: 'sys_security_acl_role'
                         id: '0250698448e14624b3d9d10ea7de0088'
                         key: {
@@ -955,6 +972,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_dictionary'
+                        id: '6a3c7ad7513d48a49a94d66b1c6169d3'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'workflow_type'
+                        }
+                    },
+                    {
                         table: 'sn_glider_source_artifact_m2m'
                         id: '6b2cee5dc541487085028f905ce48897'
                         key: {
@@ -1099,6 +1124,15 @@ declare global {
                             name: 'x_2058901_demo_ticket'
                             element: 'status'
                             value: 'posted'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '80c2b367aa924d199f9ff91fdd76eb61'
+                        key: {
+                            name: 'x_2058901_demo_ticket_approval'
+                            element: 'is_hybrid_segment'
+                            language: 'en'
                         }
                     },
                     {

@@ -9,12 +9,7 @@ import { TicketApprovalService } from '../services/TicketApprovalService'
 import { TicketService } from '../services/TicketService'
 import { ticketListUrl } from '../utils/ticketListFilter'
 import { ticketStatusBadgeClass } from '../utils/ticketStatusStyle'
-import type {
-    ContractStatus,
-    DiStatus,
-    TicketApprovalRecord,
-    TicketApprovalUpdateInput,
-} from '../types/ticketApproval'
+import type { TicketApprovalRecord, TicketApprovalUpdateInput } from '../types/ticketApproval'
 import type { TicketAttachment, TicketRecord } from '../types/ticket'
 
 const DI_POLL_INTERVAL_MS = 3000
@@ -47,39 +42,108 @@ function isContractLoading(approval: TicketApprovalRecord, ticket: TicketRecord)
     return !approval.contractStatus
 }
 
-function shouldPollApproval(
-    approval: TicketApprovalRecord,
+function isHybridTicket(approvals: TicketApprovalRecord[]): boolean {
+    return approvals.length > 1 || approvals.some((approval) => approval.isHybridSegment)
+}
+
+function sortApprovals(approvals: TicketApprovalRecord[]): TicketApprovalRecord[] {
+    return [...approvals].sort((left, right) =>
+        (left.workflowTypeCode || 'ZZZ').localeCompare(right.workflowTypeCode || 'ZZZ')
+    )
+}
+
+function isAnyDiExtracting(
+    approvals: TicketApprovalRecord[],
     ticket: TicketRecord,
     attachmentCount: number
 ): boolean {
-    return isDiExtracting(approval, ticket, attachmentCount) || isContractLoading(approval, ticket)
+    return approvals.some((approval) => isDiExtracting(approval, ticket, attachmentCount))
+}
+
+function isAnyContractLoading(approvals: TicketApprovalRecord[], ticket: TicketRecord): boolean {
+    if (ticket.stpFlag || !ticket.externalId.trim()) {
+        return false
+    }
+
+    if (isHybridTicket(approvals)) {
+        const anyComplete = approvals.some((approval) => approval.contractStatus === 'complete')
+        if (anyComplete) {
+            return false
+        }
+    }
+
+    return approvals.some((approval) => isContractLoading(approval, ticket))
+}
+
+function mergeHybridContractFields(
+    activeApproval: TicketApprovalRecord,
+    approvals: TicketApprovalRecord[]
+): TicketApprovalRecord {
+    if (!isHybridTicket(approvals)) {
+        return activeApproval
+    }
+
+    const contractSource =
+        approvals.find((approval) => approval.contractStatus === 'complete') ??
+        approvals.find(
+            (approval) =>
+                approval.companyCode ||
+                approval.profitCenter ||
+                approval.approverName ||
+                approval.chargePayeeId
+        )
+
+    if (!contractSource || contractSource.sysId === activeApproval.sysId) {
+        return activeApproval
+    }
+
+    return {
+        ...activeApproval,
+        companyCode: activeApproval.companyCode || contractSource.companyCode,
+        profitCenter: activeApproval.profitCenter || contractSource.profitCenter,
+        approverName: activeApproval.approverName || contractSource.approverName,
+        approverId: activeApproval.approverId || contractSource.approverId,
+        paymentMethod: activeApproval.paymentMethod || contractSource.paymentMethod,
+        chargePayeeId: activeApproval.chargePayeeId || contractSource.chargePayeeId,
+        chargePayeeName: activeApproval.chargePayeeName || contractSource.chargePayeeName,
+        contractStatus: activeApproval.contractStatus || contractSource.contractStatus,
+        contractError: activeApproval.contractError || contractSource.contractError,
+    }
+}
+
+function shouldPollApprovals(
+    approvals: TicketApprovalRecord[],
+    ticket: TicketRecord,
+    attachmentCount: number
+): boolean {
+    return isAnyDiExtracting(approvals, ticket, attachmentCount) || isAnyContractLoading(approvals, ticket)
+}
+
+function pickInitialApprovalSysId(approvals: TicketApprovalRecord[]): string {
+    const sorted = sortApprovals(approvals)
+    return sorted.find((approval) => !approval.approvedAt)?.sysId ?? sorted[0]?.sysId ?? ''
 }
 
 type DocIntelStatusBannerProps = {
-    diStatus: DiStatus | ''
-    diError: string
+    approvals: TicketApprovalRecord[]
     extracting: boolean
     onRefresh: () => void
 }
 
 type ContractStatusBannerProps = {
-    contractStatus: ContractStatus | ''
-    contractError: string
+    approvals: TicketApprovalRecord[]
     loading: boolean
     onRefresh: () => void
 }
 
-function ContractStatusBanner({
-    contractStatus,
-    contractError,
-    loading,
-    onRefresh,
-}: ContractStatusBannerProps) {
-    if (contractStatus === 'failed') {
+function ContractStatusBanner({ approvals, loading, onRefresh }: ContractStatusBannerProps) {
+    const failed = approvals.find((approval) => approval.contractStatus === 'failed')
+
+    if (failed) {
         return (
             <div className="portal-submit-banner portal-submit-banner-error mb-4" role="alert">
                 <p className="m-0 text-sm font-medium">Contract lookup failed</p>
-                {contractError && <p className="m-0 mt-1 text-sm">{contractError}</p>}
+                {failed.contractError && <p className="m-0 mt-1 text-sm">{failed.contractError}</p>}
                 <p className="m-0 mt-2 text-sm text-rh-muted">
                     You can still review and edit contract fields manually.
                 </p>
@@ -101,12 +165,14 @@ function ContractStatusBanner({
     )
 }
 
-function DocIntelStatusBanner({ diStatus, diError, extracting, onRefresh }: DocIntelStatusBannerProps) {
-    if (diStatus === 'failed') {
+function DocIntelStatusBanner({ approvals, extracting, onRefresh }: DocIntelStatusBannerProps) {
+    const failed = approvals.find((approval) => approval.diStatus === 'failed')
+
+    if (failed) {
         return (
             <div className="portal-submit-banner portal-submit-banner-error mb-4" role="alert">
                 <p className="m-0 text-sm font-medium">Invoice extraction failed</p>
-                {diError && <p className="m-0 mt-1 text-sm">{diError}</p>}
+                {failed.diError && <p className="m-0 mt-1 text-sm">{failed.diError}</p>}
                 <p className="m-0 mt-2 text-sm text-rh-muted">
                     You can still review and edit fields manually, or re-upload the PDF after fixing
                     configuration.
@@ -129,6 +195,44 @@ function DocIntelStatusBanner({ diStatus, diError, extracting, onRefresh }: DocI
     )
 }
 
+type HybridSegmentTabsProps = {
+    approvals: TicketApprovalRecord[]
+    activeApprovalSysId: string
+    onSelect: (sysId: string) => void
+}
+
+function HybridSegmentTabs({ approvals, activeApprovalSysId, onSelect }: HybridSegmentTabsProps) {
+    return (
+        <div className="portal-approve-segment-tabs" role="tablist" aria-label="Workflow segments">
+            {sortApprovals(approvals).map((approval) => {
+                const label = approval.workflowTypeCode || 'Segment'
+                const isActive = approval.sysId === activeApprovalSysId
+                const isApproved = Boolean(approval.approvedAt)
+
+                return (
+                    <button
+                        key={approval.sysId}
+                        type="button"
+                        role="tab"
+                        aria-selected={isActive}
+                        className={`portal-approve-segment-tab${isActive ? ' portal-approve-segment-tab-active' : ''}`}
+                        onClick={() => onSelect(approval.sysId)}
+                    >
+                        <span>{label}</span>
+                        {isApproved ? (
+                            <span className="portal-approve-segment-tab-badge">Approved</span>
+                        ) : (
+                            <span className="portal-approve-segment-tab-badge portal-approve-segment-tab-badge-pending">
+                                Pending
+                            </span>
+                        )}
+                    </button>
+                )
+            })}
+        </div>
+    )
+}
+
 type TicketApprovePageProps = {
     sysId: string | null
 }
@@ -142,7 +246,7 @@ type LoadState =
           status: 'ready'
           ticket: TicketRecord
           attachments: TicketAttachment[]
-          approval: TicketApprovalRecord
+          approvals: TicketApprovalRecord[]
       }
     | { status: 'approval-missing'; ticket: TicketRecord; attachments: TicketAttachment[] }
 
@@ -185,38 +289,63 @@ function ApprovePageChrome({ backHref, title, ticket, children }: ApprovePageChr
 }
 
 type ApproveFormPanelProps = {
-    approval: TicketApprovalRecord
-    extracting: boolean
-    contractLoading: boolean
+    ticket: TicketRecord
+    attachments: TicketAttachment[]
+    approvals: TicketApprovalRecord[]
+    activeApprovalSysId: string
+    onSelectApproval: (sysId: string) => void
     onRefresh: () => void
-    onApprove: (values: TicketApprovalUpdateInput) => Promise<void>
+    onApprove: (approvalSysId: string, values: TicketApprovalUpdateInput) => Promise<void>
 }
 
 function ApproveFormPanel({
-    approval,
-    extracting,
-    contractLoading,
+    ticket,
+    attachments,
+    approvals,
+    activeApprovalSysId,
+    onSelectApproval,
     onRefresh,
     onApprove,
 }: ApproveFormPanelProps) {
+    const hybrid = isHybridTicket(approvals)
+    const extracting = isAnyDiExtracting(approvals, ticket, attachments.length)
+    const contractLoading = isAnyContractLoading(approvals, ticket)
+    const activeApproval =
+        approvals.find((approval) => approval.sysId === activeApprovalSysId) ?? sortApprovals(approvals)[0]
+    const displayApproval = activeApproval
+        ? mergeHybridContractFields(activeApproval, approvals)
+        : null
+
+    if (!activeApproval || !displayApproval) {
+        return (
+            <section className="portal-approve-left">
+                <p className="portal-detail-message m-0 text-sm">No approval segment selected.</p>
+            </section>
+        )
+    }
+
     return (
         <section className="portal-approve-left">
-            <ContractStatusBanner
-                contractStatus={approval.contractStatus}
-                contractError={approval.contractError}
-                loading={contractLoading}
-                onRefresh={onRefresh}
-            />
-            <DocIntelStatusBanner
-                diStatus={approval.diStatus}
-                diError={approval.diError}
-                extracting={extracting}
-                onRefresh={onRefresh}
-            />
+            {hybrid && (
+                <p className="portal-approve-hybrid-note mb-4 text-sm text-rh-muted">
+                    Hybrid invoice — review and approve each workflow segment separately.
+                </p>
+            )}
+            <ContractStatusBanner approvals={approvals} loading={contractLoading} onRefresh={onRefresh} />
+            <DocIntelStatusBanner approvals={approvals} extracting={extracting} onRefresh={onRefresh} />
+            {hybrid && (
+                <HybridSegmentTabs
+                    approvals={approvals}
+                    activeApprovalSysId={activeApproval.sysId}
+                    onSelect={onSelectApproval}
+                />
+            )}
             <ApproveForm
-                approval={approval}
+                key={activeApproval.sysId}
+                approval={displayApproval}
                 extracting={extracting || contractLoading}
-                onApprove={onApprove}
+                segmentLabel={hybrid ? activeApproval.workflowTypeCode : undefined}
+                onApprove={(values) => onApprove(activeApproval.sysId, values)}
             />
         </section>
     )
@@ -226,6 +355,7 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
     const ticketService = useMemo(() => new TicketService(), [])
     const approvalService = useMemo(() => new TicketApprovalService(), [])
     const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' })
+    const [activeApprovalSysId, setActiveApprovalSysId] = useState('')
     const backHref = ticketListUrl('draft')
 
     const loadTicket = useCallback(async () => {
@@ -249,17 +379,18 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
                 return
             }
 
-            const [attachments, approval] = await Promise.all([
+            const [attachments, approvals] = await Promise.all([
                 ticketService.listAttachments(sysId),
-                approvalService.getByTicketSysId(sysId),
+                approvalService.listByTicketSysId(sysId),
             ])
 
-            if (!approval) {
+            if (approvals.length === 0) {
                 setLoadState({ status: 'approval-missing', ticket, attachments })
                 return
             }
 
-            setLoadState({ status: 'ready', ticket, attachments, approval })
+            setActiveApprovalSysId(pickInitialApprovalSysId(approvals))
+            setLoadState({ status: 'ready', ticket, attachments, approvals })
         } catch (err) {
             const message = err instanceof Error ? err.message : 'Unknown error'
             setLoadState({ status: 'error', message })
@@ -276,8 +407,8 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
             return
         }
 
-        const { approval, ticket, attachments } = loadState
-        if (!shouldPollApproval(approval, ticket, attachments.length)) {
+        const { approvals, ticket, attachments } = loadState
+        if (!shouldPollApprovals(approvals, ticket, attachments.length)) {
             return
         }
 
@@ -294,8 +425,8 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
                     return
                 }
 
-                const refreshed = await approvalService.getByTicketSysId(sysId)
-                if (!refreshed) {
+                const refreshed = await approvalService.listByTicketSysId(sysId)
+                if (refreshed.length === 0) {
                     return
                 }
 
@@ -303,7 +434,7 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
                     if (current.status !== 'ready') {
                         return current
                     }
-                    return { ...current, approval: refreshed }
+                    return { ...current, approvals: refreshed }
                 })
             })()
         }, DI_POLL_INTERVAL_MS)
@@ -311,31 +442,51 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
         return () => window.clearInterval(intervalId)
     }, [loadState, sysId, approvalService])
 
-    const refreshApproval = useCallback(async () => {
+    const refreshApprovals = useCallback(async () => {
         if (!sysId || loadState.status !== 'ready') {
             await loadTicket()
             return
         }
 
-        const refreshed = await approvalService.getByTicketSysId(sysId)
-        if (!refreshed) {
+        const refreshed = await approvalService.listByTicketSysId(sysId)
+        if (refreshed.length === 0) {
             await loadTicket()
             return
         }
 
-        setLoadState({ ...loadState, approval: refreshed })
+        setActiveApprovalSysId((current) =>
+            refreshed.some((approval) => approval.sysId === current)
+                ? current
+                : pickInitialApprovalSysId(refreshed)
+        )
+        setLoadState({ ...loadState, approvals: refreshed })
     }, [sysId, loadState, approvalService, loadTicket])
 
     const handleApprove = useCallback(
-        async (values: TicketApprovalUpdateInput) => {
-            if (loadState.status !== 'ready') {
+        async (approvalSysId: string, values: TicketApprovalUpdateInput) => {
+            if (loadState.status !== 'ready' || !sysId) {
                 return
             }
 
-            await approvalService.approve(loadState.approval.sysId, values)
-            window.location.href = ticketListUrl('approved')
+            await approvalService.approve(approvalSysId, values)
+            const refreshed = await approvalService.listByTicketSysId(sysId)
+            const allApproved =
+                refreshed.length > 0 && refreshed.every((approval) => Boolean(approval.approvedAt))
+
+            if (allApproved) {
+                window.location.href = ticketListUrl('approved')
+                return
+            }
+
+            setActiveApprovalSysId(pickInitialApprovalSysId(refreshed))
+            setLoadState({
+                status: 'ready',
+                ticket: loadState.ticket,
+                attachments: loadState.attachments,
+                approvals: refreshed,
+            })
         },
-        [approvalService, loadState]
+        [approvalService, loadState, sysId]
     )
 
     if (loadState.status === 'loading') {
@@ -426,18 +577,18 @@ export default function TicketApprovePage({ sysId }: TicketApprovePageProps) {
         )
     }
 
-    const { ticket, attachments, approval } = loadState
-    const extracting = isDiExtracting(approval, ticket, attachments.length)
-    const contractLoading = isContractLoading(approval, ticket)
+    const { ticket, attachments, approvals } = loadState
 
     return (
         <ApprovePageChrome backHref={backHref} title={ticket.title} ticket={ticket}>
             <div className="portal-approve-split">
                 <ApproveFormPanel
-                    approval={approval}
-                    extracting={extracting}
-                    contractLoading={contractLoading}
-                    onRefresh={() => void refreshApproval()}
+                    ticket={ticket}
+                    attachments={attachments}
+                    approvals={approvals}
+                    activeApprovalSysId={activeApprovalSysId}
+                    onSelectApproval={setActiveApprovalSysId}
+                    onRefresh={() => void refreshApprovals()}
                     onApprove={handleApprove}
                 />
                 <div className="portal-approve-right">
