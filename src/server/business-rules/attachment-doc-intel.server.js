@@ -161,7 +161,25 @@
             ch11Gr.insert()
         }
 
+        syncHybridContractFields(ticketSysId)
         return { pi01: pi01Gr, ch11: ch11Gr }
+    }
+
+    function syncHybridContractFields(ticketSysId) {
+        var pi01Gr = findApprovalByWorkflowCode(ticketSysId, 'PI01')
+        var ch11Gr = findApprovalByWorkflowCode(ticketSysId, 'CH11')
+
+        if (!pi01Gr || !ch11Gr) {
+            return
+        }
+
+        if (!pi01Gr.get(pi01Gr.getUniqueValue()) || !ch11Gr.get(ch11Gr.getUniqueValue())) {
+            return
+        }
+
+        copyRowFields(pi01Gr, ch11Gr, CONTRACT_COPY_COLUMNS)
+        ch11Gr.setWorkflow(false)
+        ch11Gr.update()
     }
 
     function applyHybridSegments(ticketSysId, placeholderGr, mapper, segmentResult) {
@@ -194,6 +212,8 @@
             approvalGr.di_processed_at = new GlideDateTime()
             approvalGr.update()
         }
+
+        syncHybridContractFields(ticketSysId)
     }
 
     if (current.table_name != TICKET_TABLE) {

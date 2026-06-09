@@ -61,7 +61,54 @@ function isAnyDiExtracting(
 }
 
 function isAnyContractLoading(approvals: TicketApprovalRecord[], ticket: TicketRecord): boolean {
+    if (ticket.stpFlag || !ticket.externalId.trim()) {
+        return false
+    }
+
+    if (isHybridTicket(approvals)) {
+        const anyComplete = approvals.some((approval) => approval.contractStatus === 'complete')
+        if (anyComplete) {
+            return false
+        }
+    }
+
     return approvals.some((approval) => isContractLoading(approval, ticket))
+}
+
+function mergeHybridContractFields(
+    activeApproval: TicketApprovalRecord,
+    approvals: TicketApprovalRecord[]
+): TicketApprovalRecord {
+    if (!isHybridTicket(approvals)) {
+        return activeApproval
+    }
+
+    const contractSource =
+        approvals.find((approval) => approval.contractStatus === 'complete') ??
+        approvals.find(
+            (approval) =>
+                approval.companyCode ||
+                approval.profitCenter ||
+                approval.approverName ||
+                approval.chargePayeeId
+        )
+
+    if (!contractSource || contractSource.sysId === activeApproval.sysId) {
+        return activeApproval
+    }
+
+    return {
+        ...activeApproval,
+        companyCode: activeApproval.companyCode || contractSource.companyCode,
+        profitCenter: activeApproval.profitCenter || contractSource.profitCenter,
+        approverName: activeApproval.approverName || contractSource.approverName,
+        approverId: activeApproval.approverId || contractSource.approverId,
+        paymentMethod: activeApproval.paymentMethod || contractSource.paymentMethod,
+        chargePayeeId: activeApproval.chargePayeeId || contractSource.chargePayeeId,
+        chargePayeeName: activeApproval.chargePayeeName || contractSource.chargePayeeName,
+        contractStatus: activeApproval.contractStatus || contractSource.contractStatus,
+        contractError: activeApproval.contractError || contractSource.contractError,
+    }
 }
 
 function shouldPollApprovals(
@@ -265,8 +312,11 @@ function ApproveFormPanel({
     const contractLoading = isAnyContractLoading(approvals, ticket)
     const activeApproval =
         approvals.find((approval) => approval.sysId === activeApprovalSysId) ?? sortApprovals(approvals)[0]
+    const displayApproval = activeApproval
+        ? mergeHybridContractFields(activeApproval, approvals)
+        : null
 
-    if (!activeApproval) {
+    if (!activeApproval || !displayApproval) {
         return (
             <section className="portal-approve-left">
                 <p className="portal-detail-message m-0 text-sm">No approval segment selected.</p>
@@ -292,7 +342,7 @@ function ApproveFormPanel({
             )}
             <ApproveForm
                 key={activeApproval.sysId}
-                approval={activeApproval}
+                approval={displayApproval}
                 extracting={extracting || contractLoading}
                 segmentLabel={hybrid ? activeApproval.workflowTypeCode : undefined}
                 onApprove={(values) => onApprove(activeApproval.sysId, values)}

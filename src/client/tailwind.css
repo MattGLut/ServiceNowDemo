@@ -220,6 +220,30 @@
         @apply flex min-h-0 w-full flex-col gap-3 overflow-y-auto overscroll-y-contain border-rh-border bg-rh-panel p-3 sm:p-4 lg:w-[min(36rem,46%)] lg:shrink-0 lg:border-r;
     }
 
+    .portal-approve-hybrid-note {
+        @apply rounded-md border border-violet-500/30 bg-violet-500/10 px-3 py-2;
+    }
+
+    .portal-approve-segment-tabs {
+        @apply mb-4 flex flex-wrap gap-2;
+    }
+
+    .portal-approve-segment-tab {
+        @apply inline-flex items-center gap-2 rounded-full border border-rh-border bg-rh-elevated px-3 py-1.5 text-sm text-rh-muted transition-colors hover:border-rh-green/40 hover:text-rh-text;
+    }
+
+    .portal-approve-segment-tab-active {
+        @apply border-rh-green/50 bg-rh-green/10 text-rh-text;
+    }
+
+    .portal-approve-segment-tab-badge {
+        @apply rounded-full bg-emerald-500/20 px-2 py-0.5 text-[0.625rem] font-medium uppercase tracking-wide text-emerald-200;
+    }
+
+    .portal-approve-segment-tab-badge-pending {
+        @apply bg-amber-500/15 text-amber-100;
+    }
+
     .portal-approve-right {
         @apply flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-rh-bg;
     }
